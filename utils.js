@@ -116,7 +116,7 @@ const Utils = {
     return params.get(name);
   },
 
-  /** Simpan ke sessionStorage (BUKAN localStorage, untuk keamanan). */
+  /** Simpan ke sessionStorage. */
   setSession: function (key, value) {
     try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
   },
@@ -137,10 +137,11 @@ const Utils = {
   /** Bersihkan seluruh sessionStorage. */
   clearSession: function () {
     try { sessionStorage.clear(); } catch (e) {}
-  }
-};
+  },
+
   /** Encode string ke base64 URL-safe (untuk endpoint publik tanpa Api wrapper). */
   b64UrlEncode: function (str) {
     const utf8 = unescape(encodeURIComponent(str));
     return btoa(utf8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  },
+  }
+};
