@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pendaftaran — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -201,6 +202,7 @@
     background: #fff; padding: 3px 8px; border-radius: 4px;
     font-size: 0.75rem; word-break: break-all;
   }
+  .token-bar .tb-note { font-size: 0.75rem; color: #1e40af; }
 
   @media (max-width: 600px) {
     .card { padding: 18px; }
@@ -219,6 +221,36 @@
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script>
+/* ==== OVERRIDE TAHAN BANTING: pastikan showLoading/hideLoading selalu bekerja ==== */
+(function () {
+  if (typeof Utils === 'undefined') { window.Utils = {}; }
+  Utils.showLoading = function (text) {
+    var el = document.getElementById('global-loading');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'global-loading';
+      document.body.appendChild(el);
+    }
+    el.innerHTML = '<div style="text-align:center;">' +
+      '<div class="spinner"></div>' +
+      '<div class="loading-text" style="margin-top:8px;color:#1a5490;font-weight:500;"></div>' +
+      '</div>';
+    el.style.display = 'flex';
+    el.style.position = 'fixed';
+    el.style.inset = '0';
+    el.style.background = 'rgba(255,255,255,0.85)';
+    el.style.zIndex = '9999';
+    el.style.alignItems = 'center';
+    el.style.justifyContent = 'center';
+    var txt = el.querySelector('.loading-text');
+    if (txt) txt.textContent = text || 'Memuat...';
+  };
+  Utils.hideLoading = function () {
+    var el = document.getElementById('global-loading');
+    if (el) el.style.display = 'none';
+  };
+})();
+
 (function () {
   'use strict';
 
@@ -275,9 +307,9 @@
     Api.registration.resume(token)
       .then(function (res) {
         Utils.hideLoading();
-         if (!res.success) {
+        if (!res.success) {
           if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
-            // Sesi berakhir — jangan langsung buang, beri pilihan ke user
+            // Sesi berakhir — beri pilihan ke user, jangan langsung buang
             var lanjutBaru = confirm(
               'Sesi pendaftaran Anda sudah berakhir (lebih dari 4 jam tidak ada aktivitas).\n\n' +
               'Data yang belum terkirim akan hilang. Mulai pendaftaran baru?'
@@ -365,8 +397,9 @@
         '</div>' +
       '</div>' +
       '<div class="token-bar">' +
-        '<div>🔑 Simpan tautan ini untuk melanjutkan: ' +
-          '<span class="tk">' + Utils.escapeHtml(location.origin + location.pathname + '?token=' + state.token) + '</span>' +
+        '<div>🔑 <strong>Simpan tautan ini</strong> untuk melanjutkan jika browser tertutup:' +
+          '<div class="tk">' + Utils.escapeHtml(location.origin + location.pathname + '?token=' + state.token) + '</div>' +
+          '<div class="tb-note">Sesi aktif 4 jam sejak aktivitas terakhir.</div>' +
         '</div>' +
       '</div>' +
       '<div class="card">' +
@@ -775,10 +808,11 @@
         '<p class="note">' +
           'Terima kasih, <strong>' + Utils.escapeHtml(d.nama_lengkap || '') + '</strong>.<br>' +
           'Pendaftaran Anda sedang menunggu verifikasi panitia.<br>' +
-          'Silakan simpan nomor pendaftaran untuk pengecekan status.' +
+          'Cek status kapan saja di <a href="status.html">halaman Cek Status</a>.' +
         '</p>' +
         (waUrl ? '<a class="btn-wa" href="' + waUrl + '" target="_blank" rel="noopener">💬 Konfirmasi via WhatsApp</a>' : '') +
-        '<div style="margin-top:20px;">' +
+        '<div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">' +
+          '<a href="status.html" class="btn btn-primary">Cek Status Pendaftaran</a>' +
           '<a href="index.html" class="btn btn-secondary">Kembali ke Beranda</a>' +
         '</div>' +
       '</div>';
@@ -878,9 +912,6 @@
       });
   }
 
-  /* ============================================================
-   * BOOT
-   * ============================================================ */
   boot();
 
 })();
