@@ -264,4 +264,545 @@
           <div class="user-role" id="user-role">-</div>
         </div>
         <div class="user-avatar" id="user-avatar">?</div>
-        <button class="btn-log
+        <button class="btn-logout" id="btn-logout">Keluar</button>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+      <!-- Diisi via JS -->
+    </div>
+  </main>
+</div>
+
+<div id="global-loading"><div style="text-align:center;"><div class="spinner"></div><div id="loading-text">Memuat...</div></div></div>
+<div id="toast-container"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+   * KONFIG & SESSION
+   * ============================================================ */
+  var APPS_URL = 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec';
+  var TOKEN_KEY = 'spmb_token';
+  var USER_KEY = 'spmb_user';
+
+  var token = sessionStorage.getItem(TOKEN_KEY);
+  var user = null;
+  try { user = JSON.parse(sessionStorage.getItem(USER_KEY)); } catch (e) {}
+
+  if (!token || !user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  /* ============================================================
+   * UTIL
+   * ============================================================ */
+  function b64(str) {
+    var u = unescape(encodeURIComponent(str));
+    return btoa(u).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  function api(action, payload) {
+    var body = { action: action, token: token, payload: payload || {} };
+    var url = APPS_URL + '?data=' + encodeURIComponent(b64(JSON.stringify(body)));
+    return fetch(url, { method: 'GET', redirect: 'follow' })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var j;
+        try { j = JSON.parse(t); } catch (e) { throw new Error('Respons server tidak valid'); }
+        if (!j.success && j.code === 'SESSION_EXPIRED') {
+          sessionStorage.clear();
+          alert('Sesi berakhir. Silakan login ulang.');
+          window.location.href = 'login.html';
+          throw new Error('SESSION_EXPIRED');
+        }
+        return j;
+      });
+  }
+
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function fmtTanggal(iso) {
+    if (!iso) return '-';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '-';
+    var bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    return d.getDate() + ' ' + bulan[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function toast(msg, type) {
+    var c = document.getElementById('toast-container');
+    var el = document.createElement('div');
+    el.className = 'toast toast-' + (type || 'info');
+    el.textContent = msg;
+    c.appendChild(el);
+    setTimeout(function () { el.classList.add('show'); }, 10);
+    setTimeout(function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    }, 3200);
+  }
+
+  function showLoading(text) {
+    document.getElementById('loading-text').textContent = text || 'Memuat...';
+    document.getElementById('global-loading').classList.add('show');
+  }
+  function hideLoading() {
+    document.getElementById('global-loading').classList.remove('show');
+  }
+
+  function getQuery(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  /* ============================================================
+   * SIDEBAR & TOPBAR
+   * ============================================================ */
+  var displayName = user.display_name || user.username || 'Petugas';
+  var role = user.role || '-';
+  document.getElementById('user-name').textContent = displayName;
+  document.getElementById('user-role').innerHTML =
+    '<span class="badge st-TERVERIFIKASI">' + esc(role) + '</span>';
+  document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
+
+  var menus = {
+    ADMIN: [
+      { group: 'Utama', items: [
+        { icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }
+      ]},
+      { group: 'Pendaftaran', items: [
+        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html', active: true },
+        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
+      ]},
+      { group: 'Proses', items: [
+        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
+        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
+        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
+      ]},
+      { group: 'Sistem', items: [
+        { icon: '📊', label: 'Laporan', href: '#' },
+        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
+      ]}
+    ],
+    WAWANCARA: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Wawancara', items: [
+        { icon: '🔍', label: 'Cari Siswa', href: 'interview.html' },
+        { icon: '📝', label: 'Riwayat Wawancara', href: 'interview.html#riwayat' }
+      ]}
+    ],
+    BENDAHARA: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Pembayaran', items: [
+        { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' },
+        { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html#riwayat' }
+      ]}
+    ],
+    SELEKSI: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Seleksi', items: [
+        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' },
+        { icon: '📄', label: 'Cetak Pengumuman', href: 'selection.html#cetak' }
+      ]}
+    ]
+  };
+
+  var nav = document.getElementById('nav');
+  var menu = menus[role] || menus.ADMIN;
+  var html = '';
+  menu.forEach(function (g) {
+    html += '<div class="nav-group-title">' + g.group + '</div>';
+    g.items.forEach(function (it) {
+      var cls = 'nav-item' + (it.active ? ' active' : '');
+      html += '<a href="' + it.href + '" class="' + cls + '">' +
+              '<span class="ico">' + it.icon + '</span><span>' + it.label + '</span></a>';
+    });
+  });
+  nav.innerHTML = html;
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  document.getElementById('btn-menu').addEventListener('click', function () {
+    sidebar.classList.toggle('open'); overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function () {
+    sidebar.classList.remove('open'); overlay.classList.remove('show');
+  });
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    if (!confirm('Keluar dari aplikasi?')) return;
+    api('auth.logout', {}).catch(function () {}).finally(function () {
+      sessionStorage.clear();
+      window.location.href = 'login.html';
+    });
+  });
+
+  /* ============================================================
+   * KONSENTRASI (untuk filter)
+   * ============================================================ */
+  var konsentrasiList = [];
+  api('settings.listKonsentrasi', {}).then(function (res) {
+    if (res.success && res.data && res.data.konsentrasi) {
+      konsentrasiList = res.data.konsentrasi;
+      var sel = document.getElementById('filter-konsentrasi');
+      if (sel) {
+        konsentrasiList.forEach(function (k) {
+          var o = document.createElement('option');
+          o.value = k.konsentrasi_id;
+          o.textContent = k.konsentrasi_id + ' — ' + k.nama_konsentrasi;
+          sel.appendChild(o);
+        });
+      }
+    }
+  });
+
+  function namaKonsentrasi(id) {
+    for (var i = 0; i < konsentrasiList.length; i++) {
+      if (konsentrasiList[i].konsentrasi_id === id) return konsentrasiList[i].nama_konsentrasi;
+    }
+    return id || '-';
+  }
+
+  /* ============================================================
+   * STATE
+   * ============================================================ */
+  var state = { q: '', status: '', konsentrasi: '', page: 1, per_page: 25 };
+  var mode = getQuery('mode') || 'list';
+  var detailId = getQuery('id');
+
+  /* ============================================================
+   * RENDER: LIST
+   * ============================================================ */
+  function renderList() {
+    document.getElementById('page-title').textContent = 'Daftar Pendaftar';
+    var c = document.getElementById('content');
+    c.innerHTML =
+      '<div class="panel">' +
+        '<div class="filters">' +
+          '<div class="field"><label>Cari (nama / NISN / no. pendaftaran)</label>' +
+            '<input type="text" id="filter-q" placeholder="Ketik untuk mencari..." value="' + esc(state.q) + '"></div>' +
+          '<div class="field"><label>Status</label>' +
+            '<select id="filter-status">' +
+              '<option value="">Semua</option>' +
+              '<option value="DRAFT">DRAFT</option>' +
+              '<option value="TERKIRIM">TERKIRIM</option>' +
+              '<option value="PERLU_PERBAIKAN">PERLU PERBAIKAN</option>' +
+              '<option value="TERVERIFIKASI">TERVERIFIKASI</option>' +
+              '<option value="DIBATALKAN">DIBATALKAN</option>' +
+            '</select></div>' +
+          '<div class="field"><label>Konsentrasi</label>' +
+            '<select id="filter-konsentrasi"><option value="">Semua</option></select></div>' +
+          '<div><button class="btn btn-primary" id="btn-terapkan">Terapkan</button></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="panel">' +
+        '<div class="table-wrap" id="table-wrap">' +
+          '<div class="empty">Memuat data...</div>' +
+        '</div>' +
+        '<div class="pagination" id="pagination"></div>' +
+      '</div>';
+
+    document.getElementById('filter-status').value = state.status;
+    document.getElementById('btn-terapkan').addEventListener('click', function () {
+      state.q = document.getElementById('filter-q').value.trim();
+      state.status = document.getElementById('filter-status').value;
+      state.konsentrasi = document.getElementById('filter-konsentrasi').value;
+      state.page = 1;
+      loadList();
+    });
+    document.getElementById('filter-q').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('btn-terapkan').click();
+    });
+
+    // isi konsentrasi (kalau sudah termuat)
+    var sel = document.getElementById('filter-konsentrasi');
+    if (konsentrasiList.length) {
+      konsentrasiList.forEach(function (k) {
+        var o = document.createElement('option');
+        o.value = k.konsentrasi_id;
+        o.textContent = k.konsentrasi_id + ' — ' + k.nama_konsentrasi;
+        sel.appendChild(o);
+      });
+      sel.value = state.konsentrasi;
+    }
+
+    loadList();
+  }
+
+  function loadList() {
+    showLoading('Memuat daftar pendaftar...');
+    api('registration.list', state)
+      .then(function (res) {
+        hideLoading();
+        if (!res.success) {
+          document.getElementById('table-wrap').innerHTML =
+            '<div class="empty">Gagal memuat: ' + esc(res.message || '') + '</div>';
+          return;
+        }
+        renderTable(res.data);
+      })
+      .catch(function (err) {
+        hideLoading();
+        document.getElementById('table-wrap').innerHTML =
+          '<div class="empty">Error: ' + esc(err.message) + '</div>';
+      });
+  }
+
+  function renderTable(data) {
+    var wrap = document.getElementById('table-wrap');
+    if (!data.items || !data.items.length) {
+      wrap.innerHTML = '<div class="empty">Tidak ada data pendaftar.</div>';
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+
+    var rows = '';
+    data.items.forEach(function (it) {
+      var st = String(it.status_pendaftaran || 'DRAFT').toUpperCase();
+      rows += '<tr>' +
+        '<td><strong>' + esc(it.nomor_pendaftaran || '-') + '</strong></td>' +
+        '<td>' + esc(it.nama_lengkap || '-') + '</td>' +
+        '<td>' + esc(it.nisn || '-') + '</td>' +
+        '<td>' + esc(namaKonsentrasi(it.konsentrasi_1)) + '</td>' +
+        '<td><span class="badge st-' + st + '">' + st.replace('_',' ') + '</span></td>' +
+        '<td>' + fmtTanggal(it.tanggal_daftar || it.submitted_at) + '</td>' +
+        '<td class="actions">' +
+          '<button class="btn btn-secondary btn-sm btn-detail" data-id="' + esc(it.registration_id) + '">Detail</button>' +
+        '</td>' +
+      '</tr>';
+    });
+
+    wrap.innerHTML =
+      '<table><thead><tr>' +
+        '<th>No. Pendaftaran</th><th>Nama</th><th>NISN</th>' +
+        '<th>Konsentrasi 1</th><th>Status</th><th>Tgl Daftar</th><th>Aksi</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>';
+
+    // bind detail
+    wrap.querySelectorAll('.btn-detail').forEach(function (b) {
+      b.addEventListener('click', function () {
+        window.location.href = 'admin.html?mode=detail&id=' + encodeURIComponent(b.getAttribute('data-id'));
+      });
+    });
+
+    // pagination
+    var p = document.getElementById('pagination');
+    p.innerHTML =
+      '<button id="pg-prev"' + (data.page <= 1 ? ' disabled' : '') + '>‹ Prev</button>' +
+      '<span>Halaman ' + data.page + ' dari ' + data.total_pages +
+        ' (' + data.total + ' data)</span>' +
+      '<button id="pg-next"' + (data.page >= data.total_pages ? ' disabled' : '') + '>Next ›</button>';
+    document.getElementById('pg-prev').addEventListener('click', function () {
+      if (state.page > 1) { state.page--; loadList(); }
+    });
+    document.getElementById('pg-next').addEventListener('click', function () {
+      if (state.page < data.total_pages) { state.page++; loadList(); }
+    });
+  }
+
+  /* ============================================================
+   * RENDER: DETAIL
+   * ============================================================ */
+  function renderDetail() {
+    document.getElementById('page-title').textContent = 'Detail Pendaftar';
+    document.getElementById('content').innerHTML =
+      '<div class="panel" id="detail-panel"><div class="empty">Memuat detail...</div></div>';
+
+    if (!detailId) {
+      document.getElementById('detail-panel').innerHTML =
+        '<div class="empty">Parameter id tidak ditemukan. <a href="admin.html">Kembali</a></div>';
+      return;
+    }
+
+    showLoading('Memuat detail...');
+    api('registration.get', { registration_id: detailId })
+      .then(function (res) {
+        hideLoading();
+        if (!res.success) {
+          document.getElementById('detail-panel').innerHTML =
+            '<div class="empty">Gagal: ' + esc(res.message) + ' <a href="admin.html">Kembali</a></div>';
+          return;
+        }
+        renderDetailContent(res.data);
+      })
+      .catch(function (err) {
+        hideLoading();
+        document.getElementById('detail-panel').innerHTML =
+          '<div class="empty">Error: ' + esc(err.message) + '</div>';
+      });
+  }
+
+  function fieldPair(lbl, val) {
+    return '<div class="field-pair"><div class="lbl">' + esc(lbl) + '</div>' +
+           '<div class="val">' + esc(val || '-') + '</div></div>';
+  }
+
+  function renderDetailContent(d) {
+    var p = d.pendaftaran;
+    var st = String(p.status_pendaftaran || 'DRAFT').toUpperCase();
+
+    var html =
+      '<div class="detail-head">' +
+        '<div>' +
+          '<h2>' + esc(p.nama_lengkap || '-') + '</h2>' +
+          '<div class="sub">' + esc(p.nomor_pendaftaran || '-') + ' • ' + esc(p.nisn || '-') + '</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;align-items:center;">' +
+          '<span class="badge st-' + st + '">' + st.replace('_',' ') + '</span>' +
+          '<a href="admin.html" class="btn btn-secondary btn-sm">← Kembali</a>' +
+        '</div>' +
+      '</div>';
+
+    // Identitas
+    html += '<div class="section-sub">Data Siswa</div><div class="detail-grid">' +
+      fieldPair('Nama Lengkap', p.nama_lengkap) +
+      fieldPair('NISN', p.nisn) +
+      fieldPair('NIK', p.nik) +
+      fieldPair('No. KK', p.nomor_kk) +
+      fieldPair('Tempat Lahir', p.tempat_lahir) +
+      fieldPair('Tanggal Lahir', p.tanggal_lahir ? fmtTanggal(p.tanggal_lahir) : '-') +
+      fieldPair('Jenis Kelamin', p.jenis_kelamin) +
+      fieldPair('Agama', p.agama) +
+      fieldPair('Kewarganegaraan', p.kewarganegaraan) +
+      fieldPair('Email', p.email) +
+      fieldPair('No. HP', p.nomor_hp) +
+      fieldPair('WA Siswa', p.nomor_wa_siswa) +
+      fieldPair('WA Orang Tua', p.nomor_wa_orangtua) +
+      fieldPair('WA Terverifikasi', p.wa_terverifikasi ? 'Ya' : 'Belum') +
+    '</div>';
+
+    // Alamat
+    html += '<div class="section-sub">Alamat</div><div class="detail-grid">' +
+      fieldPair('Alamat', p.alamat) +
+      fieldPair('RT/RW', (p.rt || '-') + ' / ' + (p.rw || '-')) +
+      fieldPair('Desa/Kelurahan', p.desa_kelurahan) +
+      fieldPair('Kecamatan', p.kecamatan) +
+      fieldPair('Kabupaten/Kota', p.kabupaten_kota) +
+      fieldPair('Provinsi', p.provinsi) +
+      fieldPair('Kode Pos', p.kode_pos) +
+    '</div>';
+
+    // Sekolah
+    html += '<div class="section-sub">Sekolah Asal</div><div class="detail-grid">' +
+      fieldPair('Sekolah', p.sekolah_asal) +
+      fieldPair('NPSN', p.npsn_asal) +
+      fieldPair('Tahun Lulus', p.tahun_lulus) +
+      fieldPair('No. Ijazah', p.nomor_ijazah) +
+    '</div>';
+
+    // Konsentrasi
+    html += '<div class="section-sub">Pilihan Konsentrasi</div><div class="detail-grid">' +
+      fieldPair('Pilihan 1', namaKonsentrasi(p.konsentrasi_1)) +
+      fieldPair('Pilihan 2', namaKonsentrasi(p.konsentrasi_2)) +
+    '</div>';
+
+    // Keluarga
+    html += '<div class="section-sub">Data Keluarga</div>';
+    if (d.keluarga && d.keluarga.length) {
+      html += '<div class="table-wrap"><table class="sub-table"><thead><tr>' +
+        '<th>Hubungan</th><th>Nama</th><th>NIK</th><th>Tahun Lahir</th>' +
+        '<th>Pendidikan</th><th>Pekerjaan</th><th>Penghasilan</th><th>No. HP</th>' +
+        '</tr></thead><tbody>';
+      d.keluarga.forEach(function (k) {
+        html += '<tr>' +
+          '<td>' + esc(k.hubungan) + '</td>' +
+          '<td>' + esc(k.nama) + '</td>' +
+          '<td>' + esc(k.nik) + '</td>' +
+          '<td>' + esc(k.tahun_lahir) + '</td>' +
+          '<td>' + esc(k.pendidikan) + '</td>' +
+          '<td>' + esc(k.pekerjaan) + '</td>' +
+          '<td>' + esc(k.penghasilan) + '</td>' +
+          '<td>' + esc(k.nomor_hp) + '</td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div>';
+    } else {
+      html += '<div class="empty" style="padding:16px;">Belum ada data keluarga.</div>';
+    }
+
+    // Dokumen
+    html += '<div class="section-sub">Dokumen</div>';
+    if (d.dokumen && d.dokumen.length) {
+      html += '<div class="doc-list">';
+      d.dokumen.forEach(function (doc) {
+        var url = doc.drive_file_id
+          ? 'https://drive.google.com/file/d/' + doc.drive_file_id + '/view'
+          : '';
+        html += '<div class="doc-item">' +
+          '<div class="doc-type">' + esc(doc.jenis_dokumen) + '</div>' +
+          '<div class="doc-meta">' + esc(doc.nama_file || '-') + '</div>' +
+          '<div class="doc-meta">Status: ' + esc(doc.status_verifikasi || '-') + '</div>' +
+          (url ? '<a href="' + url + '" target="_blank" rel="noopener">Lihat file →</a>' : '') +
+        '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="empty" style="padding:16px;">Belum ada dokumen.</div>';
+    }
+
+    // Aksi verifikasi (ADMIN saja)
+    if (role === 'ADMIN') {
+      html += '<div class="section-sub">Verifikasi</div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
+          '<label style="font-size:0.85rem;color:#6b7280;">Catatan (opsional):</label>' +
+          '<input type="text" id="catatan" placeholder="Catatan perbaikan / keterangan" ' +
+            'style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;" ' +
+            'value="' + esc(p.catatan_perbaikan || '') + '">' +
+          '<button class="btn btn-success btn-sm" id="btn-verif-valid">✓ Terverifikasi</button>' +
+          '<button class="btn btn-warn btn-sm" id="btn-verif-perbaikan">⚠ Perlu Perbaikan</button>' +
+          '<button class="btn btn-danger btn-sm" id="btn-verif-batal">✕ Batalkan</button>' +
+        '</div>';
+    }
+
+    document.getElementById('detail-panel').innerHTML = html;
+
+    if (role === 'ADMIN') {
+      bindVerif('TERVERIFIKASI', 'btn-verif-valid', 'Status diubah menjadi TERVERIFIKASI');
+      bindVerif('PERLU_PERBAIKAN', 'btn-verif-perbaikan', 'Status diubah menjadi PERLU PERBAIKAN');
+      bindVerif('DIBATALKAN', 'btn-verif-batal', 'Status diubah menjadi DIBATALKAN');
+    }
+  }
+
+  function bindVerif(status, btnId, okMsg) {
+    var btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      if (!confirm('Ubah status pendaftar ini menjadi ' + status + '?')) return;
+      var catatan = (document.getElementById('catatan') || {}).value || '';
+      showLoading('Menyimpan...');
+      api('registration.verify', {
+        registration_id: detailId,
+        status: status,
+        catatan: catatan
+      }).then(function (res) {
+        hideLoading();
+        if (res.success) {
+          toast(okMsg, 'success');
+          renderDetail();
+        } else {
+          toast('Gagal: ' + res.message, 'error');
+        }
+      }).catch(function (err) {
+        hideLoading();
+        toast('Error: ' + err.message, 'error');
+      });
+    });
+  }
+
+  /* ============================================================
+   * BOOT
+   * ============================================================ */
+  if (mode === 'detail') renderDetail();
+  else renderList();
+
+})();
+</script>
+</body>
+</html>
