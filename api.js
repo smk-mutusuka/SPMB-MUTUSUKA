@@ -8,6 +8,12 @@
  * - Apps Script redirect POST → CORS hilang → error.
  * - Solusi: kirim request via GET, payload di query string (base64).
  * - Apps Script TIDAK redirect GET → CORS aman.
+ *
+ * Ada dua jenis token:
+ * - Token PETUGAS → disimpan di sessionStorage 'spmb_token',
+ *   otomatis ditempel oleh Api.call() (useToken default true).
+ * - Token PENDAFTAR → dikirim manual via payload,
+ *   panggil dengan { useToken: false }.
  * ============================================================
  */
 
@@ -17,7 +23,6 @@ const Api = {
    * Encode string ke base64 URL-safe.
    */
   _b64encode: function (str) {
-    // encodeURIComponent dulu agar UTF-8 aman
     const utf8 = unescape(encodeURIComponent(str));
     return btoa(utf8)
       .replace(/\+/g, '-')
@@ -74,8 +79,9 @@ const Api = {
         } catch (e) {
           throw new Error('Respons server bukan JSON valid');
         }
-        // Auto-handle sesi kedaluwarsa
-        if (!json.success && json.code === 'SESSION_EXPIRED') {
+        // Auto-handle sesi petugas kedaluwarsa
+        // (hanya untuk request yang pakai token petugas)
+        if (useToken && !json.success && json.code === 'SESSION_EXPIRED') {
           Utils.clearSession();
           Utils.toast('Sesi telah berakhir. Silakan login ulang.', 'warning');
           setTimeout(function () { window.location.href = 'login.html'; }, 1500);
@@ -107,9 +113,12 @@ const Api = {
     }
   },
 
-    settings: {
+  settings: {
+    getPublic: function () {
+      return Api.call('settings.getPublic', {}, { useToken: false });
+    },
     get: function () {
-      return Api.call('settings.get', {}, { useToken: false });
+      return Api.call('settings.get', {});
     },
     update: function (settings) {
       return Api.call('settings.update', { settings: settings });
@@ -119,7 +128,15 @@ const Api = {
     }
   },
 
+  /**
+   * Registration API — dipakai oleh dua pihak:
+   * - PETUGAS  : list, get, verify, stats (pakai token sesi user)
+   * - PENDAFTAR: start, resume, saveDraft, uploadDokumen, submit, status
+   *              (pakai token pendaftar di payload, useToken: false)
+   */
   registration: {
+
+    /* --- Petugas --- */
     list: function (params) {
       return Api.call('registration.list', params || {});
     },
@@ -135,6 +152,36 @@ const Api = {
     },
     stats: function () {
       return Api.call('registration.stats', {});
+    },
+
+    /* --- Pendaftar --- */
+    start: function () {
+      return Api.call('registration.start', {}, { useToken: false });
+    },
+    resume: function (tokenPendaftar) {
+      return Api.call('registration.resume', { token: tokenPendaftar }, { useToken: false });
+    },
+    saveDraft: function (tokenPendaftar, step, data) {
+      return Api.call('registration.saveDraft', {
+        token: tokenPendaftar,
+        step: step,
+        data: data
+      }, { useToken: false });
+    },
+    uploadDokumen: function (tokenPendaftar, jenis_dokumen, base64, nama_file, mime_type) {
+      return Api.call('registration.uploadDokumen', {
+        token: tokenPendaftar,
+        jenis_dokumen: jenis_dokumen,
+        base64: base64,
+        nama_file: nama_file,
+        mime_type: mime_type
+      }, { useToken: false, timeout: 60000 });
+    },
+    submit: function (tokenPendaftar) {
+      return Api.call('registration.submit', { token: tokenPendaftar }, { useToken: false });
+    },
+    status: function (tokenPendaftar) {
+      return Api.call('registration.status', { token: tokenPendaftar }, { useToken: false });
     }
   },
 
