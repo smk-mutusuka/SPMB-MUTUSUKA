@@ -10,7 +10,7 @@ const APP_CONFIG = {
   /**
    * URL Web App Apps Script (hasil deploy).
    */
-  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec',
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzCS6BQwl6ff07YoOrtDlT0BgQC_uTPrn_tgsmql1i1VB6dQWqN6MlBgjtOqKGuBBZ0/exec',
 
   /** Versi aplikasi (untuk cache busting). */
   APP_VERSION: '1.0.0-tahap2',
