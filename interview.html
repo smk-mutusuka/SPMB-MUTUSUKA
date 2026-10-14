@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wawancara — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa; color: #1f2937; min-height: 100vh; }
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 260px; background: #1a5490; color: #fff;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    transition: transform 0.3s ease; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 12px; }
+  .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
+  .sidebar-header .brand { font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+  .nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+  .nav-group-title { padding: 12px 20px 6px; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.5); }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem;
+    transition: background 0.15s; border-left: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.08); }
+  .nav-item.active { background: rgba(255,255,255,0.12);
+    border-left-color: #d4a017; color: #fff; font-weight: 500; }
+  .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
+    padding: 12px 24px; display: flex; align-items: center;
+    justify-content: space-between; gap: 16px; }
+  .btn-menu { display: none; background: none; border: none;
+    font-size: 1.4rem; cursor: pointer; color: #1a5490; padding: 4px; }
+  .topbar-title { font-size: 1.05rem; font-weight: 600; color: #1a5490; }
+  .user-info { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
+  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #1a5490;
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.9rem; }
+  .user-meta { text-align: right; line-height: 1.3; }
+  .user-name { font-weight: 600; }
+  .user-role { font-size: 0.75rem; color: #6b7280; }
+  .btn-logout { background: #fee2e2; color: #d93025; border: none;
+    padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
+    font-weight: 500; cursor: pointer; }
+  .btn-logout:hover { background: #fecaca; }
+
+  .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+  .panel { background: #fff; padding: 20px; border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
+  .panel-head { display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+  .panel-head h3 { font-size: 1rem; color: #1a5490; }
+
+  .filters { display: grid; grid-template-columns: 2fr 1fr auto;
+    gap: 10px; align-items: end; }
+  .filters .field { display: flex; flex-direction: column; gap: 4px; }
+  .filters label { font-size: 0.75rem; color: #6b7280; font-weight: 500; }
+  .filters input, .filters select {
+    padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 0.9rem; font-family: inherit; background: #fff; }
+  .filters input:focus, .filters select:focus {
+    outline: none; border-color: #1a5490;
+    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
+
+  .btn { padding: 9px 16px; border: none; border-radius: 6px;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    font-family: inherit; transition: background 0.15s; }
+  .btn-primary { background: #1a5490; color: #fff; }
+  .btn-primary:hover { background: #143f6e; }
+  .btn-secondary { background: #e5e7eb; color: #1f2937; }
+  .btn-secondary:hover { background: #d1d5db; }
+  .btn-success { background: #d1fae5; color: #065f46; }
+  .btn-success:hover { background: #a7f3d0; }
+  .btn-warn { background: #fef3c7; color: #92400e; }
+  .btn-warn:hover { background: #fde68a; }
+  .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  th { background: #f9fafb; font-weight: 600; color: #374151;
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.3px; }
+  tbody tr:hover { background: #f9fafb; }
+  td.actions { white-space: nowrap; }
+
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 12px;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.3px; }
+  .bg-belum { background: #fee2e2; color: #991b1b; }
+  .bg-draft { background: #fef3c7; color: #92400e; }
+  .bg-terkirim { background: #d1fae5; color: #065f46; }
+  .bg-aktif { background: #d1fae5; color: #065f46; }
+  .bg-nonaktif { background: #e5e7eb; color: #374151; }
+
+  .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
+
+  /* Interview Form */
+  .form-head { background: #eff6ff; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 20px;
+    display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+  .form-head h3 { color: #1a5490; font-size: 1.1rem; margin-bottom: 4px; }
+  .form-head .sub { color: #6b7280; font-size: 0.85rem; }
+
+  .q-block { border: 1px solid #e5e7eb; border-radius: 10px;
+    padding: 16px; margin-bottom: 14px; background: #fff; }
+  .q-block .q-head { display: flex; gap: 10px; margin-bottom: 10px; }
+  .q-block .q-num { flex-shrink: 0; width: 28px; height: 28px;
+    background: #1a5490; color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 600; }
+  .q-block .q-text { flex: 1; }
+  .q-block .q-kategori { font-size: 0.72rem; color: #6b7280;
+    text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; }
+  .q-block .q-pertanyaan { font-size: 0.92rem; color: #1f2937; font-weight: 500; }
+  .q-block .q-wajib { color: #dc2626; font-size: 0.75rem; }
+
+  .q-block input[type=text], .q-block textarea, .q-block select {
+    width: 100%; padding: 9px 12px; border: 1px solid #d1d5db;
+    border-radius: 6px; font-size: 0.9rem; font-family: inherit; }
+  .q-block input:focus, .q-block textarea:focus, .q-block select:focus {
+    outline: none; border-color: #1a5490;
+    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
+  .q-block textarea { min-height: 80px; resize: vertical; }
+
+  .form-actions { display: flex; gap: 10px; justify-content: flex-end;
+    margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+
+  .result-btns { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .result-btns .rb { padding: 10px 18px; border: 2px solid #e5e7eb;
+    background: #fff; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: 0.9rem; font-weight: 500;
+    transition: all 0.15s; }
+  .result-btns .rb:hover { border-color: #93b3d4; }
+  .result-btns .rb.selected { border-color: #1a5490; background: #eff6ff; color: #1a5490; }
+  .result-btns .rb[data-r=DIREKOMENDASIKAN].selected { border-color: #059669; background: #ecfdf5; color: #065f46; }
+  .result-btns .rb[data-r=DIPERTIMBANGKAN].selected { border-color: #d97706; background: #fffbeb; color: #92400e; }
+  .result-btns .rb[data-r=TIDAK_DIREKOMENDASIKAN].selected { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+
+  .overlay { display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 99; }
+  .overlay.show { display: block; }
+
+  .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.3px; }
+  .role-ADMIN { background: #dbeafe; color: #1e40af; }
+  .role-WAWANCARA { background: #fef3c7; color: #92400e; }
+  .role-BENDAHARA { background: #d1fae5; color: #065f46; }
+  .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
+
+  @media (max-width: 900px) {
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+      transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .btn-menu { display: block; }
+    .user-meta { display: none; }
+    .filters { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+      <div class="brand">SPMB<br>SMK Muhammadiyah 1 Surakarta</div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-footer">Versi 1.0.0</div>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn-menu" id="btn-menu">☰</button>
+        <div class="topbar-title">Wawancara</div>
+      </div>
+      <div class="user-info">
+        <div class="user-meta">
+          <div class="user-name" id="user-name">-</div>
+          <div class="user-role" id="user-role">-</div>
+        </div>
+        <div class="user-avatar" id="user-avatar">?</div>
+        <button class="btn-logout" id="btn-logout">Keluar</button>
+      </div>
+    </header>
+
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  if (!Auth.guard(['ADMIN', 'WAWANCARA'])) return;
+
+  var user = Auth.getUser();
+  var role = user.role;
+  var displayName = user.display_name || user.username;
+
+  document.getElementById('user-name').textContent = displayName;
+  document.getElementById('user-role').innerHTML =
+    '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
+  document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
+
+  var menus = {
+    ADMIN: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Pendaftaran', items: [
+        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
+        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
+      ]},
+      { group: 'Proses', items: [
+        { icon: '🎤', label: 'Wawancara', href: 'interview.html', active: true },
+        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
+        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
+      ]},
+      { group: 'Sistem', items: [
+        { icon: '📊', label: 'Laporan', href: '#' },
+        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
+      ]}
+    ],
+    WAWANCARA: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Wawancara', items: [
+        { icon: '🔍', label: 'Cari Siswa', href: 'interview.html', active: true },
+        { icon: '📝', label: 'Riwayat Wawancara', href: 'interview.html' }
+      ]}
+    ]
+  };
+  var nav = document.getElementById('nav');
+  var menu = menus[role] || menus.WAWANCARA;
+  var html = '';
+  menu.forEach(function (g) {
+    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
+    g.items.forEach(function (it) {
+      var cls = 'nav-item' + (it.active ? ' active' : '');
+      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
+        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
+    });
+  });
+  nav.innerHTML = html;
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  document.getElementById('btn-menu').addEventListener('click', function () {
+    sidebar.classList.toggle('open'); overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function () {
+    sidebar.classList.remove('open'); overlay.classList.remove('show');
+  });
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    if (!confirm('Keluar dari aplikasi?')) return;
+    Auth.logout();
+  });
+
+  var state = {
+    filter: 'belum', q: '',
+    current: null, // { pendaftar, interview, pertanyaan, jawaban }
+    answers: {},
+    result: ''
+  };
+
+  function render() {
+    if (state.current) renderForm();
+    else renderList();
+  }
+
+  /* ============ LIST ============ */
+  function renderList() {
+    document.getElementById('content').innerHTML =
+      '<div class="panel">' +
+        '<div class="filters">' +
+          '<div class="field"><label>Cari (nama / NISN / no. pendaftaran)</label>' +
+            '<input type="text" id="f-q" value="' + Utils.escapeHtml(state.q) + '"></div>' +
+          '<div class="field"><label>Status</label>' +
+            '<select id="f-status">' +
+              '<option value="belum"' + (state.filter === 'belum' ? ' selected' : '') + '>Belum diwawancara</option>' +
+              '<option value="sudah"' + (state.filter === 'sudah' ? ' selected' : '') + '>Sudah diwawancara</option>' +
+              '<option value="semua"' + (state.filter === 'semua' ? ' selected' : '') + '>Semua</option>' +
+            '</select></div>' +
+          '<div><button class="btn btn-primary" id="btn-apply">Terapkan</button></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="panel"><div class="table-wrap" id="tbl"><div class="empty">Memuat...</div></div></div>';
+
+    document.getElementById('btn-apply').addEventListener('click', function () {
+      state.q = document.getElementById('f-q').value.trim();
+      state.filter = document.getElementById('f-status').value;
+      loadList();
+    });
+    document.getElementById('f-q').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('btn-apply').click();
+    });
+
+    loadList();
+  }
+
+  function loadList() {
+    Utils.showLoading('Memuat data...');
+    Api.interview.listCandidates({ q: state.q, filter: state.filter })
+      .then(function (res) {
+        Utils.hideLoading();
+        if (!res.success) {
+          document.getElementById('tbl').innerHTML =
+            '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
+          return;
+        }
+        var items = res.data.items || [];
+        if (!items.length) {
+          document.getElementById('tbl').innerHTML = '<div class="empty">Tidak ada data.</div>';
+          return;
+        }
+        var html = '<table><thead><tr>' +
+          '<th>No. Pendaftaran</th><th>Nama</th><th>NISN</th>' +
+          '<th>Konsentrasi 1</th><th>Status Wawancara</th><th>Aksi</th>' +
+          '</tr></thead><tbody>';
+        items.forEach(function (it) {
+          var st = it.interview_status || 'BELUM';
+          var cls = st === 'TERKIRIM' ? 'bg-terkirim' : (st === 'DRAFT' ? 'bg-draft' : 'bg-belum');
+          html += '<tr>' +
+            '<td><strong>' + Utils.escapeHtml(it.nomor_pendaftaran || '-') + '</strong></td>' +
+            '<td>' + Utils.escapeHtml(it.nama_lengkap || '-') + '</td>' +
+            '<td>' + Utils.escapeHtml(it.nisn || '-') + '</td>' +
+            '<td>' + Utils.escapeHtml(it.konsentrasi_1 || '-') + '</td>' +
+            '<td><span class="badge ' + cls + '">' + Utils.escapeHtml(st.replace('_',' ')) + '</span></td>' +
+            '<td class="actions">' +
+              '<button class="btn btn-primary btn-sm" data-go="' + Utils.escapeHtml(it.registration_id) + '">' +
+              (it.interview_id ? 'Lihat/Edit' : 'Mulai') + '</button>' +
+            '</td>' +
+          '</tr>';
+        });
+        html += '</tbody></table>';
+        document.getElementById('tbl').innerHTML = html;
+
+        document.querySelectorAll('[data-go]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            openInterview(b.getAttribute('data-go'));
+          });
+        });
+      })
+      .catch(function (err) {
+        Utils.hideLoading();
+        document.getElementById('tbl').innerHTML =
+          '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+      });
+  }
+
+  /* ============ FORM WAWANCARA ============ */
+  function openInterview(regId) {
+    Utils.showLoading('Memuat detail...');
+    Api.interview.get(regId)
+      .then(function (res) {
+        Utils.hideLoading();
+        if (!res.success) {
+          Utils.toast('Gagal: ' + res.message, 'error');
+          return;
+        }
+        state.current = res.data;
+        state.answers = {};
+        (res.data.jawaban || []).forEach(function (a) {
+          state.answers[a.question_id] = { answer_value: a.answer_value, score: a.score };
+        });
+        state.result = (res.data.interview && res.data.interview.result) || '';
+        renderForm();
+      })
+      .catch(function (err) {
+        Utils.hideLoading();
+        Utils.toast('Error: ' + err.message, 'error');
+      });
+  }
+
+  function renderForm() {
+    var d = state.current;
+    var p = d.pendaftar;
+    var iv = d.interview || {};
+
+    var html =
+      '<div class="panel">' +
+        '<div class="form-head">' +
+          '<div>' +
+            '<h3>' + Utils.escapeHtml(p.nama_lengkap) + '</h3>' +
+            '<div class="sub">' + Utils.escapeHtml(p.nomor_pendaftaran) + ' • ' +
+              Utils.escapeHtml(p.nisn) + ' • Konsentrasi: ' + Utils.escapeHtml(p.konsentrasi_1) +
+            '</div>' +
+            (p.sekolah_asal ? '<div class="sub">Sekolah asal: ' + Utils.escapeHtml(p.sekolah_asal) + '</div>' : '') +
+          '</div>' +
+          '<div>' +
+            '<button class="btn btn-secondary btn-sm" id="btn-back">← Kembali</button>' +
+          '</div>' +
+        '</div>';
+
+    // Result
+    html += '<div style="margin-bottom:16px;">' +
+      '<label style="display:block;font-size:0.8rem;color:#374151;font-weight:600;margin-bottom:8px;">' +
+      'Rekomendasi Wawancara</label>' +
+      '<div class="result-btns" id="result-btns">' +
+        '<button class="rb" data-r="DIREKOMENDASIKAN">✓ Direkomendasikan</button>' +
+        '<button class="rb" data-r="DIPERTIMBANGKAN">± Dipertimbangkan</button>' +
+        '<button class="rb" data-r="TIDAK_DIREKOMENDASIKAN">✗ Tidak Direkomendasikan</button>' +
+      '</div>' +
+    '</div>';
+
+    // Pertanyaan
+    if (!d.pertanyaan.length) {
+      html += '<div class="empty">Belum ada pertanyaan aktif. Tambahkan di Pengaturan.</div>';
+    } else {
+      d.pertanyaan.forEach(function (q, i) {
+        var ans = state.answers[q.question_id] || {};
+        html += '<div class="q-block" data-qid="' + Utils.escapeHtml(q.question_id) + '">' +
+          '<div class="q-head">' +
+            '<div class="q-num">' + (i + 1) + '</div>' +
+            '<div class="q-text">' +
+              (q.kategori ? '<div class="q-kategori">' + Utils.escapeHtml(q.kategori) + '</div>' : '') +
+              '<div class="q-pertanyaan">' + Utils.escapeHtml(q.pertanyaan) +
+                (q.wajib ? ' <span class="q-wajib">*</span>' : '') + '</div>' +
+            '</div>' +
+          '</div>';
+        html += inputFor(q, ans);
+        html += '</div>';
+      });
+    }
+
+    // Catatan umum
+    html += '<div class="q-block">' +
+      '<div class="q-head">' +
+        '<div class="q-num">📝</div>' +
+        '<div class="q-text"><div class="q-kategori">Catatan Umum</div>' +
+          '<div class="q-pertanyaan">Catatan tambahan dari pewawancara</div></div>' +
+      '</div>' +
+      '<textarea id="iv-notes" placeholder="Catatan...">' + Utils.escapeHtml(iv.notes || '') + '</textarea>' +
+    '</div>';
+
+    // Actions
+    html += '<div class="form-actions">' +
+      '<button class="btn btn-secondary" id="btn-save-draft">Simpan Draft</button>' +
+      '<button class="btn btn-primary" id="btn-submit-iv">Kirim Wawancara ✓</button>' +
+    '</div>';
+
+    html += '</div>';
+
+    document.getElementById('content').innerHTML = html;
+
+    // Set result button aktif
+    document.querySelectorAll('#result-btns .rb').forEach(function (b) {
+      if (state.result && b.getAttribute('data-r') === state.result) b.classList.add('selected');
+      b.addEventListener('click', function () {
+        document.querySelectorAll('#result-btns .rb').forEach(function (x) { x.classList.remove('selected'); });
+        b.classList.add('selected');
+        state.result = b.getAttribute('data-r');
+      });
+    });
+
+    // Bind inputs
+    document.querySelectorAll('[data-qid]').forEach(function (block) {
+      var qid = block.getAttribute('data-qid');
+      var input = block.querySelector('[data-ans]');
+      if (input) {
+        input.addEventListener('input', function () {
+          if (!state.answers[qid]) state.answers[qid] = {};
+          state.answers[qid].answer_value = input.value;
+        });
+        input.addEventListener('change', function () {
+          if (!state.answers[qid]) state.answers[qid] = {};
+          state.answers[qid].answer_value = input.value;
+        });
+      }
+    });
+
+    document.getElementById('btn-back').addEventListener('click', function () {
+      state.current = null;
+      renderList();
+    });
+    document.getElementById('btn-save-draft').addEventListener('click', function () { submitInterview(false); });
+    document.getElementById('btn-submit-iv').addEventListener('click', function () { submitInterview(true); });
+  }
+
+  function inputFor(q, ans) {
+    var v = (ans && ans.answer_value) || '';
+    if (q.jenis_jawaban === 'TEKS_PANJANG') {
+      return '<textarea data-ans placeholder="Jawaban...">' + Utils.escapeHtml(v) + '</textarea>';
+    }
+    if (q.jenis_jawaban === 'PILIHAN_TUNGGAL') {
+      var opts = String(q.opsi_jawaban || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+      var h = '<select data-ans><option value="">-- Pilih --</option>';
+      opts.forEach(function (o) {
+        h += '<option value="' + Utils.escapeHtml(o) + '"' + (v === o ? ' selected' : '') + '>' + Utils.escapeHtml(o) + '</option>';
+      });
+      h += '</select>';
+      return h;
+    }
+    if (q.jenis_jawaban === 'YA_TIDAK') {
+      return '<select data-ans>' +
+        '<option value="">-- Pilih --</option>' +
+        '<option value="YA"' + (v === 'YA' ? ' selected' : '') + '>Ya</option>' +
+        '<option value="TIDAK"' + (v === 'TIDAK' ? ' selected' : '') + '>Tidak</option>' +
+        '</select>';
+    }
+    if (q.jenis_jawaban === 'SKOR') {
+      return '<input type="number" data-ans min="0" max="100" placeholder="Skor 0-100" value="' + Utils.escapeHtml(v) + '">';
+    }
+    return '<input type="text" data-ans placeholder="Jawaban..." value="' + Utils.escapeHtml(v) + '">';
+  }
+
+  function submitInterview(final) {
+    var d = state.current;
+    var jawaban = d.pertanyaan.map(function (q) {
+      var a = state.answers[q.question_id] || {};
+      return {
+        question_id: q.question_id,
+        answer_value: a.answer_value || '',
+        score: q.jenis_jawaban === 'SKOR' ? (Number(a.answer_value) || 0) : 0
+      };
+    });
+
+    if (final) {
+      // Validasi wajib
+      var missing = [];
+      d.pertanyaan.forEach(function (q) {
+        if (q.wajib) {
+          var a = state.answers[q.question_id];
+          if (!a || !a.answer_value) missing.push(q.question_id);
+        }
+      });
+      if (missing.length) {
+        Utils.toast('Lengkapi pertanyaan wajib: ' + missing.join(', '), 'error');
+        return;
+      }
+      if (!state.result) {
+        Utils.toast('Pilih rekomendasi wawancara', 'error');
+        return;
+      }
+    }
+
+    Utils.showLoading(final ? 'Mengirim...' : 'Menyimpan draft...');
+    Api.interview.save({
+      registration_id: d.pendaftar.registration_id,
+      jawaban: jawaban,
+      submit: final,
+      result: state.result,
+      notes: (document.getElementById('iv-notes') || {}).value || ''
+    }).then(function (res) {
+      Utils.hideLoading();
+      if (res.success) {
+        Utils.toast(final ? 'Wawancara dikirim' : 'Draft tersimpan', 'success');
+        if (final) {
+          state.current = null;
+          renderList();
+        }
+      } else {
+        Utils.toast('Gagal: ' + res.message, 'error');
+      }
+    }).catch(function (err) {
+      Utils.hideLoading();
+      Utils.toast('Error: ' + err.message, 'error');
+    });
+  }
+
+  render();
+
+})();
+</script>
+</body>
+</html>
