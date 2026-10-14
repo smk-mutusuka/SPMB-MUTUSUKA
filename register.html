@@ -256,6 +256,34 @@
 
   var TOKEN_KEY = 'spmb_reg_token';
 
+  /* ============================================================
+   * OPSI DROPDOWN
+   * ============================================================ */
+  var OPSI_PEKERJAAN = [
+    ['', '-- Pilih Pekerjaan --'],
+    ['TIDAK_BEKERJA', 'Tidak Bekerja'],
+    ['BURUH', 'Buruh'],
+    ['PEDAGANG', 'Pedagang'],
+    ['PETANI', 'Petani'],
+    ['PEGAWAI_SWASTA', 'Pegawai Swasta'],
+    ['ASN', 'ASN'],
+    ['TNI_POLRI', 'TNI/Polri'],
+    ['JASA_PROFESIONAL', 'Jasa Profesional']
+  ];
+  var OPSI_PENGHASILAN = [
+    ['', '-- Pilih Penghasilan --'],
+    ['0-750000', '0 - 750.000'],
+    ['750000-1500000', '750.000 - 1.500.000'],
+    ['1500000-2500000', '1.500.000 - 2.500.000'],
+    ['>2500000', '> 2.500.000']
+  ];
+  var OPSI_STATUS_ORTU = [
+    ['LENGKAP', 'Kedua orang tua lengkap'],
+    ['YATIM_AYAH', 'Yatim (ayah meninggal)'],
+    ['YATIM_IBU', 'Yatim (ibu meninggal)'],
+    ['YATIM_PIATU', 'Yatim piatu (keduanya meninggal)']
+  ];
+
   var state = {
     step: 1,
     totalSteps: 6,
@@ -263,7 +291,7 @@
     registration_id: null,
     konsentrasi: [],
     data: {},
-    keluarga: { AYAH: {}, IBU: {}, WALI: {} },
+    keluarga: {},
     dokumen: {},
     submitted: null,
     tahun_ajaran: ''
@@ -309,7 +337,6 @@
         Utils.hideLoading();
         if (!res.success) {
           if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
-            // Sesi berakhir — beri pilihan ke user, jangan langsung buang
             var lanjutBaru = confirm(
               'Sesi pendaftaran Anda sudah berakhir (lebih dari 4 jam tidak ada aktivitas).\n\n' +
               'Data yang belum terkirim akan hilang. Mulai pendaftaran baru?'
@@ -329,10 +356,8 @@
         state.registration_id = res.data.registration_id;
         state.data = res.data.data || {};
         state.tahun_ajaran = state.data.tahun_ajaran || '';
+        state.keluarga = res.data.keluarga || {};
 
-        (res.data.keluarga || []).forEach(function (k) {
-          if (k.hubungan) state.keluarga[k.hubungan] = k;
-        });
         (res.data.dokumen || []).forEach(function (d) {
           state.dokumen[String(d.jenis_dokumen).toUpperCase()] = true;
         });
@@ -448,7 +473,6 @@
         field('nama_lengkap', 'Nama Lengkap', 'text', d.nama_lengkap, true, 'full') +
         field('nisn', 'NISN', 'text', d.nisn, true) +
         field('nik', 'NIK Siswa', 'text', d.nik) +
-        field('nomor_kk', 'Nomor Kartu Keluarga', 'text', d.nomor_kk) +
         field('tempat_lahir', 'Tempat Lahir', 'text', d.tempat_lahir, true) +
         field('tanggal_lahir', 'Tanggal Lahir', 'date', toDateInput(d.tanggal_lahir), true) +
         select('jenis_kelamin', 'Jenis Kelamin', [['','-- Pilih --'],['L','Laki-laki'],['P','Perempuan']], d.jenis_kelamin, true) +
@@ -461,7 +485,7 @@
   function bindSiswa() {
     bindInputs();
     document.getElementById('btn-next').addEventListener('click', function () {
-      var data = collectFields(['nama_lengkap','nisn','nik','nomor_kk','tempat_lahir','tanggal_lahir','jenis_kelamin','agama','kewarganegaraan']);
+      var data = collectFields(['nama_lengkap','nisn','nik','tempat_lahir','tanggal_lahir','jenis_kelamin','agama','kewarganegaraan']);
       if (!validateRequired({ nama_lengkap: 'Nama lengkap', nisn: 'NISN', tempat_lahir: 'Tempat lahir', tanggal_lahir: 'Tanggal lahir', jenis_kelamin: 'Jenis kelamin', agama: 'Agama' }, data)) return;
       goNext('siswa', data);
     });
@@ -483,9 +507,7 @@
         field('kabupaten_kota', 'Kabupaten/Kota', 'text', d.kabupaten_kota, true) +
         field('provinsi', 'Provinsi', 'text', d.provinsi || 'Jawa Tengah', true) +
         field('kode_pos', 'Kode Pos', 'text', d.kode_pos) +
-        field('nomor_hp', 'No. HP Siswa', 'tel', d.nomor_hp) +
-        field('nomor_wa_siswa', 'No. WA Siswa', 'tel', d.nomor_wa_siswa, true, '', 'Contoh: 081234567890') +
-        field('nomor_wa_orangtua', 'No. WA Orang Tua', 'tel', d.nomor_wa_orangtua) +
+        field('nomor_hp', 'No. HP Siswa', 'tel', d.nomor_hp, true, '', 'Contoh: 081234567890') +
         field('email', 'Email', 'email', d.email) +
       '</div>' +
       navButtons(2);
@@ -495,10 +517,10 @@
     bindInputs();
     document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
     document.getElementById('btn-next').addEventListener('click', function () {
-      var data = collectFields(['alamat','rt','rw','desa_kelurahan','kecamatan','kabupaten_kota','provinsi','kode_pos','nomor_hp','nomor_wa_siswa','nomor_wa_orangtua','email']);
-      if (!validateRequired({ alamat: 'Alamat', desa_kelurahan: 'Desa/Kelurahan', kecamatan: 'Kecamatan', kabupaten_kota: 'Kabupaten/Kota', provinsi: 'Provinsi', nomor_wa_siswa: 'No. WA Siswa' }, data)) return;
-      if (data.nomor_wa_siswa && !Utils.isValidWa(data.nomor_wa_siswa)) {
-        Utils.toast('Nomor WA Siswa tidak valid', 'error'); return;
+      var data = collectFields(['alamat','rt','rw','desa_kelurahan','kecamatan','kabupaten_kota','provinsi','kode_pos','nomor_hp','email']);
+      if (!validateRequired({ alamat: 'Alamat', desa_kelurahan: 'Desa/Kelurahan', kecamatan: 'Kecamatan', kabupaten_kota: 'Kabupaten/Kota', provinsi: 'Provinsi', nomor_hp: 'No. HP Siswa' }, data)) return;
+      if (data.nomor_hp && !Utils.isValidWa(data.nomor_hp)) {
+        Utils.toast('Nomor HP tidak valid', 'error'); return;
       }
       goNext('alamat', data);
     });
@@ -583,61 +605,59 @@
   }
 
   /* ============================================================
-   * STEP 5: KELUARGA
+   * STEP 5: KELUARGA (KELUARGA_V2 — datar, 1 blok)
    * ============================================================ */
   function stepKeluarga() {
+    var k = state.keluarga || {};
     return '<h2 class="step-title">Data Keluarga</h2>' +
-      '<p class="step-desc">Data ayah, ibu, dan wali (wali opsional).</p>' +
-      blokKeluarga('AYAH', 'Ayah', true) +
-      blokKeluarga('IBU', 'Ibu', true) +
-      blokKeluarga('WALI', 'Wali', false) +
-      navButtons(5);
-  }
-
-  function blokKeluarga(hub, label, required) {
-    var k = state.keluarga[hub] || {};
-    return '<div class="keluarga-block" data-hub="' + hub + '">' +
-      '<h4>' + Utils.escapeHtml(label) + ' <span class="tag">' + (required ? 'Wajib' : 'Opsional') + '</span></h4>' +
-      '<div class="grid">' +
-        field(hub + '_nama', 'Nama', 'text', k.nama, required) +
-        field(hub + '_nik', 'NIK', 'text', k.nik) +
-        field(hub + '_tahun_lahir', 'Tahun Lahir', 'text', k.tahun_lahir) +
-        field(hub + '_pendidikan', 'Pendidikan', 'text', k.pendidikan) +
-        field(hub + '_pekerjaan', 'Pekerjaan', 'text', k.pekerjaan) +
-        field(hub + '_penghasilan', 'Penghasilan', 'text', k.penghasilan) +
-        field(hub + '_nomor_hp', 'No. HP', 'tel', k.nomor_hp) +
-        field(hub + '_alamat', 'Alamat', 'text', k.alamat, false, 'full') +
+      '<p class="step-desc">Isi data orang tua / wali.</p>' +
+      '<div class="keluarga-block">' +
+        '<h4>Data Orang Tua <span class="tag">Wajib</span></h4>' +
+        '<div class="grid">' +
+          field('nama_ayah', 'Nama Ayah', 'text', k.nama_ayah, true) +
+          field('nama_ibu', 'Nama Ibu', 'text', k.nama_ibu, true) +
+          field('nomor_kk', 'Nomor Kartu Keluarga', 'text', k.nomor_kk, true) +
+          field('nomor_hp_ortu', 'No. HP Orang Tua', 'tel', k.nomor_hp_ortu, true, '', 'Contoh: 081234567890') +
+          select('pekerjaan_ayah', 'Pekerjaan Ayah', OPSI_PEKERJAAN, k.pekerjaan_ayah, true) +
+          select('pekerjaan_ibu', 'Pekerjaan Ibu', OPSI_PEKERJAAN, k.pekerjaan_ibu, true) +
+          select('penghasilan_ayah', 'Penghasilan Ayah', OPSI_PENGHASILAN, k.penghasilan_ayah, true) +
+          select('penghasilan_ibu', 'Penghasilan Ibu', OPSI_PENGHASILAN, k.penghasilan_ibu, true) +
+          select('status_yatim', 'Status Orang Tua', OPSI_STATUS_ORTU, k.status_yatim || 'LENGKAP', true, 'full') +
+          field('alamat_ortu', 'Alamat Orang Tua (isi jika beda dengan siswa)', 'text', k.alamat_ortu, false, 'full') +
+        '</div>' +
       '</div>' +
-    '</div>';
+      navButtons(5);
   }
 
   function bindKeluarga() {
     bindInputs();
     document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
     document.getElementById('btn-next').addEventListener('click', function () {
-      var arr = [];
-      var err = '';
-      ['AYAH','IBU','WALI'].forEach(function (hub) {
-        var k = {
-          hubungan: hub,
-          nama: val(hub + '_nama'),
-          nik: val(hub + '_nik'),
-          tahun_lahir: val(hub + '_tahun_lahir'),
-          pendidikan: val(hub + '_pendidikan'),
-          pekerjaan: val(hub + '_pekerjaan'),
-          penghasilan: val(hub + '_penghasilan'),
-          nomor_hp: val(hub + '_nomor_hp'),
-          alamat: val(hub + '_alamat')
-        };
-        if (hub === 'AYAH' && !k.nama) { err = 'Nama ayah wajib diisi'; return; }
-        if (hub === 'IBU' && !k.nama) { err = 'Nama ibu wajib diisi'; return; }
-        if (hub === 'WALI' && !k.nama) return;
-        arr.push(k);
-        state.keluarga[hub] = k;
-      });
-      if (err) { Utils.toast(err, 'error'); return; }
-      if (arr.length < 2) return;
-      goNext('keluarga', { keluarga: arr });
+      var k = {
+        nama_ayah: val('nama_ayah'),
+        nama_ibu: val('nama_ibu'),
+        nomor_kk: val('nomor_kk'),
+        nomor_hp_ortu: val('nomor_hp_ortu'),
+        pekerjaan_ayah: val('pekerjaan_ayah'),
+        pekerjaan_ibu: val('pekerjaan_ibu'),
+        penghasilan_ayah: val('penghasilan_ayah'),
+        penghasilan_ibu: val('penghasilan_ibu'),
+        status_yatim: val('status_yatim') || 'LENGKAP',
+        alamat_ortu: val('alamat_ortu')
+      };
+      if (!k.nama_ayah) { Utils.toast('Nama ayah wajib diisi', 'error'); return; }
+      if (!k.nama_ibu) { Utils.toast('Nama ibu wajib diisi', 'error'); return; }
+      if (!k.nomor_kk) { Utils.toast('Nomor KK wajib diisi', 'error'); return; }
+      if (!k.nomor_hp_ortu) { Utils.toast('No. HP orang tua wajib diisi', 'error'); return; }
+      if (!k.pekerjaan_ayah) { Utils.toast('Pekerjaan ayah wajib dipilih', 'error'); return; }
+      if (!k.pekerjaan_ibu) { Utils.toast('Pekerjaan ibu wajib dipilih', 'error'); return; }
+      if (!k.penghasilan_ayah) { Utils.toast('Penghasilan ayah wajib dipilih', 'error'); return; }
+      if (!k.penghasilan_ibu) { Utils.toast('Penghasilan ibu wajib dipilih', 'error'); return; }
+      if (k.nomor_hp_ortu && !Utils.isValidWa(k.nomor_hp_ortu)) {
+        Utils.toast('No. HP orang tua tidak valid', 'error'); return;
+      }
+      state.keluarga = k;
+      goNext('keluarga', { keluarga: k });
     });
   }
 
@@ -646,7 +666,7 @@
    * ============================================================ */
   function stepDokumen() {
     return '<h2 class="step-title">Unggah Dokumen</h2>' +
-      '<p class="step-desc">Format JPG/PNG. Foto akan dikompres otomatis. Maks 2 MB.</p>' +
+      '<p class="step-desc">Format JPG/PNG. Foto dikompres otomatis (kualitas cetak 3×4 cm tetap jelas).</p>' +
       '<div class="upload-grid">' +
         uploadBox('FOTO', 'Foto Siswa', 'Pas foto 3x4, latar merah/biru') +
         uploadBox('KK', 'Kartu Keluarga', 'Scan/foto KK yang jelas') +
@@ -727,6 +747,11 @@
     });
   }
 
+  /**
+   * Kompres gambar: max 700 px sisi panjang, kualitas 0.82.
+   * Cukup untuk cetak 3×4 cm (bahkan 3×4 di 300dpi hanya butuh ~350×450).
+   * Target hasil: 60–100 KB base64.
+   */
   function compressFile(file, cb) {
     if (file.type === 'application/pdf') {
       var r = new FileReader();
@@ -739,17 +764,17 @@
     var url = URL.createObjectURL(file);
     img.onload = function () {
       URL.revokeObjectURL(url);
-      var MAX = 1000;
+      var MAX = 700; // sisi panjang max 700 px — cetak 3x4 tetap tajam
       var w = img.width, h = img.height;
-      if (w > h && w > MAX) { h = h * MAX / w; w = MAX; }
-      else if (h > MAX) { w = w * MAX / h; h = MAX; }
+      if (w > h && w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      else if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
       var canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       var ctx = canvas.getContext('2d');
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
       var b64 = dataUrl.split(',')[1];
       var newName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
       cb(b64, 'image/jpeg', newName);
@@ -830,8 +855,8 @@
     '</div>';
   }
 
-  function select(name, label, opts, value, req) {
-    var h = '<div class="field" data-name="' + name + '">' +
+  function select(name, label, opts, value, req, cls) {
+    var h = '<div class="field ' + (cls || '') + '" data-name="' + name + '">' +
       '<label>' + Utils.escapeHtml(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
       '<select data-field="' + name + '">';
     opts.forEach(function (o) {
@@ -850,6 +875,10 @@
   function bindInputs() {
     document.querySelectorAll('input[data-field], select[data-field]').forEach(function (el) {
       el.addEventListener('input', function () {
+        var f = el.closest('.field');
+        if (f) f.classList.remove('invalid');
+      });
+      el.addEventListener('change', function () {
         var f = el.closest('.field');
         if (f) f.classList.remove('invalid');
       });
