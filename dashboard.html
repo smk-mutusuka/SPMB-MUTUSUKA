@@ -142,19 +142,50 @@
 
   .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
   }
   .stat-card {
     background: #fff;
-    padding: 20px;
+    padding: 18px 20px;
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     border-left: 4px solid #1a5490;
+    transition: transform 0.15s, box-shadow 0.15s;
   }
-  .stat-label { font-size: 0.8rem; color: #6b7280; margin-bottom: 6px; }
-  .stat-value { font-size: 1.6rem; font-weight: 700; color: #1a5490; }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .stat-label { font-size: 0.78rem; color: #6b7280; margin-bottom: 6px; }
+  .stat-value { font-size: 1.6rem; font-weight: 700; color: #1a5490; line-height: 1; }
+
+  .stat-card.sc-draft { border-left-color: #6b7280; }
+  .stat-card.sc-draft .stat-value { color: #374151; }
+  .stat-card.sc-terkirim { border-left-color: #1e40af; }
+  .stat-card.sc-terkirim .stat-value { color: #1e40af; }
+  .stat-card.sc-verif { border-left-color: #059669; }
+  .stat-card.sc-verif .stat-value { color: #059669; }
+  .stat-card.sc-perbaikan { border-left-color: #d97706; }
+  .stat-card.sc-perbaikan .stat-value { color: #d97706; }
+  .stat-card.sc-batal { border-left-color: #dc2626; }
+  .stat-card.sc-batal .stat-value { color: #dc2626; }
+
+  .stat-card.loading .stat-value {
+    color: transparent;
+    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+    border-radius: 4px;
+    display: inline-block;
+    min-width: 40px;
+    height: 1.6rem;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
 
   .section-title {
     font-size: 1rem;
@@ -173,6 +204,29 @@
     margin-bottom: 20px;
   }
   .panel p { color: #6b7280; font-size: 0.9rem; line-height: 1.6; }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .qa-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #1f2937;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .qa-btn:hover { background: #eff6ff; border-color: #1a5490; color: #1a5490; }
+  .qa-btn .qa-ico { font-size: 1.2rem; }
 
   .badge-role {
     display: inline-block;
@@ -198,6 +252,24 @@
   }
   .overlay.show { display: block; }
 
+  /* Toast */
+  #toast-container {
+    position: fixed; top: 20px; right: 20px; z-index: 1000;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .toast {
+    background: #1f2937; color: #fff;
+    padding: 12px 18px; border-radius: 8px;
+    font-size: 0.88rem; min-width: 220px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0; transform: translateY(-10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast-success { background: #065f46; }
+  .toast-error { background: #991b1b; }
+  .toast-warning { background: #92400e; }
+
   /* ================= RESPONSIVE ================= */
   @media (max-width: 900px) {
     .sidebar {
@@ -217,6 +289,7 @@
     .content { padding: 16px; }
     .welcome-card { padding: 18px 20px; }
     .welcome-card h2 { font-size: 1.1rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -267,24 +340,40 @@
         <p id="welcome-sub">Anda login sebagai petugas SPMB.</p>
       </div>
 
-      <!-- Statistik (placeholder, akan diisi setelah modul pendaftaran) -->
-      <h3 class="section-title">Ringkasan</h3>
+      <!-- Statistik -->
+      <h3 class="section-title">Ringkasan Pendaftaran</h3>
       <div class="stats">
-        <div class="stat-card">
+        <div class="stat-card loading" id="card-total">
           <div class="stat-label">Total Pendaftar</div>
-          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-value" id="stat-total">—</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card sc-draft loading" id="card-draft">
+          <div class="stat-label">Draft</div>
+          <div class="stat-value" id="stat-draft">—</div>
+        </div>
+        <div class="stat-card sc-terkirim loading" id="card-terkirim">
           <div class="stat-label">Formulir Terkirim</div>
-          <div class="stat-value" id="stat-terkirim">0</div>
+          <div class="stat-value" id="stat-terkirim">—</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card sc-verif loading" id="card-terverifikasi">
           <div class="stat-label">Terverifikasi</div>
-          <div class="stat-value" id="stat-terverifikasi">0</div>
+          <div class="stat-value" id="stat-terverifikasi">—</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card sc-perbaikan loading" id="card-perbaikan">
           <div class="stat-label">Perlu Perbaikan</div>
-          <div class="stat-value" id="stat-perbaikan">0</div>
+          <div class="stat-value" id="stat-perbaikan">—</div>
+        </div>
+        <div class="stat-card sc-batal loading" id="card-dibatalkan">
+          <div class="stat-label">Dibatalkan</div>
+          <div class="stat-value" id="stat-dibatalkan">—</div>
+        </div>
+      </div>
+
+      <!-- Aksi Cepat -->
+      <h3 class="section-title">Aksi Cepat</h3>
+      <div class="panel">
+        <div class="quick-actions" id="quick-actions">
+          <!-- Diisi via JS sesuai role -->
         </div>
       </div>
 
@@ -296,48 +385,85 @@
           menampilkan fitur sesuai <strong>role</strong> Anda.
         </p>
         <p style="margin-top:10px;">
-          Modul-modul (Pendaftar, Wawancara, Pembayaran, Seleksi) akan muncul di sini
-          secara bertahap. Statistik di atas akan terisi otomatis setelah modul pendaftaran aktif.
+          Statistik di atas diambil langsung dari database pendaftaran dan
+          diperbarui setiap kali halaman ini dimuat.
         </p>
       </div>
     </div>
   </main>
 </div>
 
+<div id="toast-container"></div>
+
 <script>
 (function () {
-  // ================= SESSION =================
+  'use strict';
+
+  /* ============================================================
+   * KONFIG & SESSION
+   * ============================================================ */
+  var APPS_URL = 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec';
   var TOKEN_KEY = 'spmb_token';
   var USER_KEY = 'spmb_user';
   var EXP_KEY = 'spmb_expires_at';
 
-  function getSession(k) {
-    try { return JSON.parse(sessionStorage.getItem(k)); } catch (e) { return null; }
-  }
-  function getToken() { return sessionStorage.getItem(TOKEN_KEY); }
-
-  // Cek login
-  var token = getToken();
-  var user = getSession(USER_KEY);
+  var token = sessionStorage.getItem(TOKEN_KEY);
+  var user = null;
+  try { user = JSON.parse(sessionStorage.getItem(USER_KEY)); } catch (e) {}
 
   if (!token || !user) {
     window.location.href = 'login.html';
     return;
   }
 
-  // ================= ISI UI =================
   var displayName = user.display_name || user.username || 'Petugas';
   var role = user.role || '-';
-  var initial = displayName.charAt(0).toUpperCase();
 
-  document.getElementById('user-name').textContent = displayName;
-  document.getElementById('user-role').innerHTML =
-    '<span class="badge-role role-' + role + '">' + role + '</span>';
-  document.getElementById('user-avatar').textContent = initial;
-  document.getElementById('welcome-title').textContent =
-    'Selamat datang, ' + displayName;
-  document.getElementById('welcome-sub').textContent =
-    'Anda login sebagai ' + roleLabel(role) + ' SPMB SMK Muhammadiyah 1 Surakarta.';
+  /* ============================================================
+   * UTIL
+   * ============================================================ */
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function toast(msg, type) {
+    var c = document.getElementById('toast-container');
+    var el = document.createElement('div');
+    el.className = 'toast toast-' + (type || 'info');
+    el.textContent = msg;
+    c.appendChild(el);
+    setTimeout(function () { el.classList.add('show'); }, 10);
+    setTimeout(function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    }, 3200);
+  }
+
+  function b64(str) {
+    var u = unescape(encodeURIComponent(str));
+    return btoa(u).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  function apiCall(action, payload) {
+    var body = { action: action, token: token, payload: payload || {} };
+    var url = APPS_URL + '?data=' + encodeURIComponent(b64(JSON.stringify(body)));
+    return fetch(url, { method: 'GET', redirect: 'follow' })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var j;
+        try { j = JSON.parse(t); } catch (e) { throw new Error('Respons server tidak valid'); }
+        if (!j.success && j.code === 'SESSION_EXPIRED') {
+          sessionStorage.clear();
+          alert('Sesi berakhir. Silakan login ulang.');
+          window.location.href = 'login.html';
+          throw new Error('SESSION_EXPIRED');
+        }
+        return j;
+      });
+  }
 
   function roleLabel(r) {
     return {
@@ -348,7 +474,20 @@
     }[r] || r;
   }
 
-  // ================= MENU =================
+  /* ============================================================
+   * ISI UI
+   * ============================================================ */
+  document.getElementById('user-name').textContent = displayName;
+  document.getElementById('user-role').innerHTML =
+    '<span class="badge-role role-' + esc(role) + '">' + esc(role) + '</span>';
+  document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
+  document.getElementById('welcome-title').textContent = 'Selamat datang, ' + displayName;
+  document.getElementById('welcome-sub').textContent =
+    'Anda login sebagai ' + roleLabel(role) + ' SPMB SMK Muhammadiyah 1 Surakarta.';
+
+  /* ============================================================
+   * MENU
+   * ============================================================ */
   var menus = {
     ADMIN: [
       { group: 'Utama', items: [
@@ -356,7 +495,7 @@
       ]},
       { group: 'Pendaftaran', items: [
         { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html#verifikasi' }
+        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
       ]},
       { group: 'Proses', items: [
         { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
@@ -374,7 +513,7 @@
       ]},
       { group: 'Wawancara', items: [
         { icon: '🔍', label: 'Cari Siswa', href: 'interview.html' },
-        { icon: '📝', label: 'Riwayat Wawancara', href: 'interview.html#riwayat' }
+        { icon: '📝', label: 'Riwayat Wawancara', href: 'interview.html' }
       ]}
     ],
     BENDAHARA: [
@@ -383,7 +522,7 @@
       ]},
       { group: 'Pembayaran', items: [
         { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' },
-        { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html#riwayat' }
+        { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html' }
       ]}
     ],
     SELEKSI: [
@@ -392,7 +531,7 @@
       ]},
       { group: 'Seleksi', items: [
         { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' },
-        { icon: '📄', label: 'Cetak Pengumuman', href: 'selection.html#cetak' }
+        { icon: '📄', label: 'Cetak Pengumuman', href: 'selection.html' }
       ]}
     ]
   };
@@ -401,17 +540,46 @@
   var menu = menus[role] || menus.ADMIN;
   var html = '';
   menu.forEach(function (group) {
-    html += '<div class="nav-group-title">' + group.group + '</div>';
+    html += '<div class="nav-group-title">' + esc(group.group) + '</div>';
     group.items.forEach(function (item) {
       var cls = 'nav-item' + (item.active ? ' active' : '');
-      html += '<a href="' + item.href + '" class="' + cls + '">' +
+      html += '<a href="' + esc(item.href) + '" class="' + cls + '">' +
         '<span class="ico">' + item.icon + '</span>' +
-        '<span>' + item.label + '</span></a>';
+        '<span>' + esc(item.label) + '</span></a>';
     });
   });
   nav.innerHTML = html;
 
-  // ================= TOGGLE SIDEBAR (mobile) =================
+  /* ============================================================
+   * AKSI CEPAT (sesuai role)
+   * ============================================================ */
+  var quickByRole = {
+    ADMIN: [
+      { icon: '👥', label: 'Lihat Pendaftar', href: 'admin.html' },
+      { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' },
+      { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
+    ],
+    WAWANCARA: [
+      { icon: '🔍', label: 'Mulai Wawancara', href: 'interview.html' }
+    ],
+    BENDAHARA: [
+      { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' }
+    ],
+    SELEKSI: [
+      { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }
+    ]
+  };
+  var qa = quickByRole[role] || quickByRole.ADMIN;
+  var qaHtml = '';
+  qa.forEach(function (q) {
+    qaHtml += '<a class="qa-btn" href="' + esc(q.href) + '">' +
+      '<span class="qa-ico">' + q.icon + '</span><span>' + esc(q.label) + '</span></a>';
+  });
+  document.getElementById('quick-actions').innerHTML = qaHtml;
+
+  /* ============================================================
+   * TOGGLE SIDEBAR (mobile)
+   * ============================================================ */
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   var btnMenu = document.getElementById('btn-menu');
@@ -425,11 +593,12 @@
     overlay.classList.remove('show');
   });
 
-  // ================= LOGOUT =================
+  /* ============================================================
+   * LOGOUT
+   * ============================================================ */
   document.getElementById('btn-logout').addEventListener('click', function () {
     if (!confirm('Keluar dari aplikasi?')) return;
-    // Coba panggil server logout, tapi tidak masalah kalau gagal
-    fetchLogout().finally(function () {
+    apiCall('auth.logout', {}).catch(function () {}).finally(function () {
       sessionStorage.removeItem(TOKEN_KEY);
       sessionStorage.removeItem(USER_KEY);
       sessionStorage.removeItem(EXP_KEY);
@@ -437,16 +606,54 @@
     });
   });
 
-  function fetchLogout() {
-    var APPS_URL = 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec';
-    function b64(str) {
-      var u = unescape(encodeURIComponent(str));
-      return btoa(u).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    }
-    var body = { action: 'auth.logout', token: token, payload: {} };
-    var url = APPS_URL + '?data=' + encodeURIComponent(b64(JSON.stringify(body)));
-    return fetch(url, { method: 'GET', redirect: 'follow' }).then(function (r) { return r.text(); }).catch(function () {});
+  /* ============================================================
+   * STATISTIK
+   * ============================================================ */
+  function setStat(id, cardId, value) {
+    var el = document.getElementById(id);
+    var card = document.getElementById(cardId);
+    if (el) el.textContent = value;
+    if (card) card.classList.remove('loading');
   }
+
+  apiCall('registration.stats', {})
+    .then(function (res) {
+      if (!res || !res.success) {
+        // Fallback: hilangkan loading, isi 0
+        ['card-total','card-draft','card-terkirim','card-terverifikasi','card-perbaikan','card-dibatalkan']
+          .forEach(function (c) {
+            var el = document.getElementById(c);
+            if (el) el.classList.remove('loading');
+          });
+        setStat('stat-total', 'card-total', 0);
+        setStat('stat-draft', 'card-draft', 0);
+        setStat('stat-terkirim', 'card-terkirim', 0);
+        setStat('stat-terverifikasi', 'card-terverifikasi', 0);
+        setStat('stat-perbaikan', 'card-perbaikan', 0);
+        setStat('stat-dibatalkan', 'card-dibatalkan', 0);
+        toast(res && res.message ? res.message : 'Gagal memuat statistik', 'warning');
+        return;
+      }
+      var d = res.data || {};
+      setStat('stat-total', 'card-total', d.total || 0);
+      setStat('stat-draft', 'card-draft', d.draft || 0);
+      setStat('stat-terkirim', 'card-terkirim', d.terkirim || 0);
+      setStat('stat-terverifikasi', 'card-terverifikasi', d.terverifikasi || 0);
+      setStat('stat-perbaikan', 'card-perbaikan', d.perlu_perbaikan || 0);
+      setStat('stat-dibatalkan', 'card-dibatalkan', d.dibatalkan || 0);
+    })
+    .catch(function (err) {
+      console.warn('[SPMB] gagal memuat statistik:', err.message);
+      ['card-total','card-draft','card-terkirim','card-terverifikasi','card-perbaikan','card-dibatalkan']
+        .forEach(function (c) {
+          var el = document.getElementById(c);
+          if (el) el.classList.remove('loading');
+        });
+      if (err.message !== 'SESSION_EXPIRED') {
+        toast('Gagal memuat statistik: ' + err.message, 'error');
+      }
+    });
+
 })();
 </script>
 </body>
