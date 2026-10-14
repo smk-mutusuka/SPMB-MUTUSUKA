@@ -3,20 +3,34 @@
  * api.js
  * ------------------------------------------------------------
  * Wrapper fetch() ke Apps Script Web App.
- * - Selalu kirim Content-Type: text/plain (hindari preflight CORS)
- * - Body: JSON { action, token, payload }
- * - Response: JSON { success, message, code?, data? }
+ *
+ * PENTING:
+ * - Apps Script redirect POST → CORS hilang → error.
+ * - Solusi: kirim request via GET, payload di query string (base64).
+ * - Apps Script TIDAK redirect GET → CORS aman.
  * ============================================================
  */
 
 const Api = {
 
   /**
-   * Panggil API Apps Script.
-   * @param {string} action - nama action, mis. 'auth.login'
-   * @param {object} payload - data
+   * Encode string ke base64 URL-safe.
+   */
+  _b64encode: function (str) {
+    // encodeURIComponent dulu agar UTF-8 aman
+    const utf8 = unescape(encodeURIComponent(str));
+    return btoa(utf8)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  },
+
+  /**
+   * Panggil API Apps Script via GET.
+   * @param {string} action
+   * @param {object} payload
    * @param {object} opts - { useToken: bool (default true), timeout: ms }
-   * @return {Promise<object>} respons standar
+   * @return {Promise<object>}
    */
   call: function (action, payload, opts) {
     opts = opts || {};
@@ -35,14 +49,14 @@ const Api = {
       payload: payload || {}
     };
 
+    const b64 = Api._b64encode(JSON.stringify(body));
+    const url = APP_CONFIG.APPS_SCRIPT_URL + '?data=' + encodeURIComponent(b64);
+
     const controller = new AbortController();
     const timer = setTimeout(function () { controller.abort(); }, timeout);
 
-    return fetch(APP_CONFIG.APPS_SCRIPT_URL, {
-      method: 'POST',
-      // PENTING: text/plain agar tidak trigger preflight CORS
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(body),
+    return fetch(url, {
+      method: 'GET',
       signal: controller.signal,
       redirect: 'follow'
     })
@@ -78,7 +92,7 @@ const Api = {
   },
 
   /* ============================================================
-   * Shortcut per modul (akan ditambah seiring tahap)
+   * Shortcut per modul
    * ============================================================ */
 
   auth: {
@@ -95,7 +109,7 @@ const Api = {
 
   settings: {
     get: function () {
-      return Api.call('settings.get', {});
+      return Api.call('settings.get', {}, { useToken: false });
     },
     update: function (settings) {
       return Api.call('settings.update', { settings: settings });
