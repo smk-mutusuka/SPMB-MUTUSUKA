@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengaturan — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa; color: #1f2937; min-height: 100vh; }
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 260px; background: #1a5490; color: #fff;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    transition: transform 0.3s ease; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 12px; }
+  .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
+  .sidebar-header .brand { font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+  .nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+  .nav-group-title { padding: 12px 20px 6px; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.5); }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem;
+    transition: background 0.15s; border-left: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.08); }
+  .nav-item.active { background: rgba(255,255,255,0.12);
+    border-left-color: #d4a017; color: #fff; font-weight: 500; }
+  .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
+    padding: 12px 24px; display: flex; align-items: center;
+    justify-content: space-between; gap: 16px; }
+  .btn-menu { display: none; background: none; border: none;
+    font-size: 1.4rem; cursor: pointer; color: #1a5490; padding: 4px; }
+  .topbar-title { font-size: 1.05rem; font-weight: 600; color: #1a5490; }
+  .user-info { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
+  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #1a5490;
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.9rem; }
+  .user-meta { text-align: right; line-height: 1.3; }
+  .user-name { font-weight: 600; }
+  .user-role { font-size: 0.75rem; color: #6b7280; }
+  .btn-logout { background: #fee2e2; color: #d93025; border: none;
+    padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
+    font-weight: 500; cursor: pointer; }
+  .btn-logout:hover { background: #fecaca; }
+
+  .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px;
+    overflow-x: auto; border-bottom: 2px solid #e5e7eb; padding-bottom: 0; }
+  .tab { padding: 10px 18px; background: none; border: none;
+    font-size: 0.9rem; font-family: inherit; cursor: pointer;
+    color: #6b7280; border-bottom: 3px solid transparent; margin-bottom: -2px;
+    white-space: nowrap; }
+  .tab:hover { color: #1a5490; }
+  .tab.active { color: #1a5490; font-weight: 600; border-bottom-color: #1a5490; }
+
+  .panel { background: #fff; padding: 20px; border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
+  .panel-head { display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+  .panel-head h3 { font-size: 1rem; color: #1a5490; }
+
+  .btn { padding: 9px 16px; border: none; border-radius: 6px;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    font-family: inherit; transition: background 0.15s; }
+  .btn-primary { background: #1a5490; color: #fff; }
+  .btn-primary:hover { background: #143f6e; }
+  .btn-secondary { background: #e5e7eb; color: #1f2937; }
+  .btn-secondary:hover { background: #d1d5db; }
+  .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+  .btn-success { background: #d1fae5; color: #065f46; }
+  .btn-warn { background: #fef3c7; color: #92400e; }
+  .btn-danger { background: #fee2e2; color: #991b1b; }
+  .btn-danger:hover { background: #fecaca; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  th { background: #f9fafb; font-weight: 600; color: #374151;
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.3px; }
+  tbody tr:hover { background: #f9fafb; }
+  td.actions { white-space: nowrap; }
+  td.actions .btn { margin-right: 4px; }
+
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 12px;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.3px; }
+  .bg-ADMIN { background: #dbeafe; color: #1e40af; }
+  .bg-WAWANCARA { background: #fef3c7; color: #92400e; }
+  .bg-BENDAHARA { background: #d1fae5; color: #065f46; }
+  .bg-SELEKSI { background: #ede9fe; color: #5b21b6; }
+  .bg-aktif { background: #d1fae5; color: #065f46; }
+  .bg-nonaktif { background: #fee2e2; color: #991b1b; }
+
+  .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
+
+  /* Modal */
+  .modal-bg { display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 200;
+    align-items: center; justify-content: center; padding: 20px; }
+  .modal-bg.show { display: flex; }
+  .modal { background: #fff; border-radius: 12px; max-width: 560px;
+    width: 100%; max-height: 90vh; overflow-y: auto; padding: 24px; }
+  .modal h3 { font-size: 1.1rem; color: #1a5490; margin-bottom: 16px; }
+  .modal .field { margin-bottom: 12px; }
+  .modal label { display: block; font-size: 0.8rem; font-weight: 500;
+    color: #374151; margin-bottom: 5px; }
+  .modal input, .modal select, .modal textarea {
+    width: 100%; padding: 9px 12px; border: 1px solid #d1d5db;
+    border-radius: 6px; font-size: 0.9rem; font-family: inherit; }
+  .modal input:focus, .modal select:focus, .modal textarea:focus {
+    outline: none; border-color: #1a5490;
+    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
+  .modal textarea { min-height: 100px; resize: vertical; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  .overlay { display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 99; }
+  .overlay.show { display: block; }
+
+  .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.3px; }
+  .role-ADMIN { background: #dbeafe; color: #1e40af; }
+  .role-WAWANCARA { background: #fef3c7; color: #92400e; }
+  .role-BENDAHARA { background: #d1fae5; color: #065f46; }
+  .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
+
+  @media (max-width: 900px) {
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+      transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .btn-menu { display: block; }
+    .user-meta { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+      <div class="brand">SPMB<br>SMK Muhammadiyah 1 Surakarta</div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-footer">Versi 1.0.0</div>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn-menu" id="btn-menu">☰</button>
+        <div class="topbar-title">Pengaturan</div>
+      </div>
+      <div class="user-info">
+        <div class="user-meta">
+          <div class="user-name" id="user-name">-</div>
+          <div class="user-role" id="user-role">-</div>
+        </div>
+        <div class="user-avatar" id="user-avatar">?</div>
+        <button class="btn-logout" id="btn-logout">Keluar</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="pengaturan">Pengaturan Umum</button>
+        <button class="tab" data-tab="users">Pengguna</button>
+        <button class="tab" data-tab="konsentrasi">Konsentrasi</button>
+        <button class="tab" data-tab="pertanyaan">Pertanyaan Wawancara</button>
+        <button class="tab" data-tab="template">Template WA</button>
+      </div>
+      <div id="tab-content"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // Guard: ADMIN only
+  if (!Auth.guard(['ADMIN'])) return;
+
+  var user = Auth.getUser();
+  var role = user.role;
+  var displayName = user.display_name || user.username;
+
+  document.getElementById('user-name').textContent = displayName;
+  document.getElementById('user-role').innerHTML =
+    '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
+  document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
+
+  // Sidebar
+  var menus = [
+    { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+    { group: 'Pendaftaran', items: [
+      { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
+      { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
+    ]},
+    { group: 'Proses', items: [
+      { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
+      { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
+      { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
+    ]},
+    { group: 'Sistem', items: [
+      { icon: '📊', label: 'Laporan', href: '#' },
+      { icon: '⚙️', label: 'Pengaturan', href: 'settings.html', active: true }
+    ]}
+  ];
+  var nav = document.getElementById('nav');
+  var html = '';
+  menus.forEach(function (g) {
+    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
+    g.items.forEach(function (it) {
+      var cls = 'nav-item' + (it.active ? ' active' : '');
+      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
+        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
+    });
+  });
+  nav.innerHTML = html;
+
+  // Toggle sidebar
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  document.getElementById('btn-menu').addEventListener('click', function () {
+    sidebar.classList.toggle('open'); overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function () {
+    sidebar.classList.remove('open'); overlay.classList.remove('show');
+  });
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    if (!confirm('Keluar dari aplikasi?')) return;
+    Auth.logout();
+  });
+
+  // Tabs
+  var currentTab = 'pengaturan';
+  document.getElementById('tabs').addEventListener('click', function (e) {
+    var t = e.target.closest('.tab');
+    if (!t) return;
+    document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+    t.classList.add('active');
+    currentTab = t.getAttribute('data-tab');
+    renderTab();
+  });
+
+  function renderTab() {
+    var c = document.getElementById('tab-content');
+    c.innerHTML = '<div class="panel"><div class="empty">Memuat...</div></div>';
+    if (currentTab === 'pengaturan') renderPengaturan();
+    else if (currentTab === 'users') renderUsers();
+    else if (currentTab === 'konsentrasi') renderKonsentrasi();
+    else if (currentTab === 'pertanyaan') renderPertanyaan();
+    else if (currentTab === 'template') renderTemplate();
+  }
+
+  /* ============ MODAL ============ */
+  var modalBg = document.getElementById('modal-bg');
+  function openModal(html) {
+    document.getElementById('modal').innerHTML = html;
+    modalBg.classList.add('show');
+  }
+  function closeModal() {
+    modalBg.classList.remove('show');
+    document.getElementById('modal').innerHTML = '';
+  }
+  modalBg.addEventListener('click', function (e) {
+    if (e.target === modalBg) closeModal();
+  });
+
+  /* ============ PENGATURAN UMUM ============ */
+  function renderPengaturan() {
+    Api.admin.getFullSettings().then(function (res) {
+      if (!res.success) {
+        document.getElementById('tab-content').innerHTML =
+          '<div class="panel"><div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div></div>';
+        return;
+      }
+      var rows = res.data.settings || [];
+      var html = '<div class="panel"><div class="panel-head"><h3>Pengaturan Umum</h3>' +
+        '<button class="btn btn-primary btn-sm" id="btn-save-pengaturan">Simpan Semua</button></div>' +
+        '<div class="table-wrap"><table><thead><tr>' +
+        '<th>Kunci</th><th>Nilai</th><th>Deskripsi</th></tr></thead><tbody>';
+      rows.forEach(function (r) {
+        html += '<tr>' +
+          '<td><code style="font-size:0.8rem;">' + Utils.escapeHtml(r.setting_key) + '</code></td>' +
+          '<td><input type="text" data-key="' + Utils.escapeHtml(r.setting_key) + '" ' +
+            'value="' + Utils.escapeHtml(r.setting_value || '') + '" ' +
+            'style="width:100%;min-width:200px;padding:6px 10px;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;"></td>' +
+          '<td style="color:#6b7280;font-size:0.82rem;">' + Utils.escapeHtml(r.description || '') + '</td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+      document.getElementById('tab-content').innerHTML = html;
+
+      document.getElementById('btn-save-pengaturan').addEventListener('click', function () {
+        var updates = {};
+        document.querySelectorAll('[data-key]').forEach(function (el) {
+          updates[el.getAttribute('data-key')] = el.value;
+        });
+        Utils.showLoading('Menyimpan...');
+        Api.settings.update(updates).then(function (r) {
+          Utils.hideLoading();
+          if (r.success) Utils.toast('Pengaturan disimpan', 'success');
+          else Utils.toast('Gagal: ' + r.message, 'error');
+        }).catch(function (err) {
+          Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+        });
+      });
+    }).catch(function (err) {
+      document.getElementById('tab-content').innerHTML =
+        '<div class="panel"><div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div></div>';
+    });
+  }
+
+  /* ============ USERS ============ */
+  function renderUsers() {
+    Api.admin.listUsers().then(function (res) {
+      if (!res.success) {
+        document.getElementById('tab-content').innerHTML =
+          '<div class="panel"><div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div></div>';
+        return;
+      }
+      var users = res.data.users || [];
+      var html = '<div class="panel"><div class="panel-head"><h3>Pengguna</h3>' +
+        '<button class="btn btn-primary btn-sm" id="btn-add-user">+ Tambah User</button></div>' +
+        '<div class="table-wrap"><table><thead><tr>' +
+        '<th>Username</th><th>Nama</th><th>Role</th><th>Status</th><th>Aksi</th>' +
+        '</tr></thead><tbody>';
+      users.forEach(function (u) {
+        html += '<tr>' +
+          '<td><strong>' + Utils.escapeHtml(u.username) + '</strong></td>' +
+          '<td>' + Utils.escapeHtml(u.display_name) + '</td>' +
+          '<td><span class="badge bg-' + u.role + '">' + u.role + '</span></td>' +
+          '<td><span class="badge ' + (u.active ? 'bg-aktif' : 'bg-nonaktif') + '">' +
+            (u.active ? 'Aktif' : 'Nonaktif') + '</span></td>' +
+          '<td class="actions">' +
+            '<button class="btn btn-secondary btn-sm" data-edit="' + u.user_id + '">Edit</button>' +
+            '<button class="btn btn-warn btn-sm" data-reset="' + u.user_id + '">Reset PW</button>' +
+            (u.username !== 'admin' ?
+              '<button class="btn btn-danger btn-sm" data-del="' + u.user_id + '">Nonaktifkan</button>' : '') +
+          '</td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+      document.getElementById('tab-content').innerHTML = html;
+
+      document.getElementById('btn-add-user').addEventListener('click', function () {
+        openModal(
+          '<h3>Tambah User</h3>' +
+          '<div class="field"><label>Username</label><input id="m-username" type="text"></div>' +
+          '<div class="field"><label>Nama Lengkap</label><input id="m-display" type="text"></div>' +
+          '<div class="field"><label>Password</label><input id="m-password" type="password"></div>' +
+          '<div class="field"><label>Role</label>' +
+            '<select id="m-role"><option value="ADMIN">ADMIN</option>' +
+            '<option value="WAWANCARA">WAWANCARA</option>' +
+            '<option value="BENDAHARA">BENDAHARA</option>' +
+            '<option value="SELEKSI">SELEKSI</option></select></div>' +
+          '<div class="modal-actions">' +
+            '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+            '<button class="btn btn-primary" id="m-save">Simpan</button>' +
+          '</div>'
+        );
+        document.getElementById('m-cancel').addEventListener('click', closeModal);
+        document.getElementById('m-save').addEventListener('click', function () {
+          var d = {
+            username: document.getElementById('m-username').value.trim(),
+            display_name: document.getElementById('m-display').value.trim(),
+            password: document.getElementById('m-password').value,
+            role: document.getElementById('m-role').value
+          };
+          if (!d.username || !d.password || !d.display_name) {
+            Utils.toast('Lengkapi field', 'error'); return;
+          }
+          Utils.showLoading('Menyimpan...');
+          Api.admin.createUser(d).then(function (r) {
+            Utils.hideLoading();
+            if (r.success) { Utils.toast('User dibuat', 'success'); closeModal(); renderUsers(); }
+            else Utils.toast('Gagal: ' + r.message, 'error');
+          }).catch(function (err) {
+            Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+          });
+        });
+      });
+
+      document.querySelectorAll('[data-edit]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var uid = b.getAttribute('data-edit');
+          var u = users.filter(function (x) { return x.user_id === uid; })[0];
+          if (!u) return;
+          openModal(
+            '<h3>Edit User</h3>' +
+            '<div class="field"><label>Username</label>' +
+              '<input type="text" value="' + Utils.escapeHtml(u.username) + '" disabled></div>' +
+            '<div class="field"><label>Nama Lengkap</label>' +
+              '<input id="m-display" type="text" value="' + Utils.escapeHtml(u.display_name) + '"></div>' +
+            '<div class="field"><label>Role</label>' +
+              '<select id="m-role">' +
+              ['ADMIN','WAWANCARA','BENDAHARA','SELEKSI'].map(function (r) {
+                return '<option value="' + r + '"' + (u.role === r ? ' selected' : '') + '>' + r + '</option>';
+              }).join('') +
+              '</select></div>' +
+            '<div class="field"><label>Status</label>' +
+              '<select id="m-active"><option value="true"' + (u.active ? ' selected' : '') + '>Aktif</option>' +
+              '<option value="false"' + (!u.active ? ' selected' : '') + '>Nonaktif</option></select></div>' +
+            '<div class="modal-actions">' +
+              '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+              '<button class="btn btn-primary" id="m-save">Simpan</button>' +
+            '</div>'
+          );
+          document.getElementById('m-cancel').addEventListener('click', closeModal);
+          document.getElementById('m-save').addEventListener('click', function () {
+            var d = {
+              user_id: uid,
+              display_name: document.getElementById('m-display').value.trim(),
+              role: document.getElementById('m-role').value,
+              active: document.getElementById('m-active').value === 'true'
+            };
+            Utils.showLoading('Menyimpan...');
+            Api.admin.updateUser(d).then(function (r) {
+              Utils.hideLoading();
+              if (r.success) { Utils.toast('User diupdate', 'success'); closeModal(); renderUsers(); }
+              else Utils.toast('Gagal: ' + r.message, 'error');
+            }).catch(function (err) {
+              Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+            });
+          });
+        });
+      });
+
+      document.querySelectorAll('[data-reset]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var uid = b.getAttribute('data-reset');
+          openModal(
+            '<h3>Reset Password</h3>' +
+            '<div class="field"><label>Password Baru</label>' +
+              '<input id="m-newpw" type="password" placeholder="Min 8 karakter"></div>' +
+            '<div class="modal-actions">' +
+              '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+              '<button class="btn btn-primary" id="m-save">Reset</button>' +
+            '</div>'
+          );
+          document.getElementById('m-cancel').addEventListener('click', closeModal);
+          document.getElementById('m-save').addEventListener('click', function () {
+            var pw = document.getElementById('m-newpw').value;
+            if (pw.length < 8) { Utils.toast('Password minimal 8 karakter', 'error'); return; }
+            Utils.showLoading('Menyimpan...');
+            Api.admin.resetUserPassword({ user_id: uid, password: pw }).then(function (r) {
+              Utils.hideLoading();
+              if (r.success) { Utils.toast('Password direset', 'success'); closeModal(); }
+              else Utils.toast('Gagal: ' + r.message, 'error');
+            }).catch(function (err) {
+              Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+            });
+          });
+        });
+      });
+
+      document.querySelectorAll('[data-del]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (!confirm('Nonaktifkan user ini?')) return;
+          var uid = b.getAttribute('data-del');
+          Utils.showLoading('Memproses...');
+          Api.admin.deleteUser(uid).then(function (r) {
+            Utils.hideLoading();
+            if (r.success) { Utils.toast('User dinonaktifkan', 'success'); renderUsers(); }
+            else Utils.toast('Gagal: ' + r.message, 'error');
+          }).catch(function (err) {
+            Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+          });
+        });
+      });
+    });
+  }
+
+  /* ============ KONSENTRASI ============ */
+  function renderKonsentrasi() {
+    Api.admin.listKonsentrasi().then(function (res) {
+      if (!res.success) {
+        document.getElementById('tab-content').innerHTML =
+          '<div class="panel"><div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div></div>';
+        return;
+      }
+      var list = res.data.konsentrasi || [];
+      var html = '<div class="panel"><div class="panel-head"><h3>Konsentrasi Keahlian</h3>' +
+        '<button class="btn btn-primary btn-sm" id="btn-add-k">+ Tambah</button></div>' +
+        '<div class="table-wrap"><table><thead><tr>' +
+        '<th>ID</th><th>Nama</th><th>Kuota</th><th>Urutan</th><th>Status</th><th>Aksi</th>' +
+        '</tr></thead><tbody>';
+      list.forEach(function (k) {
+        html += '<tr>' +
+          '<td><strong>' + Utils.escapeHtml(k.konsentrasi_id) + '</strong></td>' +
+          '<td>' + Utils.escapeHtml(k.nama_konsentrasi) + '</td>' +
+          '<td>' + (k.kuota || 0) + '</td>' +
+          '<td>' + (k.urutan || 0) + '</td>' +
+          '<td><span class="badge ' + (k.aktif ? 'bg-aktif' : 'bg-nonaktif') + '">' +
+            (k.aktif ? 'Aktif' : 'Nonaktif') + '</span></td>' +
+          '<td class="actions"><button class="btn btn-secondary btn-sm" data-edit-k="' + Utils.escapeHtml(k.konsentrasi_id) + '">Edit</button></td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+      document.getElementById('tab-content').innerHTML = html;
+
+      document.getElementById('btn-add-k').addEventListener('click', function () { showKForm(null); });
+      document.querySelectorAll('[data-edit-k]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var id = b.getAttribute('data-edit-k');
+          var k = list.filter(function (x) { return x.konsentrasi_id === id; })[0];
+          showKForm(k);
+        });
+      });
+    });
+  }
+
+  function showKForm(k) {
+    var isEdit = !!k;
+    openModal(
+      '<h3>' + (isEdit ? 'Edit' : 'Tambah') + ' Konsentrasi</h3>' +
+      '<div class="field"><label>ID</label>' +
+        '<input id="k-id" type="text" value="' + Utils.escapeHtml(k ? k.konsentrasi_id : '') + '"' +
+        (isEdit ? ' disabled' : '') + ' placeholder="K01"></div>' +
+      '<div class="field"><label>Nama</label>' +
+        '<input id="k-nama" type="text" value="' + Utils.escapeHtml(k ? k.nama_konsentrasi : '') + '"></div>' +
+      '<div class="field"><label>Kuota</label>' +
+        '<input id="k-kuota" type="number" value="' + (k ? k.kuota : 36) + '"></div>' +
+      '<div class="field"><label>Urutan</label>' +
+        '<input id="k-urutan" type="number" value="' + (k ? k.urutan : 1) + '"></div>' +
+      '<div class="field"><label>Aktif</label>' +
+        '<select id="k-aktif"><option value="true"' + (!k || k.aktif ? ' selected' : '') + '>Ya</option>' +
+        '<option value="false"' + (k && !k.aktif ? ' selected' : '') + '>Tidak</option></select></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+        '<button class="btn btn-primary" id="m-save">Simpan</button>' +
+      '</div>'
+    );
+    document.getElementById('m-cancel').addEventListener('click', closeModal);
+    document.getElementById('m-save').addEventListener('click', function () {
+      var d = {
+        konsentrasi_id: document.getElementById('k-id').value.trim(),
+        nama_konsentrasi: document.getElementById('k-nama').value.trim(),
+        kuota: parseInt(document.getElementById('k-kuota').value, 10) || 0,
+        urutan: parseInt(document.getElementById('k-urutan').value, 10) || 0,
+        aktif: document.getElementById('k-aktif').value === 'true'
+      };
+      if (!d.konsentrasi_id || !d.nama_konsentrasi) {
+        Utils.toast('Lengkapi field', 'error'); return;
+      }
+      Utils.showLoading('Menyimpan...');
+      Api.admin.saveKonsentrasi(d).then(function (r) {
+        Utils.hideLoading();
+        if (r.success) { Utils.toast('Tersimpan', 'success'); closeModal(); renderKonsentrasi(); }
+        else Utils.toast('Gagal: ' + r.message, 'error');
+      }).catch(function (err) {
+        Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+      });
+    });
+  }
+
+  /* ============ PERTANYAAN ============ */
+  function renderPertanyaan() {
+    Api.admin.listPertanyaan().then(function (res) {
+      if (!res.success) {
+        document.getElementById('tab-content').innerHTML =
+          '<div class="panel"><div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div></div>';
+        return;
+      }
+      var list = res.data.pertanyaan || [];
+      var html = '<div class="panel"><div class="panel-head"><h3>Pertanyaan Wawancara</h3>' +
+        '<button class="btn btn-primary btn-sm" id="btn-add-q">+ Tambah</button></div>' +
+        '<div class="table-wrap"><table><thead><tr>' +
+        '<th>ID</th><th>Kategori</th><th>Pertanyaan</th><th>Jenis</th><th>Status</th><th>Aksi</th>' +
+        '</tr></thead><tbody>';
+      list.forEach(function (q) {
+        html += '<tr>' +
+          '<td><strong>' + Utils.escapeHtml(q.question_id) + '</strong></td>' +
+          '<td>' + Utils.escapeHtml(q.kategori) + '</td>' +
+          '<td>' + Utils.escapeHtml(q.pertanyaan) + '</td>' +
+          '<td style="font-size:0.78rem;">' + Utils.escapeHtml(q.jenis_jawaban) + '</td>' +
+          '<td><span class="badge ' + (q.aktif ? 'bg-aktif' : 'bg-nonaktif') + '">' +
+            (q.aktif ? 'Aktif' : 'Nonaktif') + '</span></td>' +
+          '<td class="actions"><button class="btn btn-secondary btn-sm" data-edit-q="' + Utils.escapeHtml(q.question_id) + '">Edit</button></td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+      document.getElementById('tab-content').innerHTML = html;
+
+      document.getElementById('btn-add-q').addEventListener('click', function () { showQForm(null); });
+      document.querySelectorAll('[data-edit-q]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var id = b.getAttribute('data-edit-q');
+          var q = list.filter(function (x) { return x.question_id === id; })[0];
+          showQForm(q);
+        });
+      });
+    });
+  }
+
+  function showQForm(q) {
+    var isEdit = !!q;
+    var jenisList = ['TEKS_SINGKAT','TEKS_PANJANG','PILIHAN_TUNGGAL','YA_TIDAK','SKOR'];
+    openModal(
+      '<h3>' + (isEdit ? 'Edit' : 'Tambah') + ' Pertanyaan</h3>' +
+      '<div class="field"><label>ID</label>' +
+        '<input id="q-id" type="text" value="' + Utils.escapeHtml(q ? q.question_id : '') + '"' +
+        (isEdit ? ' disabled' : '') + ' placeholder="Q01"></div>' +
+      '<div class="field"><label>Kategori</label>' +
+        '<input id="q-kategori" type="text" value="' + Utils.escapeHtml(q ? q.kategori : '') + '"></div>' +
+      '<div class="field"><label>Pertanyaan</label>' +
+        '<textarea id="q-pertanyaan">' + Utils.escapeHtml(q ? q.pertanyaan : '') + '</textarea></div>' +
+      '<div class="field"><label>Jenis Jawaban</label>' +
+        '<select id="q-jenis">' + jenisList.map(function (j) {
+          return '<option value="' + j + '"' + (q && q.jenis_jawaban === j ? ' selected' : '') + '>' + j + '</option>';
+        }).join('') + '</select></div>' +
+      '<div class="field"><label>Opsi Jawaban (koma untuk pilihan tunggal)</label>' +
+        '<input id="q-opsi" type="text" value="' + Utils.escapeHtml(q ? (q.opsi_jawaban || '') : '') + '"></div>' +
+      '<div class="field"><label>Urutan</label>' +
+        '<input id="q-urutan" type="number" value="' + (q ? q.urutan : 1) + '"></div>' +
+      '<div class="field"><label>Wajib</label>' +
+        '<select id="q-wajib"><option value="true"' + (!q || q.wajib ? ' selected' : '') + '>Ya</option>' +
+        '<option value="false"' + (q && !q.wajib ? ' selected' : '') + '>Tidak</option></select></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+        '<button class="btn btn-primary" id="m-save">Simpan</button>' +
+      '</div>'
+    );
+    document.getElementById('m-cancel').addEventListener('click', closeModal);
+    document.getElementById('m-save').addEventListener('click', function () {
+      var d = {
+        question_id: document.getElementById('q-id').value.trim(),
+        kategori: document.getElementById('q-kategori').value.trim(),
+        pertanyaan: document.getElementById('q-pertanyaan').value.trim(),
+        jenis_jawaban: document.getElementById('q-jenis').value,
+        opsi_jawaban: document.getElementById('q-opsi').value.trim(),
+        urutan: parseInt(document.getElementById('q-urutan').value, 10) || 0,
+        wajib: document.getElementById('q-wajib').value === 'true',
+        aktif: true
+      };
+      if (!d.question_id || !d.pertanyaan) { Utils.toast('Lengkapi field', 'error'); return; }
+      Utils.showLoading('Menyimpan...');
+      Api.admin.savePertanyaan(d).then(function (r) {
+        Utils.hideLoading();
+        if (r.success) { Utils.toast('Tersimpan', 'success'); closeModal(); renderPertanyaan(); }
+        else Utils.toast('Gagal: ' + r.message, 'error');
+      }).catch(function (err) {
+        Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+      });
+    });
+  }
+
+  /* ============ TEMPLATE WA ============ */
+  function renderTemplate() {
+    Api.admin.listTemplate().then(function (res) {
+      if (!res.success) {
+        document.getElementById('tab-content').innerHTML =
+          '<div class="panel"><div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div></div>';
+        return;
+      }
+      var list = res.data.template || [];
+      var html = '<div class="panel"><div class="panel-head"><h3>Template Notifikasi WhatsApp</h3></div>' +
+        '<div class="table-wrap"><table><thead><tr>' +
+        '<th>Kode</th><th>Nama</th><th>Penerima</th><th>Status</th><th>Aksi</th>' +
+        '</tr></thead><tbody>';
+      list.forEach(function (t) {
+        html += '<tr>' +
+          '<td><strong>' + Utils.escapeHtml(t.template_code) + '</strong></td>' +
+          '<td>' + Utils.escapeHtml(t.nama) + '</td>' +
+          '<td>' + Utils.escapeHtml(t.recipient) + '</td>' +
+          '<td><span class="badge ' + (t.aktif ? 'bg-aktif' : 'bg-nonaktif') + '">' +
+            (t.aktif ? 'Aktif' : 'Nonaktif') + '</span></td>' +
+          '<td class="actions"><button class="btn btn-secondary btn-sm" data-edit-t="' + Utils.escapeHtml(t.template_code) + '">Edit</button></td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+      document.getElementById('tab-content').innerHTML = html;
+
+      document.querySelectorAll('[data-edit-t]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var code = b.getAttribute('data-edit-t');
+          var t = list.filter(function (x) { return x.template_code === code; })[0];
+          if (!t) return;
+          openModal(
+            '<h3>Edit Template</h3>' +
+            '<div class="field"><label>Kode</label>' +
+              '<input type="text" value="' + Utils.escapeHtml(t.template_code) + '" disabled></div>' +
+            '<div class="field"><label>Nama</label>' +
+              '<input id="t-nama" type="text" value="' + Utils.escapeHtml(t.nama) + '"></div>' +
+            '<div class="field"><label>Penerima</label>' +
+              '<select id="t-recipient">' +
+              '<option value="SISWA"' + (t.recipient === 'SISWA' ? ' selected' : '') + '>SISWA</option>' +
+              '<option value="ORANGTUA"' + (t.recipient === 'ORANGTUA' ? ' selected' : '') + '>ORANGTUA</option>' +
+              '</select></div>' +
+            '<div class="field"><label>Isi Pesan</label>' +
+              '<textarea id="t-body" style="min-height:180px;font-family:monospace;font-size:0.85rem;">' +
+              Utils.escapeHtml(t.body || '') + '</textarea>' +
+              '<div style="font-size:0.75rem;color:#6b7280;margin-top:4px;">' +
+              'Variabel: {{nama}}, {{nomor}}, {{sekolah}}, {{tahun_ajaran}}, {{konsentrasi}}, {{batas_daftar_ulang}}, {{catatan}}</div></div>' +
+            '<div class="field"><label>Aktif</label>' +
+              '<select id="t-aktif"><option value="true"' + (t.aktif ? ' selected' : '') + '>Ya</option>' +
+              '<option value="false"' + (!t.aktif ? ' selected' : '') + '>Tidak</option></select></div>' +
+            '<div class="modal-actions">' +
+              '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+              '<button class="btn btn-primary" id="m-save">Simpan</button>' +
+            '</div>'
+          );
+          document.getElementById('m-cancel').addEventListener('click', closeModal);
+          document.getElementById('m-save').addEventListener('click', function () {
+            var d = {
+              template_code: t.template_code,
+              nama: document.getElementById('t-nama').value.trim(),
+              recipient: document.getElementById('t-recipient').value,
+              body: document.getElementById('t-body').value,
+              aktif: document.getElementById('t-aktif').value === 'true'
+            };
+            Utils.showLoading('Menyimpan...');
+            Api.admin.saveTemplate(d).then(function (r) {
+              Utils.hideLoading();
+              if (r.success) { Utils.toast('Tersimpan', 'success'); closeModal(); renderTemplate(); }
+              else Utils.toast('Gagal: ' + r.message, 'error');
+            }).catch(function (err) {
+              Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+            });
+          });
+        });
+      });
+    });
+  }
+
+  renderTab();
+
+})();
+</script>
+</body>
+</html>
