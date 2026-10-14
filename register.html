@@ -8,10 +8,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #f5f7fa;
-    color: #1f2937;
-    min-height: 100vh;
-    line-height: 1.5;
+    background: #f5f7fa; color: #1f2937; min-height: 100vh; line-height: 1.5;
   }
 
   .wrap { max-width: 820px; margin: 0 auto; padding: 24px 16px 60px; }
@@ -31,7 +28,6 @@
     padding: 24px; margin-bottom: 20px;
   }
 
-  /* Stepper */
   .stepper {
     display: flex; gap: 4px; margin-bottom: 24px;
     overflow-x: auto; padding-bottom: 4px;
@@ -104,7 +100,6 @@
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
 
-  /* Keluarga */
   .keluarga-block {
     border: 1px solid #e5e7eb; border-radius: 10px;
     padding: 16px; margin-bottom: 14px; background: #f9fafb;
@@ -118,7 +113,6 @@
     background: #dbeafe; color: #1e40af; border-radius: 10px;
   }
 
-  /* Konsentrasi */
   .konsentrasi-list { display: grid; gap: 10px; }
   .konsentrasi-item {
     display: flex; align-items: center; gap: 12px;
@@ -134,7 +128,6 @@
   .konsentrasi-item .k-name { font-weight: 600; font-size: 0.92rem; color: #1f2937; }
   .konsentrasi-item .k-id { font-size: 0.75rem; color: #6b7280; }
 
-  /* Upload */
   .upload-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 14px;
@@ -164,20 +157,6 @@
   }
   .upload-box input[type=file] { display: none; }
 
-  /* Ringkasan */
-  .ringkasan dl {
-    display: grid; grid-template-columns: 180px 1fr;
-    gap: 6px 12px; font-size: 0.88rem;
-  }
-  .ringkasan dt { color: #6b7280; }
-  .ringkasan dd { color: #1f2937; font-weight: 500; }
-  .ringkasan h4 {
-    font-size: 0.88rem; color: #1a5490;
-    margin: 14px 0 8px; padding-bottom: 4px;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  /* Sukses */
   .success-box { text-align: center; padding: 20px 0; }
   .success-box .ico { font-size: 3.5rem; margin-bottom: 10px; }
   .success-box h2 { color: #059669; margin-bottom: 8px; }
@@ -196,25 +175,6 @@
     margin-top: 16px;
   }
 
-  /* Toast */
-  #toast-container {
-    position: fixed; top: 20px; right: 20px; z-index: 1000;
-    display: flex; flex-direction: column; gap: 8px;
-  }
-  .toast {
-    background: #1f2937; color: #fff;
-    padding: 12px 18px; border-radius: 8px;
-    font-size: 0.88rem; min-width: 220px; max-width: 340px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    opacity: 0; transform: translateY(-10px);
-    transition: opacity 0.25s, transform 0.25s;
-  }
-  .toast.show { opacity: 1; transform: translateY(0); }
-  .toast-success { background: #065f46; }
-  .toast-error { background: #991b1b; }
-  .toast-warning { background: #92400e; }
-
-  /* Loading */
   #global-loading {
     display: none; position: fixed; inset: 0;
     background: rgba(255,255,255,0.8); z-index: 999;
@@ -228,7 +188,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Overlay info token */
   .token-bar {
     background: #eff6ff; border: 1px solid #bfdbfe;
     border-radius: 8px; padding: 10px 14px;
@@ -245,8 +204,6 @@
 
   @media (max-width: 600px) {
     .card { padding: 18px; }
-    .ringkasan dl { grid-template-columns: 1fr; }
-    .ringkasan dt { font-weight: 600; margin-top: 6px; }
     .actions { flex-direction: column-reverse; }
     .actions .btn { width: 100%; }
   }
@@ -254,23 +211,18 @@
 </head>
 <body>
 
-<div id="toast-container"></div>
 <div id="global-loading"><div style="text-align:center;"><div class="spinner"></div><div id="loading-text">Memuat...</div></div></div>
 
-<div class="wrap" id="app">
-  <!-- Diisi via JS -->
-</div>
+<div class="wrap" id="app"></div>
 
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="api.js"></script>
 <script>
 (function () {
   'use strict';
 
-  /* ============================================================
-   * KONFIG
-   * ============================================================ */
-  var APPS_URL = 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec';
   var TOKEN_KEY = 'spmb_reg_token';
-  var DATA_KEY = 'spmb_reg_data';
 
   var state = {
     step: 1,
@@ -280,152 +232,91 @@
     konsentrasi: [],
     data: {},
     keluarga: { AYAH: {}, IBU: {}, WALI: {} },
-    dokumen: {}, // { FOTO: true, KK: true, AKTA: true }
+    dokumen: {},
     submitted: null,
     tahun_ajaran: ''
   };
 
   /* ============================================================
-   * UTIL
-   * ============================================================ */
-  function esc(s) {
-    if (s === null || s === undefined) return '';
-    return String(s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
-
-  function toast(msg, type) {
-    var c = document.getElementById('toast-container');
-    var el = document.createElement('div');
-    el.className = 'toast toast-' + (type || 'info');
-    el.textContent = msg;
-    c.appendChild(el);
-    setTimeout(function () { el.classList.add('show'); }, 10);
-    setTimeout(function () {
-      el.classList.remove('show');
-      setTimeout(function () { el.remove(); }, 300);
-    }, 3600);
-  }
-
-  function showLoading(text) {
-    document.getElementById('loading-text').textContent = text || 'Memuat...';
-    document.getElementById('global-loading').classList.add('show');
-  }
-  function hideLoading() {
-    document.getElementById('global-loading').classList.remove('show');
-  }
-
-  function b64(str) {
-    var u = unescape(encodeURIComponent(str));
-    return btoa(u).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  }
-
-  function api(action, payload) {
-    var body = { action: action, token: null, payload: payload || {} };
-    var url = APPS_URL + '?data=' + encodeURIComponent(b64(JSON.stringify(body)));
-    return fetch(url, { method: 'GET', redirect: 'follow' })
-      .then(function (r) { return r.text(); })
-      .then(function (t) {
-        var j;
-        try { j = JSON.parse(t); } catch (e) { throw new Error('Respons server tidak valid'); }
-        return j;
-      });
-  }
-
-  function getQuery(name) {
-    return new URLSearchParams(window.location.search).get(name);
-  }
-
-  /* ============================================================
    * BOOT
    * ============================================================ */
   function boot() {
-    var urlToken = getQuery('token');
+    var urlToken = Utils.getQueryParam('token');
     var savedToken = sessionStorage.getItem(TOKEN_KEY);
 
-    if (urlToken) {
-      // Resume dari QR / link
-      resumeSession(urlToken);
-    } else if (savedToken) {
-      // Lanjut sesi yang masih ada di browser
-      resumeSession(savedToken);
-    } else {
-      // Mulai baru
-      startSession();
-    }
+    if (urlToken) resumeSession(urlToken);
+    else if (savedToken) resumeSession(savedToken);
+    else startSession();
   }
 
   function startSession() {
-    showLoading('Menyiapkan formulir...');
-    api('registration.start', {}).then(function (res) {
-      hideLoading();
-      if (!res.success) {
-        renderError(res.message || 'Gagal memulai pendaftaran');
-        return;
-      }
-      state.token = res.data.token;
-      state.registration_id = res.data.registration_id;
-      state.tahun_ajaran = res.data.tahun_ajaran;
-      sessionStorage.setItem(TOKEN_KEY, state.token);
-      loadKonsentrasi().then(function () {
-        renderApp();
+    Utils.showLoading('Menyiapkan formulir...');
+    Api.registration.start()
+      .then(function (res) {
+        Utils.hideLoading();
+        if (!res.success) {
+          renderError(res.message || 'Gagal memulai pendaftaran');
+          return;
+        }
+        state.token = res.data.token;
+        state.registration_id = res.data.registration_id;
+        state.tahun_ajaran = res.data.tahun_ajaran;
+        sessionStorage.setItem(TOKEN_KEY, state.token);
+        loadKonsentrasi().then(function () { renderApp(); });
+      })
+      .catch(function (err) {
+        Utils.hideLoading();
+        renderError(err.message);
       });
-    }).catch(function (err) {
-      hideLoading();
-      renderError(err.message);
-    });
   }
 
   function resumeSession(token) {
-    showLoading('Memuat data pendaftaran...');
-    api('registration.resume', { token: token }).then(function (res) {
-      hideLoading();
-      if (!res.success) {
-        // Token kadaluwarsa → mulai baru
-        sessionStorage.removeItem(TOKEN_KEY);
-        if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
-          toast('Sesi sebelumnya berakhir. Mulai pendaftaran baru.', 'warning');
-          startSession();
+    Utils.showLoading('Memuat data pendaftaran...');
+    Api.registration.resume(token)
+      .then(function (res) {
+        Utils.hideLoading();
+        if (!res.success) {
+          sessionStorage.removeItem(TOKEN_KEY);
+          if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
+            Utils.toast('Sesi sebelumnya berakhir. Mulai pendaftaran baru.', 'warning');
+            startSession();
+            return;
+          }
+          renderError(res.message || 'Gagal memuat');
           return;
         }
-        renderError(res.message || 'Gagal memuat');
-        return;
-      }
-      state.token = token;
-      state.registration_id = res.data.registration_id;
-      state.data = res.data.data || {};
-      state.tahun_ajaran = state.data.tahun_ajaran || '';
-      // Keluarga
-      (res.data.keluarga || []).forEach(function (k) {
-        if (k.hubungan) state.keluarga[k.hubungan] = k;
+        state.token = token;
+        state.registration_id = res.data.registration_id;
+        state.data = res.data.data || {};
+        state.tahun_ajaran = state.data.tahun_ajaran || '';
+
+        (res.data.keluarga || []).forEach(function (k) {
+          if (k.hubungan) state.keluarga[k.hubungan] = k;
+        });
+        (res.data.dokumen || []).forEach(function (d) {
+          state.dokumen[String(d.jenis_dokumen).toUpperCase()] = true;
+        });
+
+        if (state.data.status_pendaftaran === 'TERKIRIM' ||
+            state.data.status_pendaftaran === 'TERVERIFIKASI') {
+          state.submitted = {
+            nomor_pendaftaran: state.data.nomor_pendaftaran,
+            nama_lengkap: state.data.nama_lengkap,
+            nomor_wa_panitia: ''
+          };
+          renderSuccess();
+          return;
+        }
+        loadKonsentrasi().then(function () { renderApp(); });
+      })
+      .catch(function (err) {
+        Utils.hideLoading();
+        renderError(err.message);
       });
-      // Dokumen
-      (res.data.dokumen || []).forEach(function (d) {
-        state.dokumen[String(d.jenis_dokumen).toUpperCase()] = true;
-      });
-      // Kalau sudah submit → tampilkan halaman sukses
-      if (state.data.status_pendaftaran === 'TERKIRIM' ||
-          state.data.status_pendaftaran === 'TERVERIFIKASI') {
-        state.submitted = {
-          nomor_pendaftaran: state.data.nomor_pendaftaran,
-          nama_lengkap: state.data.nama_lengkap,
-          nomor_wa_panitia: ''
-        };
-        renderSuccess();
-        return;
-      }
-      loadKonsentrasi().then(function () {
-        renderApp();
-      });
-    }).catch(function (err) {
-      hideLoading();
-      renderError(err.message);
-    });
   }
 
   function loadKonsentrasi() {
-    return api('settings.listKonsentrasi', {}).then(function (res) {
+    return Api.settings.listKonsentrasi().then(function (res) {
       if (res.success && res.data && res.data.konsentrasi) {
         state.konsentrasi = res.data.konsentrasi;
       }
@@ -447,13 +338,13 @@
       '<div class="card" style="text-align:center;padding:40px 20px;">' +
         '<div style="font-size:3rem;margin-bottom:12px;">⚠️</div>' +
         '<h2 style="color:#dc2626;margin-bottom:8px;">Terjadi Kesalahan</h2>' +
-        '<p style="color:#6b7280;margin-bottom:20px;">' + esc(msg) + '</p>' +
+        '<p style="color:#6b7280;margin-bottom:20px;">' + Utils.escapeHtml(msg) + '</p>' +
         '<a href="index.html" class="btn btn-secondary">Kembali ke Beranda</a>' +
       '</div>';
   }
 
   /* ============================================================
-   * RENDER: APP (HEADER + STEPPER + STEP)
+   * RENDER: APP
    * ============================================================ */
   function renderApp() {
     var app = document.getElementById('app');
@@ -462,12 +353,12 @@
         '<img src="logo.png" alt="Logo" onerror="this.style.display=\'none\'">' +
         '<div>' +
           '<div class="htitle">Pendaftaran Murid Baru</div>' +
-          '<div class="hsub">SMK Muhammadiyah 1 Surakarta • TP ' + esc(state.tahun_ajaran || '2027/2028') + '</div>' +
+          '<div class="hsub">SMK Muhammadiyah 1 Surakarta • TP ' + Utils.escapeHtml(state.tahun_ajaran || '2027/2028') + '</div>' +
         '</div>' +
       '</div>' +
       '<div class="token-bar">' +
         '<div>🔑 Simpan tautan ini untuk melanjutkan: ' +
-          '<span class="tk">' + esc(location.origin + location.pathname + '?token=' + state.token) + '</span>' +
+          '<span class="tk">' + Utils.escapeHtml(location.origin + location.pathname + '?token=' + state.token) + '</span>' +
         '</div>' +
       '</div>' +
       '<div class="card">' +
@@ -488,7 +379,7 @@
       else if (n === state.step) cls += ' active';
       html += '<div class="' + cls + '">' +
         '<div class="num">' + (n < state.step ? '✓' : n) + '</div>' +
-        '<div>' + esc(label) + '</div></div>';
+        '<div>' + Utils.escapeHtml(label) + '</div></div>';
     });
     document.getElementById('stepper').innerHTML = html;
   }
@@ -515,8 +406,8 @@
       '<div class="grid">' +
         field('nama_lengkap', 'Nama Lengkap', 'text', d.nama_lengkap, true, 'full') +
         field('nisn', 'NISN', 'text', d.nisn, true) +
-        field('nik', 'NIK Siswa', 'text', d.nik, false) +
-        field('nomor_kk', 'Nomor Kartu Keluarga', 'text', d.nomor_kk, false) +
+        field('nik', 'NIK Siswa', 'text', d.nik) +
+        field('nomor_kk', 'Nomor Kartu Keluarga', 'text', d.nomor_kk) +
         field('tempat_lahir', 'Tempat Lahir', 'text', d.tempat_lahir, true) +
         field('tanggal_lahir', 'Tanggal Lahir', 'date', toDateInput(d.tanggal_lahir), true) +
         select('jenis_kelamin', 'Jenis Kelamin', [['','-- Pilih --'],['L','Laki-laki'],['P','Perempuan']], d.jenis_kelamin, true) +
@@ -565,8 +456,8 @@
     document.getElementById('btn-next').addEventListener('click', function () {
       var data = collectFields(['alamat','rt','rw','desa_kelurahan','kecamatan','kabupaten_kota','provinsi','kode_pos','nomor_hp','nomor_wa_siswa','nomor_wa_orangtua','email']);
       if (!validateRequired({ alamat: 'Alamat', desa_kelurahan: 'Desa/Kelurahan', kecamatan: 'Kecamatan', kabupaten_kota: 'Kabupaten/Kota', provinsi: 'Provinsi', nomor_wa_siswa: 'No. WA Siswa' }, data)) return;
-      if (data.nomor_wa_siswa && !isValidWa(data.nomor_wa_siswa)) {
-        toast('Nomor WA Siswa tidak valid', 'error'); return;
+      if (data.nomor_wa_siswa && !Utils.isValidWa(data.nomor_wa_siswa)) {
+        Utils.toast('Nomor WA Siswa tidak valid', 'error'); return;
       }
       goNext('alamat', data);
     });
@@ -607,14 +498,14 @@
     state.konsentrasi.forEach(function (k) {
       var id = k.konsentrasi_id;
       var name = k.nama_konsentrasi;
-      listHtml1 += '<label class="konsentrasi-item' + (d.konsentrasi_1 === id ? ' selected' : '') + '" data-target="k1">' +
-        '<input type="radio" name="konsentrasi_1" value="' + esc(id) + '"' + (d.konsentrasi_1 === id ? ' checked' : '') + '>' +
-        '<div class="k-info"><div class="k-name">' + esc(name) + '</div>' +
-        '<div class="k-id">' + esc(id) + '</div></div></label>';
-      listHtml2 += '<label class="konsentrasi-item' + (d.konsentrasi_2 === id ? ' selected' : '') + '" data-target="k2">' +
-        '<input type="radio" name="konsentrasi_2" value="' + esc(id) + '"' + (d.konsentrasi_2 === id ? ' checked' : '') + '>' +
-        '<div class="k-info"><div class="k-name">' + esc(name) + '</div>' +
-        '<div class="k-id">' + esc(id) + '</div></div></label>';
+      listHtml1 += '<label class="konsentrasi-item' + (d.konsentrasi_1 === id ? ' selected' : '') + '">' +
+        '<input type="radio" name="konsentrasi_1" value="' + Utils.escapeHtml(id) + '"' + (d.konsentrasi_1 === id ? ' checked' : '') + '>' +
+        '<div class="k-info"><div class="k-name">' + Utils.escapeHtml(name) + '</div>' +
+        '<div class="k-id">' + Utils.escapeHtml(id) + '</div></div></label>';
+      listHtml2 += '<label class="konsentrasi-item' + (d.konsentrasi_2 === id ? ' selected' : '') + '">' +
+        '<input type="radio" name="konsentrasi_2" value="' + Utils.escapeHtml(id) + '"' + (d.konsentrasi_2 === id ? ' checked' : '') + '>' +
+        '<div class="k-info"><div class="k-name">' + Utils.escapeHtml(name) + '</div>' +
+        '<div class="k-id">' + Utils.escapeHtml(id) + '</div></div></label>';
     });
     return '<h2 class="step-title">Pilihan Konsentrasi</h2>' +
       '<p class="step-desc">Pilih dua konsentrasi keahlian dengan urutan prioritas.</p>' +
@@ -626,7 +517,6 @@
   }
 
   function bindKonsentrasi() {
-    // Highlight pilihan
     document.querySelectorAll('#list-k1 .konsentrasi-item').forEach(function (el) {
       el.addEventListener('click', function () {
         document.querySelectorAll('#list-k1 .konsentrasi-item').forEach(function (x) { x.classList.remove('selected'); });
@@ -645,8 +535,8 @@
       var k2El = document.querySelector('input[name=konsentrasi_2]:checked');
       var k1 = k1El ? k1El.value : '';
       var k2 = k2El ? k2El.value : '';
-      if (!k1) { toast('Pilih konsentrasi 1', 'error'); return; }
-      if (k2 && k2 === k1) { toast('Konsentrasi 2 tidak boleh sama dengan 1', 'error'); return; }
+      if (!k1) { Utils.toast('Pilih konsentrasi 1', 'error'); return; }
+      if (k2 && k2 === k1) { Utils.toast('Konsentrasi 2 tidak boleh sama dengan 1', 'error'); return; }
       goNext('konsentrasi', { konsentrasi_1: k1, konsentrasi_2: k2 });
     });
   }
@@ -666,7 +556,7 @@
   function blokKeluarga(hub, label, required) {
     var k = state.keluarga[hub] || {};
     return '<div class="keluarga-block" data-hub="' + hub + '">' +
-      '<h4>' + esc(label) + ' <span class="tag">' + (required ? 'Wajib' : 'Opsional') + '</span></h4>' +
+      '<h4>' + Utils.escapeHtml(label) + ' <span class="tag">' + (required ? 'Wajib' : 'Opsional') + '</span></h4>' +
       '<div class="grid">' +
         field(hub + '_nama', 'Nama', 'text', k.nama, required) +
         field(hub + '_nik', 'NIK', 'text', k.nik) +
@@ -685,6 +575,7 @@
     document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
     document.getElementById('btn-next').addEventListener('click', function () {
       var arr = [];
+      var err = '';
       ['AYAH','IBU','WALI'].forEach(function (hub) {
         var k = {
           hubungan: hub,
@@ -697,12 +588,13 @@
           nomor_hp: val(hub + '_nomor_hp'),
           alamat: val(hub + '_alamat')
         };
-        if (hub === 'AYAH' && !k.nama) { toast('Nama ayah wajib diisi', 'error'); return; }
-        if (hub === 'IBU' && !k.nama) { toast('Nama ibu wajib diisi', 'error'); return; }
-        if (hub === 'WALI' && !k.nama) return; // wali opsional
+        if (hub === 'AYAH' && !k.nama) { err = 'Nama ayah wajib diisi'; return; }
+        if (hub === 'IBU' && !k.nama) { err = 'Nama ibu wajib diisi'; return; }
+        if (hub === 'WALI' && !k.nama) return;
         arr.push(k);
         state.keluarga[hub] = k;
       });
+      if (err) { Utils.toast(err, 'error'); return; }
       if (arr.length < 2) return;
       goNext('keluarga', { keluarga: arr });
     });
@@ -729,8 +621,8 @@
     var ok = state.dokumen[jenis];
     return '<div class="upload-box' + (ok ? ' has-file' : '') + '" data-jenis="' + jenis + '">' +
       '<div class="ub-ico">' + (ok ? '✅' : '📄') + '</div>' +
-      '<div class="ub-label">' + esc(label) + '</div>' +
-      '<div class="ub-hint">' + esc(hint) + '</div>' +
+      '<div class="ub-label">' + Utils.escapeHtml(label) + '</div>' +
+      '<div class="ub-hint">' + Utils.escapeHtml(hint) + '</div>' +
       '<div class="ub-status' + (ok ? ' ok' : '') + '">' + (ok ? 'Sudah diunggah' : 'Klik untuk pilih file') + '</div>' +
       '<div class="ub-progress"><div class="bar"></div></div>' +
       '<input type="file" accept="image/jpeg,image/png,application/pdf">' +
@@ -760,12 +652,6 @@
     var progress = box.querySelector('.ub-progress');
     var bar = box.querySelector('.bar');
 
-    if (file.size > 2 * 1024 * 1024 && file.type !== 'image/jpeg' && file.type !== 'image/png') {
-      status.className = 'ub-status err';
-      status.textContent = 'File melebihi 2 MB';
-      return;
-    }
-
     status.className = 'ub-status';
     status.textContent = 'Memproses...';
     progress.classList.add('show');
@@ -775,48 +661,39 @@
       bar.style.width = '50%';
       status.textContent = 'Mengunggah...';
 
-      api('registration.uploadDokumen', {
-        token: state.token,
-        jenis_dokumen: jenis,
-        base64: b64,
-        nama_file: nama,
-        mime_type: mime
-      }).then(function (res) {
-        bar.style.width = '100%';
-        if (res.success) {
-          state.dokumen[jenis] = true;
-          box.classList.add('has-file');
-          box.querySelector('.ub-ico').textContent = '✅';
-          status.className = 'ub-status ok';
-          status.textContent = 'Sudah diunggah (' + Math.round(res.data.ukuran_byte / 1024) + ' KB)';
-          toast(jenis + ' berhasil diunggah', 'success');
-        } else {
+      Api.registration.uploadDokumen(state.token, jenis, b64, nama, mime)
+        .then(function (res) {
+          bar.style.width = '100%';
+          if (res.success) {
+            state.dokumen[jenis] = true;
+            box.classList.add('has-file');
+            box.querySelector('.ub-ico').textContent = '✅';
+            status.className = 'ub-status ok';
+            status.textContent = 'Sudah diunggah (' + Math.round(res.data.ukuran_byte / 1024) + ' KB)';
+            Utils.toast(jenis + ' berhasil diunggah', 'success');
+          } else {
+            status.className = 'ub-status err';
+            status.textContent = res.message || 'Gagal mengunggah';
+            Utils.toast('Gagal: ' + res.message, 'error');
+          }
+          setTimeout(function () { progress.classList.remove('show'); }, 800);
+        })
+        .catch(function (err) {
           status.className = 'ub-status err';
-          status.textContent = res.message || 'Gagal mengunggah';
-          toast('Gagal: ' + res.message, 'error');
-        }
-        setTimeout(function () { progress.classList.remove('show'); }, 800);
-      }).catch(function (err) {
-        status.className = 'ub-status err';
-        status.textContent = 'Error: ' + err.message;
-        progress.classList.remove('show');
-      });
+          status.textContent = 'Error: ' + err.message;
+          progress.classList.remove('show');
+        });
     });
   }
 
-  /**
-   * Kompres gambar via canvas. PDF dilewatkan apa adanya (max 2MB).
-   */
   function compressFile(file, cb) {
     if (file.type === 'application/pdf') {
       var r = new FileReader();
-      r.onload = function () {
-        cb(r.result.split(',')[1], file.type, file.name);
-      };
+      r.onload = function () { cb(r.result.split(',')[1], file.type, file.name); };
+      r.onerror = function () { Utils.toast('Gagal membaca file', 'error'); };
       r.readAsDataURL(file);
       return;
     }
-    // Gambar → kompres
     var img = new Image();
     var url = URL.createObjectURL(file);
     img.onload = function () {
@@ -838,31 +715,33 @@
     };
     img.onerror = function () {
       URL.revokeObjectURL(url);
-      toast('Gagal memuat gambar', 'error');
+      Utils.toast('Gagal memuat gambar', 'error');
     };
     img.src = url;
   }
 
   function submitFinal() {
     if (!state.dokumen.FOTO || !state.dokumen.KK || !state.dokumen.AKTA) {
-      toast('Lengkapi semua dokumen (Foto, KK, Akta)', 'error');
+      Utils.toast('Lengkapi semua dokumen (Foto, KK, Akta)', 'error');
       return;
     }
     if (!confirm('Kirim pendaftaran sekarang? Data tidak bisa diubah setelah dikirim.')) return;
-    showLoading('Mengirim pendaftaran...');
-    api('registration.submit', { token: state.token }).then(function (res) {
-      hideLoading();
-      if (res.success) {
-        state.submitted = res.data;
-        sessionStorage.removeItem(TOKEN_KEY);
-        renderSuccess();
-      } else {
-        toast('Gagal: ' + res.message, 'error');
-      }
-    }).catch(function (err) {
-      hideLoading();
-      toast('Error: ' + err.message, 'error');
-    });
+    Utils.showLoading('Mengirim pendaftaran...');
+    Api.registration.submit(state.token)
+      .then(function (res) {
+        Utils.hideLoading();
+        if (res.success) {
+          state.submitted = res.data;
+          sessionStorage.removeItem(TOKEN_KEY);
+          renderSuccess();
+        } else {
+          Utils.toast('Gagal: ' + res.message, 'error');
+        }
+      })
+      .catch(function (err) {
+        Utils.hideLoading();
+        Utils.toast('Error: ' + err.message, 'error');
+      });
   }
 
   /* ============================================================
@@ -870,7 +749,7 @@
    * ============================================================ */
   function renderSuccess() {
     var d = state.submitted || {};
-    var wa = d.nomor_wa_panitia ? normalizeWa(d.nomor_wa_panitia) : '';
+    var wa = d.nomor_wa_panitia ? Utils.normalizeWa(d.nomor_wa_panitia) : '';
     var pesan = encodeURIComponent(
       'Assalamualaikum, saya ' + (d.nama_lengkap || '') +
       ' dengan nomor pendaftaran ' + (d.nomor_pendaftaran || '') +
@@ -884,9 +763,9 @@
         '<div class="ico">🎉</div>' +
         '<h2>Pendaftaran Berhasil!</h2>' +
         '<p style="color:#6b7280;">Simpan nomor pendaftaran Anda:</p>' +
-        '<div class="nomor">' + esc(d.nomor_pendaftaran || '-') + '</div>' +
+        '<div class="nomor">' + Utils.escapeHtml(d.nomor_pendaftaran || '-') + '</div>' +
         '<p class="note">' +
-          'Terima kasih, <strong>' + esc(d.nama_lengkap || '') + '</strong>.<br>' +
+          'Terima kasih, <strong>' + Utils.escapeHtml(d.nama_lengkap || '') + '</strong>.<br>' +
           'Pendaftaran Anda sedang menunggu verifikasi panitia.<br>' +
           'Silakan simpan nomor pendaftaran untuk pengecekan status.' +
         '</p>' +
@@ -902,19 +781,19 @@
    * ============================================================ */
   function field(name, label, type, value, req, cls, hint) {
     return '<div class="field ' + (cls || '') + '" data-name="' + name + '">' +
-      '<label>' + esc(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
-      '<input type="' + type + '" data-field="' + name + '" value="' + esc(value || '') + '">' +
-      (hint ? '<div class="hint">' + esc(hint) + '</div>' : '') +
+      '<label>' + Utils.escapeHtml(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
+      '<input type="' + type + '" data-field="' + name + '" value="' + Utils.escapeHtml(value || '') + '">' +
+      (hint ? '<div class="hint">' + Utils.escapeHtml(hint) + '</div>' : '') +
       '<div class="error-msg">Wajib diisi</div>' +
     '</div>';
   }
 
   function select(name, label, opts, value, req) {
     var h = '<div class="field" data-name="' + name + '">' +
-      '<label>' + esc(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
+      '<label>' + Utils.escapeHtml(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
       '<select data-field="' + name + '">';
     opts.forEach(function (o) {
-      h += '<option value="' + esc(o[0]) + '"' + (String(value || '') === String(o[0]) ? ' selected' : '') + '>' + esc(o[1]) + '</option>';
+      h += '<option value="' + Utils.escapeHtml(o[0]) + '"' + (String(value || '') === String(o[0]) ? ' selected' : '') + '>' + Utils.escapeHtml(o[1]) + '</option>';
     });
     h += '</select><div class="error-msg">Wajib diisi</div></div>';
     return h;
@@ -951,11 +830,11 @@
     Object.keys(map).forEach(function (k) {
       var el = document.querySelector('[data-field="' + k + '"]');
       if (!data[k]) {
-        if (el) el.closest('.field').classList.add('invalid');
+        if (el && el.closest('.field')) el.closest('.field').classList.add('invalid');
         ok = false;
       }
     });
-    if (!ok) toast('Lengkapi field yang wajib diisi', 'error');
+    if (!ok) Utils.toast('Lengkapi field yang wajib diisi', 'error');
     return ok;
   }
 
@@ -968,44 +847,27 @@
     return d.getFullYear() + '-' + m + '-' + day;
   }
 
-  function isValidWa(s) {
-    s = String(s || '').replace(/\D/g, '');
-    if (s.indexOf('0') === 0) s = '62' + s.substring(1);
-    else if (s.indexOf('8') === 0) s = '62' + s;
-    return /^628\d{7,13}$/.test(s);
-  }
-
-  function normalizeWa(s) {
-    s = String(s || '').replace(/\D/g, '');
-    if (s.indexOf('0') === 0) s = '62' + s.substring(1);
-    else if (s.indexOf('8') === 0) s = '62' + s;
-    return s;
-  }
-
   /* ============================================================
    * NAVIGASI & SIMPAN
    * ============================================================ */
   function goNext(step, data) {
-    showLoading('Menyimpan...');
-    api('registration.saveDraft', {
-      token: state.token,
-      step: step,
-      data: data
-    }).then(function (res) {
-      hideLoading();
-      if (!res.success) {
-        toast('Gagal menyimpan: ' + res.message, 'error');
-        return;
-      }
-      // Merge ke state
-      Object.keys(data).forEach(function (k) { state.data[k] = data[k]; });
-      state.step++;
-      renderApp();
-      window.scrollTo(0, 0);
-    }).catch(function (err) {
-      hideLoading();
-      toast('Error: ' + err.message, 'error');
-    });
+    Utils.showLoading('Menyimpan...');
+    Api.registration.saveDraft(state.token, step, data)
+      .then(function (res) {
+        Utils.hideLoading();
+        if (!res.success) {
+          Utils.toast('Gagal menyimpan: ' + res.message, 'error');
+          return;
+        }
+        Object.keys(data).forEach(function (k) { state.data[k] = data[k]; });
+        state.step++;
+        renderApp();
+        window.scrollTo(0, 0);
+      })
+      .catch(function (err) {
+        Utils.hideLoading();
+        Utils.toast('Error: ' + err.message, 'error');
+      });
   }
 
   /* ============================================================
