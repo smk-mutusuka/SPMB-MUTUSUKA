@@ -275,10 +275,18 @@
     Api.registration.resume(token)
       .then(function (res) {
         Utils.hideLoading();
-        if (!res.success) {
-          sessionStorage.removeItem(TOKEN_KEY);
+         if (!res.success) {
           if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
-            Utils.toast('Sesi sebelumnya berakhir. Mulai pendaftaran baru.', 'warning');
+            // Sesi berakhir — jangan langsung buang, beri pilihan ke user
+            var lanjutBaru = confirm(
+              'Sesi pendaftaran Anda sudah berakhir (lebih dari 4 jam tidak ada aktivitas).\n\n' +
+              'Data yang belum terkirim akan hilang. Mulai pendaftaran baru?'
+            );
+            if (!lanjutBaru) {
+              window.location.href = 'index.html';
+              return;
+            }
+            sessionStorage.removeItem(TOKEN_KEY);
             startSession();
             return;
           }
