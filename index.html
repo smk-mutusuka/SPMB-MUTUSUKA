@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPMB SMK Muhammadiyah 1 Surakarta</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=1.0.0">
+  <title>SPMB SMK Mutusuka</title>
+  <link rel="stylesheet" href="style.css?v=1.0.0">
 </head>
 <body>
 
 <div class="landing-wrapper">
   <div class="landing-card">
-    <img src="https://drive.google.com/uc?export=view&id=1BokjTNpAmp9l6QpM0ULASQp2TpvMEUjb" alt="Logo Sekolah" class="landing-logo" onerror="this.style.display='none'">
+    <img src="logo.png" alt="Logo Sekolah" class="landing-logo"
+         onerror="this.style.display='none'">
     <h1 class="landing-title" id="school-name">SMK Muhammadiyah 1 Surakarta</h1>
     <p class="landing-subtitle">
       Sistem Penerimaan Murid Baru<br>
-      Tahun Pelajaran <span id="tahun-ajaran">2027/2028</span>
+      Tahun Pelajaran <span id="tahun-ajaran">...</span>
     </p>
 
     <div id="info-sekolah" class="text-muted mb-3" style="font-size:0.85rem;"></div>
@@ -33,19 +34,14 @@
   </div>
 </div>
 
-<script src="assets/js/config.js?v=1.0.0"></script>
-<script src="assets/js/utils.js?v=1.0.0"></script>
-<script src="assets/js/api.js?v=1.0.0"></script>
+<script src="config.js?v=1.0.0"></script>
+<script src="utils.js?v=1.0.0"></script>
+<script src="api.js?v=1.0.0"></script>
 <script>
-  // Muat pengaturan publik untuk tampilkan info sekolah
   (function () {
     document.getElementById('tahun-ajaran').textContent = '...';
 
-    Api.settings.listKonsentrasi()
-      .then(function (res) {
-        // hanya untuk memastikan backend hidup
-        return Api.call('settings.get', {}, { useToken: false });
-      })
+    Api.call('settings.get', {}, { useToken: false })
       .then(function (res) {
         if (res && res.success && res.data && res.data.settings) {
           const s = res.data.settings;
@@ -59,7 +55,6 @@
         }
       })
       .catch(function (err) {
-        // Backend belum siap / URL belum diisi — tetap tampilkan halaman
         console.warn('Gagal memuat pengaturan:', err.message);
       });
   })();
