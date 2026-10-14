@@ -20,13 +20,13 @@ const APP_CONFIG = {
    * 5. Copy "Web app URL"
    * 6. Paste di sini
    */
-  APPS_SCRIPT_URL: 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI',
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec',
 
   /** Versi aplikasi (untuk cache busting). */
   APP_VERSION: '1.0.0-tahap2',
 
   /** Nama aplikasi. */
-  APP_NAME: 'SPMB SMK Muhammadiyah 1 Surakarta',
+  APP_NAME: 'SPMB SMK Mutusuka',
 
   /** Timeout fetch (ms). */
   FETCH_TIMEOUT: 30000
