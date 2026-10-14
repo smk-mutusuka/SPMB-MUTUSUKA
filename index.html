@@ -3,39 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Petugas — SPMB SMK Muhammadiyah 1 Surakarta</title>
+  <title>SPMB SMK Muhammadiyah 1 Surakarta</title>
   <link rel="stylesheet" href="style.css?v=2.0.0">
 </head>
 <body>
 
-<div class="login-wrapper">
-  <div class="login-card">
-    <div class="login-logo">
-      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-    </div>
-    <h1 class="login-title">Login Petugas</h1>
-    <p class="login-subtitle">SPMB SMK Muhammadiyah 1 Surakarta</p>
+<div class="landing-wrapper">
+  <div class="landing-card">
+    <img src="logo.png" alt="Logo Sekolah" class="landing-logo"
+         onerror="this.style.display='none'">
+    <h1 class="landing-title" id="school-name">SMK Muhammadiyah 1 Surakarta</h1>
+    <p class="landing-subtitle">
+      Sistem Penerimaan Murid Baru<br>
+      Tahun Pelajaran <span id="tahun-ajaran">...</span>
+    </p>
 
-    <form id="login-form" autocomplete="on">
-      <div class="form-group">
-        <label class="form-label" for="username">Username</label>
-        <input type="text" id="username" name="username" class="form-input"
-               autocomplete="username" required autofocus>
-      </div>
+    <div id="info-sekolah" class="text-muted mb-3" style="font-size:0.85rem;"></div>
 
-      <div class="form-group">
-        <label class="form-label" for="password">Password</label>
-        <input type="password" id="password" name="password" class="form-input"
-               autocomplete="current-password" required>
-      </div>
+    <a href="register.html" class="btn btn-primary btn-lg btn-block mb-2">
+      Daftar Sekarang
+    </a>
 
-      <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login">
-        Masuk
-      </button>
-    </form>
+    <a href="login.html" class="btn btn-secondary btn-block">
+      Login Petugas
+    </a>
 
-    <p class="text-center mt-3">
-      <a href="index.html" class="text-muted" style="font-size:0.85rem;">← Kembali ke halaman utama</a>
+    <p class="text-muted mt-3" style="font-size:0.75rem;">
+      Dengan mendaftar, Anda menyetujui pemrosesan data pribadi untuk keperluan PPDB.
     </p>
   </div>
 </div>
@@ -44,52 +38,30 @@
 <script src="config.js?v=2.0.0"></script>
 <script src="utils.js?v=2.0.0"></script>
 <script src="api.js?v=2.0.0"></script>
-<script src="auth.js?v=2.0.0"></script>
 <script>
   (function () {
-    if (Auth.isLoggedIn()) {
-      window.location.href = 'dashboard.html';
-      return;
-    }
+    console.log('[SPMB] index.html script mulai');
+    console.log('[SPMB] Api.call source:', Api.call.toString().substring(0, 150));
 
-    const form = document.getElementById('login-form');
-    const btn = document.getElementById('btn-login');
+    document.getElementById('tahun-ajaran').textContent = '...';
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-
-      if (!username || !password) {
-        Utils.toast('Username dan password wajib diisi', 'warning');
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Memproses...';
-      Utils.showLoading('Memverifikasi...');
-
-      Api.auth.login(username, password)
-        .then(function (res) {
-          if (res.success) {
-            Auth.saveSession(res.data);
-            Utils.toast('Login berhasil', 'success');
-            setTimeout(function () {
-              window.location.href = 'dashboard.html';
-            }, 600);
-          } else {
-            Utils.toast(res.message || 'Login gagal', 'error');
-          }
-        })
-        .catch(function (err) {
-          Utils.toast(err.message || 'Gagal terhubung ke server', 'error');
-        })
-        .finally(function () {
-          btn.disabled = false;
-          btn.textContent = 'Masuk';
-          Utils.hideLoading();
-        });
-    });
+    Api.call('settings.get', {}, { useToken: false })
+      .then(function (res) {
+        console.log('[SPMB] respons settings.get:', res);
+        if (res && res.success && res.data && res.data.settings) {
+          const s = res.data.settings;
+          if (s.nama_sekolah) document.getElementById('school-name').textContent = s.nama_sekolah;
+          if (s.tahun_ajaran) document.getElementById('tahun-ajaran').textContent = s.tahun_ajaran;
+          const info = [];
+          if (s.alamat_sekolah) info.push(s.alamat_sekolah);
+          if (s.telepon_sekolah) info.push('Telp: ' + s.telepon_sekolah);
+          if (s.website_sekolah) info.push(s.website_sekolah);
+          document.getElementById('info-sekolah').innerHTML = info.map(Utils.escapeHtml).join('<br>');
+        }
+      })
+      .catch(function (err) {
+        console.error('[SPMB] Gagal memuat pengaturan:', err.message, err);
+      });
   })();
 </script>
 </body>
