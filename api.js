@@ -7,21 +7,15 @@
  * PENTING:
  * - Apps Script redirect POST → CORS hilang → error.
  * - Solusi: kirim request via GET, payload di query string (base64).
- * - Apps Script TIDAK redirect GET → CORS aman.
  *
- * Ada dua jenis token:
- * - Token PETUGAS → disimpan di sessionStorage 'spmb_token',
- *   otomatis ditempel oleh Api.call() (useToken default true).
- * - Token PENDAFTAR → dikirim manual via payload,
- *   panggil dengan { useToken: false }.
+ * Dua jenis token:
+ * - Token PETUGAS  → sessionStorage 'spmb_token' (auto via useToken).
+ * - Token PENDAFTAR → dikirim manual via payload (useToken: false).
  * ============================================================
  */
 
 const Api = {
 
-  /**
-   * Encode string ke base64 URL-safe.
-   */
   _b64encode: function (str) {
     const utf8 = unescape(encodeURIComponent(str));
     return btoa(utf8)
@@ -35,7 +29,6 @@ const Api = {
    * @param {string} action
    * @param {object} payload
    * @param {object} opts - { useToken: bool (default true), timeout: ms }
-   * @return {Promise<object>}
    */
   call: function (action, payload, opts) {
     opts = opts || {};
@@ -47,40 +40,23 @@ const Api = {
     }
 
     const token = useToken ? Utils.getSession('spmb_token') : null;
-
-    const body = {
-      action: action,
-      token: token,
-      payload: payload || {}
-    };
-
+    const body = { action: action, token: token, payload: payload || {} };
     const b64 = Api._b64encode(JSON.stringify(body));
     const url = APP_CONFIG.APPS_SCRIPT_URL + '?data=' + encodeURIComponent(b64);
 
     const controller = new AbortController();
     const timer = setTimeout(function () { controller.abort(); }, timeout);
 
-    return fetch(url, {
-      method: 'GET',
-      signal: controller.signal,
-      redirect: 'follow'
-    })
+    return fetch(url, { method: 'GET', signal: controller.signal, redirect: 'follow' })
       .then(function (res) {
         clearTimeout(timer);
-        if (!res.ok) {
-          throw new Error('HTTP ' + res.status);
-        }
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.text();
       })
       .then(function (text) {
         let json;
-        try {
-          json = JSON.parse(text);
-        } catch (e) {
-          throw new Error('Respons server bukan JSON valid');
-        }
-        // Auto-handle sesi petugas kedaluwarsa
-        // (hanya untuk request yang pakai token petugas)
+        try { json = JSON.parse(text); }
+        catch (e) { throw new Error('Respons server bukan JSON valid'); }
         if (useToken && !json.success && json.code === 'SESSION_EXPIRED') {
           Utils.clearSession();
           Utils.toast('Sesi telah berakhir. Silakan login ulang.', 'warning');
@@ -90,9 +66,7 @@ const Api = {
       })
       .catch(function (err) {
         clearTimeout(timer);
-        if (err.name === 'AbortError') {
-          throw new Error('Permintaan timeout. Coba lagi.');
-        }
+        if (err.name === 'AbortError') throw new Error('Permintaan timeout. Coba lagi.');
         throw err;
       });
   },
@@ -128,64 +102,97 @@ const Api = {
     }
   },
 
-  /**
-   * Registration API — dipakai oleh dua pihak:
-   * - PETUGAS  : list, get, verify, stats (pakai token sesi user)
-   * - PENDAFTAR: start, resume, saveDraft, uploadDokumen, submit, status
-   *              (pakai token pendaftar di payload, useToken: false)
-   */
-  registration: {
-
-    /* --- Petugas --- */
-    list: function (params) {
-      return Api.call('registration.list', params || {});
-    },
-    get: function (registration_id) {
-      return Api.call('registration.get', { registration_id: registration_id });
-    },
-    verify: function (registration_id, status, catatan) {
-      return Api.call('registration.verify', {
-        registration_id: registration_id,
-        status: status,
-        catatan: catatan || ''
-      });
-    },
-    stats: function () {
-      return Api.call('registration.stats', {});
-    },
-
-    /* --- Pendaftar --- */
-    start: function () {
-      return Api.call('registration.start', {}, { useToken: false });
-    },
-    resume: function (tokenPendaftar) {
-      return Api.call('registration.resume', { token: tokenPendaftar }, { useToken: false });
-    },
-    saveDraft: function (tokenPendaftar, step, data) {
-      return Api.call('registration.saveDraft', {
-        token: tokenPendaftar,
-        step: step,
-        data: data
-      }, { useToken: false });
-    },
-    uploadDokumen: function (tokenPendaftar, jenis_dokumen, base64, nama_file, mime_type) {
-      return Api.call('registration.uploadDokumen', {
-        token: tokenPendaftar,
-        jenis_dokumen: jenis_dokumen,
-        base64: base64,
-        nama_file: nama_file,
-        mime_type: mime_type
-      }, { useToken: false, timeout: 60000 });
-    },
-    submit: function (tokenPendaftar) {
-      return Api.call('registration.submit', { token: tokenPendaftar }, { useToken: false });
-    },
-    status: function (tokenPendaftar) {
-      return Api.call('registration.status', { token: tokenPendaftar }, { useToken: false });
-    }
+  /* ---- ADMIN ---- */
+  admin: {
+    // Users
+    listUsers: function () { return Api.call('admin.listUsers', {}); },
+    createUser: function (d) { return Api.call('admin.createUser', d); },
+    updateUser: function (d) { return Api.call('admin.updateUser', d); },
+    resetUserPassword: function (d) { return Api.call('admin.resetUserPassword', d); },
+    deleteUser: function (userId) { return Api.call('admin.deleteUser', { user_id: userId }); },
+    // Konsentrasi
+    listKonsentrasi: function () { return Api.call('admin.listKonsentrasi', {}); },
+    saveKonsentrasi: function (d) { return Api.call('admin.saveKonsentrasi', d); },
+    deleteKonsentrasi: function (id) { return Api.call('admin.deleteKonsentrasi', { konsentrasi_id: id }); },
+    // Pertanyaan
+    listPertanyaan: function () { return Api.call('admin.listPertanyaan', {}); },
+    savePertanyaan: function (d) { return Api.call('admin.savePertanyaan', d); },
+    deletePertanyaan: function (id) { return Api.call('admin.deletePertanyaan', { question_id: id }); },
+    // Template WA
+    listTemplate: function () { return Api.call('admin.listTemplate', {}); },
+    saveTemplate: function (d) { return Api.call('admin.saveTemplate', d); },
+    // Settings lengkap
+    getFullSettings: function () { return Api.call('admin.getFullSettings', {}); }
   },
 
-  ping: function () {
-    return Api.call('ping', {}, { useToken: false });
-  }
+  /* ---- REGISTRATION ---- */
+  registration: {
+    // Petugas
+    list: function (params) { return Api.call('registration.list', params || {}); },
+    get: function (id) { return Api.call('registration.get', { registration_id: id }); },
+    verify: function (id, status, catatan) {
+      return Api.call('registration.verify', { registration_id: id, status: status, catatan: catatan || '' });
+    },
+    stats: function () { return Api.call('registration.stats', {}); },
+    // Pendaftar
+    start: function () { return Api.call('registration.start', {}, { useToken: false }); },
+    resume: function (t) { return Api.call('registration.resume', { token: t }, { useToken: false }); },
+    saveDraft: function (t, step, data) {
+      return Api.call('registration.saveDraft', { token: t, step: step, data: data }, { useToken: false });
+    },
+    uploadDokumen: function (t, jenis, b64, nama, mime) {
+      return Api.call('registration.uploadDokumen', {
+        token: t, jenis_dokumen: jenis, base64: b64, nama_file: nama, mime_type: mime
+      }, { useToken: false, timeout: 60000 });
+    },
+    submit: function (t) { return Api.call('registration.submit', { token: t }, { useToken: false }); },
+    status: function (t) { return Api.call('registration.status', { token: t }, { useToken: false }); }
+  },
+
+  /* ---- INTERVIEW ---- */
+  interview: {
+    listCandidates: function (params) { return Api.call('interview.listCandidates', params || {}); },
+    get: function (id) { return Api.call('interview.get', { registration_id: id }); },
+    save: function (d) { return Api.call('interview.save', d); }
+  },
+
+  /* ---- PAYMENT ---- */
+  payment: {
+    list: function (params) { return Api.call('payment.list', params || {}); },
+    summary: function () { return Api.call('payment.summary', {}); },
+    create: function (d) { return Api.call('payment.create', d); },
+    cancel: function (id, alasan) {
+      return Api.call('payment.cancel', { transaction_id: id, alasan: alasan || '' });
+    },
+    getForPrint: function (id) { return Api.call('payment.getForPrint', { transaction_id: id }); }
+  },
+
+  /* ---- SELECTION ---- */
+  selection: {
+    listCandidates: function (params) { return Api.call('selection.listCandidates', params || {}); },
+    setDecision: function (id, decision, notes) {
+      return Api.call('selection.setDecision', {
+        registration_id: id, decision: decision, decision_notes: notes || ''
+      });
+    },
+    bulkSet: function (items) { return Api.call('selection.bulkSet', { items: items }); },
+    publish: function (publish) { return Api.call('selection.publish', { publish: publish }); },
+    getResult: function (id) { return Api.call('selection.getResult', { registration_id: id }); },
+    stats: function () { return Api.call('selection.stats', {}); }
+  },
+
+  /* ---- NOTIFIKASI WA ---- */
+  notif: {
+    preview: function (regId, templateCode, recipientType) {
+      return Api.call('notif.preview', {
+        registration_id: regId,
+        template_code: templateCode,
+        recipient_type: recipientType || 'SISWA'
+      });
+    },
+    log: function (d) { return Api.call('notif.log', d); },
+    listLog: function (params) { return Api.call('notif.listLog', params || {}); }
+  },
+
+  ping: function () { return Api.call('ping', {}, { useToken: false }); }
 };
