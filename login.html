@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Petugas — SPMB SMK Muhammadiyah 1 Surakarta</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=1.0.0">
+  <title>Login Petugas — SPMB SMK Mutusuka</title>
+  <link rel="stylesheet" href="style.css?v=1.0.0">
 </head>
 <body>
 
 <div class="login-wrapper">
   <div class="login-card">
     <div class="login-logo">
-      <img src="https://drive.google.com/uc?export=view&id=1BokjTNpAmp9l6QpM0ULASQp2TpvMEUjb" alt="Logo" onerror="this.style.display='none'">
+      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
     </div>
     <h1 class="login-title">Login Petugas</h1>
-    <p class="login-subtitle">SPMB SMK Muhammadiyah 1 Surakarta</p>
+    <p class="login-subtitle">SPMB SMK Mutusuka</p>
 
     <form id="login-form" autocomplete="on">
       <div class="form-group">
@@ -40,13 +40,12 @@
   </div>
 </div>
 
-<script src="assets/js/config.js?v=1.0.0"></script>
-<script src="assets/js/utils.js?v=1.0.0"></script>
-<script src="assets/js/api.js?v=1.0.0"></script>
-<script src="assets/js/auth.js?v=1.0.0"></script>
+<script src="config.js?v=1.0.0"></script>
+<script src="utils.js?v=1.0.0"></script>
+<script src="api.js?v=1.0.0"></script>
+<script src="auth.js?v=1.0.0"></script>
 <script>
   (function () {
-    // Jika sudah login, langsung redirect
     if (Auth.isLoggedIn()) {
       window.location.href = 'dashboard.html';
       return;
