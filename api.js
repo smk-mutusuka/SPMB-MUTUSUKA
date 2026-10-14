@@ -107,7 +107,7 @@ const Api = {
     }
   },
 
-  settings: {
+    settings: {
     get: function () {
       return Api.call('settings.get', {}, { useToken: false });
     },
@@ -116,6 +116,25 @@ const Api = {
     },
     listKonsentrasi: function () {
       return Api.call('settings.listKonsentrasi', {}, { useToken: false });
+    }
+  },
+
+  registration: {
+    list: function (params) {
+      return Api.call('registration.list', params || {});
+    },
+    get: function (registration_id) {
+      return Api.call('registration.get', { registration_id: registration_id });
+    },
+    verify: function (registration_id, status, catatan) {
+      return Api.call('registration.verify', {
+        registration_id: registration_id,
+        status: status,
+        catatan: catatan || ''
+      });
+    },
+    stats: function () {
+      return Api.call('registration.stats', {});
     }
   },
 
