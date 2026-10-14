@@ -26,8 +26,7 @@
   }
   .logo { max-width: 100px; margin-bottom: 16px; }
   h1 { font-size: 1.4rem; font-weight: 700; color: #1a5490; margin-bottom: 8px; }
-  .subtitle { font-size: 0.95rem; color: #6b7280; margin-bottom: 24px; line-height: 1.5; }
-  .info { font-size: 0.85rem; color: #6b7280; margin-bottom: 24px; line-height: 1.6; }
+  .subtitle { font-size: 0.95rem; color: #6b7280; margin-bottom: 32px; line-height: 1.5; }
   .btn {
     display: block;
     padding: 14px 24px;
@@ -44,17 +43,6 @@
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
   .footnote { font-size: 0.75rem; color: #6b7280; margin-top: 20px; }
-  #debug {
-    margin-top: 20px;
-    padding: 10px;
-    background: #f3f4f6;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    color: #6b7280;
-    font-family: monospace;
-    text-align: left;
-    word-break: break-all;
-  }
 </style>
 </head>
 <body>
@@ -66,7 +54,6 @@
     Sistem Penerimaan Murid Baru<br>
     Tahun Pelajaran <span id="tahun-ajaran">...</span>
   </p>
-  <div class="info" id="info-sekolah"></div>
 
   <a href="register.html" class="btn btn-primary">Daftar Sekarang</a>
   <a href="login.html" class="btn btn-secondary">Login Petugas</a>
@@ -74,66 +61,34 @@
   <p class="footnote">
     Dengan mendaftar, Anda menyetujui pemrosesan data pribadi untuk keperluan PPDB.
   </p>
-
-  <div id="debug">Status: memuat...</div>
 </div>
 
 <script>
 (function () {
   var APPS_URL = 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec';
-  var debugEl = document.getElementById('debug');
-
-  function setDebug(msg) {
-    debugEl.textContent = 'Status: ' + msg;
-    console.log('[SPMB]', msg);
-  }
-
-  setDebug('script mulai');
 
   function b64encode(str) {
     var utf8 = unescape(encodeURIComponent(str));
     return btoa(utf8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 
-  try {
-    setDebug('menyiapkan request');
-    var payload = { action: 'settings.getPublic', token: null, payload: {} };
-    var b64 = b64encode(JSON.stringify(payload));
-    var url = APPS_URL + '?data=' + encodeURIComponent(b64);
-    setDebug('fetch ke Apps Script...');
+  var payload = { action: 'settings.getPublic', token: null, payload: {} };
+  var b64 = b64encode(JSON.stringify(payload));
+  var url = APPS_URL + '?data=' + encodeURIComponent(b64);
 
-    fetch(url, { method: 'GET', redirect: 'follow' })
-      .then(function (r) {
-        setDebug('respons HTTP ' + r.status);
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.text();
-      })
-      .then(function (text) {
-        setDebug('parsing JSON...');
-        var json = JSON.parse(text);
-        console.log('[SPMB] respons:', json);
-        if (json.success && json.data && json.data.settings) {
-          var s = json.data.settings;
-          if (s.nama_sekolah) document.getElementById('school-name').textContent = s.nama_sekolah;
-          if (s.tahun_ajaran) document.getElementById('tahun-ajaran').textContent = s.tahun_ajaran;
-          var info = [];
-          if (s.alamat_sekolah) info.push(s.alamat_sekolah);
-          if (s.telepon_sekolah) info.push('Telp: ' + s.telepon_sekolah);
-          if (s.website_sekolah) info.push(s.website_sekolah);
-          document.getElementById('info-sekolah').innerHTML = info.join('<br>');
-          setDebug('BERHASIL — data dimuat');
-        } else {
-          setDebug('respons tidak sesuai format: ' + JSON.stringify(json));
-        }
-      })
-      .catch(function (err) {
-        setDebug('GAGAL: ' + err.message);
-        console.error('[SPMB] error:', err);
-      });
-  } catch (err) {
-    setDebug('ERROR: ' + err.message);
-    console.error('[SPMB] exception:', err);
-  }
+  fetch(url, { method: 'GET', redirect: 'follow' })
+    .then(function (r) { return r.text(); })
+    .then(function (text) {
+      var json = JSON.parse(text);
+      if (json.success && json.data && json.data.settings) {
+        var s = json.data.settings;
+        if (s.nama_sekolah) document.getElementById('school-name').textContent = s.nama_sekolah;
+        if (s.tahun_ajaran) document.getElementById('tahun-ajaran').textContent = s.tahun_ajaran;
+      }
+    })
+    .catch(function (err) {
+      console.warn('[SPMB] gagal memuat pengaturan:', err.message);
+    });
 })();
 </script>
 </body>
