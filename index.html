@@ -97,7 +97,7 @@
 
   try {
     setDebug('menyiapkan request');
-    var payload = { action: 'settings.get', token: null, payload: {} };
+    var payload = { action: 'settings.getPublic', token: null, payload: {} };
     var b64 = b64encode(JSON.stringify(payload));
     var url = APPS_URL + '?data=' + encodeURIComponent(b64);
     setDebug('fetch ke Apps Script...');
@@ -123,7 +123,7 @@
           document.getElementById('info-sekolah').innerHTML = info.join('<br>');
           setDebug('BERHASIL — data dimuat');
         } else {
-          setDebug('respons tidak sesuai format');
+          setDebug('respons tidak sesuai format: ' + JSON.stringify(json));
         }
       })
       .catch(function (err) {
