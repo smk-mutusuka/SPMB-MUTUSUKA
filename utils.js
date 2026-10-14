@@ -139,3 +139,8 @@ const Utils = {
     try { sessionStorage.clear(); } catch (e) {}
   }
 };
+  /** Encode string ke base64 URL-safe (untuk endpoint publik tanpa Api wrapper). */
+  b64UrlEncode: function (str) {
+    const utf8 = unescape(encodeURIComponent(str));
+    return btoa(utf8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  },
