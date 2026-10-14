@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendaftaran — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa;
+    color: #1f2937;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  .wrap { max-width: 820px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .header img { width: 56px; height: 56px; object-fit: contain; }
+  .header .htitle { font-size: 1.1rem; font-weight: 700; color: #1a5490; line-height: 1.3; }
+  .header .hsub { font-size: 0.82rem; color: #6b7280; }
+
+  .card {
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    padding: 24px; margin-bottom: 20px;
+  }
+
+  /* Stepper */
+  .stepper {
+    display: flex; gap: 4px; margin-bottom: 24px;
+    overflow-x: auto; padding-bottom: 4px;
+  }
+  .step-item {
+    flex: 1; min-width: 100px; text-align: center;
+    padding: 10px 6px; font-size: 0.72rem;
+    color: #9ca3af; position: relative;
+    border-top: 3px solid #e5e7eb;
+  }
+  .step-item .num {
+    display: inline-block; width: 22px; height: 22px;
+    line-height: 22px; border-radius: 50%;
+    background: #e5e7eb; color: #6b7280;
+    font-weight: 600; font-size: 0.72rem; margin-bottom: 4px;
+  }
+  .step-item.active { color: #1a5490; border-top-color: #1a5490; font-weight: 600; }
+  .step-item.active .num { background: #1a5490; color: #fff; }
+  .step-item.done { color: #059669; border-top-color: #059669; }
+  .step-item.done .num { background: #059669; color: #fff; }
+
+  h2.step-title { font-size: 1.15rem; color: #1a5490; margin-bottom: 4px; }
+  p.step-desc { font-size: 0.85rem; color: #6b7280; margin-bottom: 20px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px 16px;
+  }
+  .grid .full { grid-column: 1 / -1; }
+
+  label {
+    display: block; font-size: 0.78rem; font-weight: 500;
+    color: #374151; margin-bottom: 5px;
+  }
+  label .req { color: #dc2626; }
+  input[type=text], input[type=email], input[type=date],
+  input[type=number], input[type=tel], input[type=password],
+  select, textarea {
+    width: 100%; padding: 9px 12px;
+    border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 0.9rem; font-family: inherit;
+    background: #fff; color: #1f2937;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: #1a5490;
+    box-shadow: 0 0 0 3px rgba(26,84,144,0.1);
+  }
+  textarea { min-height: 70px; resize: vertical; }
+  .hint { font-size: 0.72rem; color: #9ca3af; margin-top: 4px; }
+  .error-msg { font-size: 0.72rem; color: #dc2626; margin-top: 4px; display: none; }
+  .field.invalid input, .field.invalid select, .field.invalid textarea {
+    border-color: #dc2626;
+  }
+  .field.invalid .error-msg { display: block; }
+
+  .actions {
+    display: flex; gap: 10px; justify-content: space-between;
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .btn {
+    padding: 11px 22px; border: none; border-radius: 8px;
+    font-size: 0.92rem; font-weight: 500; cursor: pointer;
+    font-family: inherit; transition: background 0.15s;
+  }
+  .btn-primary { background: #1a5490; color: #fff; }
+  .btn-primary:hover { background: #143f6e; }
+  .btn-primary:disabled { background: #93b3d4; cursor: not-allowed; }
+  .btn-secondary { background: #e5e7eb; color: #1f2937; }
+  .btn-secondary:hover { background: #d1d5db; }
+
+  /* Keluarga */
+  .keluarga-block {
+    border: 1px solid #e5e7eb; border-radius: 10px;
+    padding: 16px; margin-bottom: 14px; background: #f9fafb;
+  }
+  .keluarga-block h4 {
+    font-size: 0.9rem; color: #1a5490; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .keluarga-block h4 .tag {
+    font-size: 0.68rem; padding: 2px 8px;
+    background: #dbeafe; color: #1e40af; border-radius: 10px;
+  }
+
+  /* Konsentrasi */
+  .konsentrasi-list { display: grid; gap: 10px; }
+  .konsentrasi-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; border: 2px solid #e5e7eb;
+    border-radius: 10px; cursor: pointer; transition: all 0.15s;
+  }
+  .konsentrasi-item:hover { border-color: #93b3d4; background: #f0f7ff; }
+  .konsentrasi-item.selected {
+    border-color: #1a5490; background: #eff6ff;
+  }
+  .konsentrasi-item input { width: auto; margin: 0; }
+  .konsentrasi-item .k-info { flex: 1; }
+  .konsentrasi-item .k-name { font-weight: 600; font-size: 0.92rem; color: #1f2937; }
+  .konsentrasi-item .k-id { font-size: 0.75rem; color: #6b7280; }
+
+  /* Upload */
+  .upload-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .upload-box {
+    border: 2px dashed #d1d5db; border-radius: 10px;
+    padding: 18px; text-align: center;
+    cursor: pointer; transition: all 0.15s; background: #f9fafb;
+    position: relative;
+  }
+  .upload-box:hover { border-color: #1a5490; background: #eff6ff; }
+  .upload-box.has-file { border-color: #059669; background: #ecfdf5; border-style: solid; }
+  .upload-box .ub-ico { font-size: 1.6rem; margin-bottom: 6px; }
+  .upload-box .ub-label { font-size: 0.85rem; font-weight: 600; color: #1f2937; }
+  .upload-box .ub-hint { font-size: 0.72rem; color: #6b7280; margin-top: 4px; }
+  .upload-box .ub-status { font-size: 0.72rem; margin-top: 6px; font-weight: 500; }
+  .upload-box .ub-status.ok { color: #059669; }
+  .upload-box .ub-status.err { color: #dc2626; }
+  .upload-box .ub-progress {
+    margin-top: 8px; height: 4px; background: #e5e7eb;
+    border-radius: 2px; overflow: hidden; display: none;
+  }
+  .upload-box .ub-progress.show { display: block; }
+  .upload-box .ub-progress .bar {
+    height: 100%; background: #1a5490; width: 0%;
+    transition: width 0.2s;
+  }
+  .upload-box input[type=file] { display: none; }
+
+  /* Ringkasan */
+  .ringkasan dl {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 6px 12px; font-size: 0.88rem;
+  }
+  .ringkasan dt { color: #6b7280; }
+  .ringkasan dd { color: #1f2937; font-weight: 500; }
+  .ringkasan h4 {
+    font-size: 0.88rem; color: #1a5490;
+    margin: 14px 0 8px; padding-bottom: 4px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  /* Sukses */
+  .success-box { text-align: center; padding: 20px 0; }
+  .success-box .ico { font-size: 3.5rem; margin-bottom: 10px; }
+  .success-box h2 { color: #059669; margin-bottom: 8px; }
+  .success-box .nomor {
+    display: inline-block; font-size: 1.4rem; font-weight: 700;
+    color: #1a5490; padding: 10px 22px;
+    background: #eff6ff; border-radius: 10px;
+    letter-spacing: 1px; margin: 12px 0;
+  }
+  .success-box .note { font-size: 0.85rem; color: #6b7280; margin-top: 12px; }
+  .success-box .btn-wa {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #25D366; color: #fff;
+    padding: 12px 22px; border-radius: 8px;
+    text-decoration: none; font-weight: 600;
+    margin-top: 16px;
+  }
+
+  /* Toast */
+  #toast-container {
+    position: fixed; top: 20px; right: 20px; z-index: 1000;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .toast {
+    background: #1f2937; color: #fff;
+    padding: 12px 18px; border-radius: 8px;
+    font-size: 0.88rem; min-width: 220px; max-width: 340px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0; transform: translateY(-10px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast-success { background: #065f46; }
+  .toast-error { background: #991b1b; }
+  .toast-warning { background: #92400e; }
+
+  /* Loading */
+  #global-loading {
+    display: none; position: fixed; inset: 0;
+    background: rgba(255,255,255,0.8); z-index: 999;
+    align-items: center; justify-content: center;
+  }
+  #global-loading.show { display: flex; }
+  .spinner {
+    width: 42px; height: 42px; border: 4px solid #e5e7eb;
+    border-top-color: #1a5490; border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Overlay info token */
+  .token-bar {
+    background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 0.8rem; color: #1e40af;
+    margin-bottom: 16px; display: flex;
+    justify-content: space-between; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .token-bar .tk {
+    font-family: 'Consolas', monospace;
+    background: #fff; padding: 3px 8px; border-radius: 4px;
+    font-size: 0.75rem; word-break: break-all;
+  }
+
+  @media (max-width: 600px) {
+    .card { padding: 18px; }
+    .ringkasan dl { grid-template-columns: 1fr; }
+    .ringkasan dt { font-weight: 600; margin-top: 6px; }
+    .actions { flex-direction: column-reverse; }
+    .actions .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+<div id="global-loading"><div style="text-align:center;"><div class="spinner"></div><div id="loading-text">Memuat...</div></div></div>
+
+<div class="wrap" id="app">
+  <!-- Diisi via JS -->
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+   * KONFIG
+   * ============================================================ */
+  var APPS_URL = 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec';
+  var TOKEN_KEY = 'spmb_reg_token';
+  var DATA_KEY = 'spmb_reg_data';
+
+  var state = {
+    step: 1,
+    totalSteps: 6,
+    token: null,
+    registration_id: null,
+    konsentrasi: [],
+    data: {},
+    keluarga: { AYAH: {}, IBU: {}, WALI: {} },
+    dokumen: {}, // { FOTO: true, KK: true, AKTA: true }
+    submitted: null,
+    tahun_ajaran: ''
+  };
+
+  /* ============================================================
+   * UTIL
+   * ============================================================ */
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function toast(msg, type) {
+    var c = document.getElementById('toast-container');
+    var el = document.createElement('div');
+    el.className = 'toast toast-' + (type || 'info');
+    el.textContent = msg;
+    c.appendChild(el);
+    setTimeout(function () { el.classList.add('show'); }, 10);
+    setTimeout(function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    }, 3600);
+  }
+
+  function showLoading(text) {
+    document.getElementById('loading-text').textContent = text || 'Memuat...';
+    document.getElementById('global-loading').classList.add('show');
+  }
+  function hideLoading() {
+    document.getElementById('global-loading').classList.remove('show');
+  }
+
+  function b64(str) {
+    var u = unescape(encodeURIComponent(str));
+    return btoa(u).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  function api(action, payload) {
+    var body = { action: action, token: null, payload: payload || {} };
+    var url = APPS_URL + '?data=' + encodeURIComponent(b64(JSON.stringify(body)));
+    return fetch(url, { method: 'GET', redirect: 'follow' })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var j;
+        try { j = JSON.parse(t); } catch (e) { throw new Error('Respons server tidak valid'); }
+        return j;
+      });
+  }
+
+  function getQuery(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  /* ============================================================
+   * BOOT
+   * ============================================================ */
+  function boot() {
+    var urlToken = getQuery('token');
+    var savedToken = sessionStorage.getItem(TOKEN_KEY);
+
+    if (urlToken) {
+      // Resume dari QR / link
+      resumeSession(urlToken);
+    } else if (savedToken) {
+      // Lanjut sesi yang masih ada di browser
+      resumeSession(savedToken);
+    } else {
+      // Mulai baru
+      startSession();
+    }
+  }
+
+  function startSession() {
+    showLoading('Menyiapkan formulir...');
+    api('registration.start', {}).then(function (res) {
+      hideLoading();
+      if (!res.success) {
+        renderError(res.message || 'Gagal memulai pendaftaran');
+        return;
+      }
+      state.token = res.data.token;
+      state.registration_id = res.data.registration_id;
+      state.tahun_ajaran = res.data.tahun_ajaran;
+      sessionStorage.setItem(TOKEN_KEY, state.token);
+      loadKonsentrasi().then(function () {
+        renderApp();
+      });
+    }).catch(function (err) {
+      hideLoading();
+      renderError(err.message);
+    });
+  }
+
+  function resumeSession(token) {
+    showLoading('Memuat data pendaftaran...');
+    api('registration.resume', { token: token }).then(function (res) {
+      hideLoading();
+      if (!res.success) {
+        // Token kadaluwarsa → mulai baru
+        sessionStorage.removeItem(TOKEN_KEY);
+        if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
+          toast('Sesi sebelumnya berakhir. Mulai pendaftaran baru.', 'warning');
+          startSession();
+          return;
+        }
+        renderError(res.message || 'Gagal memuat');
+        return;
+      }
+      state.token = token;
+      state.registration_id = res.data.registration_id;
+      state.data = res.data.data || {};
+      state.tahun_ajaran = state.data.tahun_ajaran || '';
+      // Keluarga
+      (res.data.keluarga || []).forEach(function (k) {
+        if (k.hubungan) state.keluarga[k.hubungan] = k;
+      });
+      // Dokumen
+      (res.data.dokumen || []).forEach(function (d) {
+        state.dokumen[String(d.jenis_dokumen).toUpperCase()] = true;
+      });
+      // Kalau sudah submit → tampilkan halaman sukses
+      if (state.data.status_pendaftaran === 'TERKIRIM' ||
+          state.data.status_pendaftaran === 'TERVERIFIKASI') {
+        state.submitted = {
+          nomor_pendaftaran: state.data.nomor_pendaftaran,
+          nama_lengkap: state.data.nama_lengkap,
+          nomor_wa_panitia: ''
+        };
+        renderSuccess();
+        return;
+      }
+      loadKonsentrasi().then(function () {
+        renderApp();
+      });
+    }).catch(function (err) {
+      hideLoading();
+      renderError(err.message);
+    });
+  }
+
+  function loadKonsentrasi() {
+    return api('settings.listKonsentrasi', {}).then(function (res) {
+      if (res.success && res.data && res.data.konsentrasi) {
+        state.konsentrasi = res.data.konsentrasi;
+      }
+    });
+  }
+
+  function namaKonsentrasi(id) {
+    for (var i = 0; i < state.konsentrasi.length; i++) {
+      if (state.konsentrasi[i].konsentrasi_id === id) return state.konsentrasi[i].nama_konsentrasi;
+    }
+    return id || '-';
+  }
+
+  /* ============================================================
+   * RENDER: ERROR
+   * ============================================================ */
+  function renderError(msg) {
+    document.getElementById('app').innerHTML =
+      '<div class="card" style="text-align:center;padding:40px 20px;">' +
+        '<div style="font-size:3rem;margin-bottom:12px;">⚠️</div>' +
+        '<h2 style="color:#dc2626;margin-bottom:8px;">Terjadi Kesalahan</h2>' +
+        '<p style="color:#6b7280;margin-bottom:20px;">' + esc(msg) + '</p>' +
+        '<a href="index.html" class="btn btn-secondary">Kembali ke Beranda</a>' +
+      '</div>';
+  }
+
+  /* ============================================================
+   * RENDER: APP (HEADER + STEPPER + STEP)
+   * ============================================================ */
+  function renderApp() {
+    var app = document.getElementById('app');
+    app.innerHTML =
+      '<div class="header">' +
+        '<img src="logo.png" alt="Logo" onerror="this.style.display=\'none\'">' +
+        '<div>' +
+          '<div class="htitle">Pendaftaran Murid Baru</div>' +
+          '<div class="hsub">SMK Muhammadiyah 1 Surakarta • TP ' + esc(state.tahun_ajaran || '2027/2028') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="token-bar">' +
+        '<div>🔑 Simpan tautan ini untuk melanjutkan: ' +
+          '<span class="tk">' + esc(location.origin + location.pathname + '?token=' + state.token) + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="stepper" id="stepper"></div>' +
+        '<div id="step-content"></div>' +
+      '</div>';
+    renderStepper();
+    renderStep();
+  }
+
+  function renderStepper() {
+    var steps = ['Data Siswa','Alamat','Sekolah Asal','Konsentrasi','Keluarga','Dokumen'];
+    var html = '';
+    steps.forEach(function (label, i) {
+      var n = i + 1;
+      var cls = 'step-item';
+      if (n < state.step) cls += ' done';
+      else if (n === state.step) cls += ' active';
+      html += '<div class="' + cls + '">' +
+        '<div class="num">' + (n < state.step ? '✓' : n) + '</div>' +
+        '<div>' + esc(label) + '</div></div>';
+    });
+    document.getElementById('stepper').innerHTML = html;
+  }
+
+  function renderStep() {
+    var c = document.getElementById('step-content');
+    switch (state.step) {
+      case 1: c.innerHTML = stepSiswa(); bindSiswa(); break;
+      case 2: c.innerHTML = stepAlamat(); bindAlamat(); break;
+      case 3: c.innerHTML = stepSekolah(); bindSekolah(); break;
+      case 4: c.innerHTML = stepKonsentrasi(); bindKonsentrasi(); break;
+      case 5: c.innerHTML = stepKeluarga(); bindKeluarga(); break;
+      case 6: c.innerHTML = stepDokumen(); bindDokumen(); break;
+    }
+  }
+
+  /* ============================================================
+   * STEP 1: DATA SISWA
+   * ============================================================ */
+  function stepSiswa() {
+    var d = state.data;
+    return '<h2 class="step-title">Data Siswa</h2>' +
+      '<p class="step-desc">Isi data sesuai dokumen resmi (KK / Akta / Ijazah).</p>' +
+      '<div class="grid">' +
+        field('nama_lengkap', 'Nama Lengkap', 'text', d.nama_lengkap, true, 'full') +
+        field('nisn', 'NISN', 'text', d.nisn, true) +
+        field('nik', 'NIK Siswa', 'text', d.nik, false) +
+        field('nomor_kk', 'Nomor Kartu Keluarga', 'text', d.nomor_kk, false) +
+        field('tempat_lahir', 'Tempat Lahir', 'text', d.tempat_lahir, true) +
+        field('tanggal_lahir', 'Tanggal Lahir', 'date', toDateInput(d.tanggal_lahir), true) +
+        select('jenis_kelamin', 'Jenis Kelamin', [['','-- Pilih --'],['L','Laki-laki'],['P','Perempuan']], d.jenis_kelamin, true) +
+        select('agama', 'Agama', [['','-- Pilih --'],['Islam','Islam'],['Kristen','Kristen'],['Katolik','Katolik'],['Hindu','Hindu'],['Buddha','Buddha'],['Konghucu','Konghucu']], d.agama, true) +
+        field('kewarganegaraan', 'Kewarganegaraan', 'text', d.kewarganegaraan || 'Indonesia', true) +
+      '</div>' +
+      navButtons(1);
+  }
+
+  function bindSiswa() {
+    bindInputs();
+    document.getElementById('btn-next').addEventListener('click', function () {
+      var data = collectFields(['nama_lengkap','nisn','nik','nomor_kk','tempat_lahir','tanggal_lahir','jenis_kelamin','agama','kewarganegaraan']);
+      if (!validateRequired({ nama_lengkap: 'Nama lengkap', nisn: 'NISN', tempat_lahir: 'Tempat lahir', tanggal_lahir: 'Tanggal lahir', jenis_kelamin: 'Jenis kelamin', agama: 'Agama' }, data)) return;
+      goNext('siswa', data);
+    });
+  }
+
+  /* ============================================================
+   * STEP 2: ALAMAT
+   * ============================================================ */
+  function stepAlamat() {
+    var d = state.data;
+    return '<h2 class="step-title">Alamat & Kontak</h2>' +
+      '<p class="step-desc">Alamat tempat tinggal sesuai KK.</p>' +
+      '<div class="grid">' +
+        field('alamat', 'Alamat (Jalan/Dusun)', 'text', d.alamat, true, 'full') +
+        field('rt', 'RT', 'text', d.rt) +
+        field('rw', 'RW', 'text', d.rw) +
+        field('desa_kelurahan', 'Desa/Kelurahan', 'text', d.desa_kelurahan, true) +
+        field('kecamatan', 'Kecamatan', 'text', d.kecamatan, true) +
+        field('kabupaten_kota', 'Kabupaten/Kota', 'text', d.kabupaten_kota, true) +
+        field('provinsi', 'Provinsi', 'text', d.provinsi || 'Jawa Tengah', true) +
+        field('kode_pos', 'Kode Pos', 'text', d.kode_pos) +
+        field('nomor_hp', 'No. HP Siswa', 'tel', d.nomor_hp) +
+        field('nomor_wa_siswa', 'No. WA Siswa', 'tel', d.nomor_wa_siswa, true, '', 'Contoh: 081234567890') +
+        field('nomor_wa_orangtua', 'No. WA Orang Tua', 'tel', d.nomor_wa_orangtua) +
+        field('email', 'Email', 'email', d.email) +
+      '</div>' +
+      navButtons(2);
+  }
+
+  function bindAlamat() {
+    bindInputs();
+    document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
+    document.getElementById('btn-next').addEventListener('click', function () {
+      var data = collectFields(['alamat','rt','rw','desa_kelurahan','kecamatan','kabupaten_kota','provinsi','kode_pos','nomor_hp','nomor_wa_siswa','nomor_wa_orangtua','email']);
+      if (!validateRequired({ alamat: 'Alamat', desa_kelurahan: 'Desa/Kelurahan', kecamatan: 'Kecamatan', kabupaten_kota: 'Kabupaten/Kota', provinsi: 'Provinsi', nomor_wa_siswa: 'No. WA Siswa' }, data)) return;
+      if (data.nomor_wa_siswa && !isValidWa(data.nomor_wa_siswa)) {
+        toast('Nomor WA Siswa tidak valid', 'error'); return;
+      }
+      goNext('alamat', data);
+    });
+  }
+
+  /* ============================================================
+   * STEP 3: SEKOLAH ASAL
+   * ============================================================ */
+  function stepSekolah() {
+    var d = state.data;
+    return '<h2 class="step-title">Sekolah Asal</h2>' +
+      '<p class="step-desc">Data sekolah sebelumnya (SMP/MTs/sederajat).</p>' +
+      '<div class="grid">' +
+        field('sekolah_asal', 'Nama Sekolah', 'text', d.sekolah_asal, true, 'full') +
+        field('npsn_asal', 'NPSN Sekolah', 'text', d.npsn_asal) +
+        field('tahun_lulus', 'Tahun Lulus', 'text', d.tahun_lulus, true) +
+        field('nomor_ijazah', 'Nomor Ijazah', 'text', d.nomor_ijazah) +
+      '</div>' +
+      navButtons(3);
+  }
+
+  function bindSekolah() {
+    bindInputs();
+    document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
+    document.getElementById('btn-next').addEventListener('click', function () {
+      var data = collectFields(['sekolah_asal','npsn_asal','tahun_lulus','nomor_ijazah']);
+      if (!validateRequired({ sekolah_asal: 'Nama sekolah', tahun_lulus: 'Tahun lulus' }, data)) return;
+      goNext('sekolah', data);
+    });
+  }
+
+  /* ============================================================
+   * STEP 4: KONSENTRASI
+   * ============================================================ */
+  function stepKonsentrasi() {
+    var d = state.data;
+    var listHtml1 = '', listHtml2 = '';
+    state.konsentrasi.forEach(function (k) {
+      var id = k.konsentrasi_id;
+      var name = k.nama_konsentrasi;
+      listHtml1 += '<label class="konsentrasi-item' + (d.konsentrasi_1 === id ? ' selected' : '') + '" data-target="k1">' +
+        '<input type="radio" name="konsentrasi_1" value="' + esc(id) + '"' + (d.konsentrasi_1 === id ? ' checked' : '') + '>' +
+        '<div class="k-info"><div class="k-name">' + esc(name) + '</div>' +
+        '<div class="k-id">' + esc(id) + '</div></div></label>';
+      listHtml2 += '<label class="konsentrasi-item' + (d.konsentrasi_2 === id ? ' selected' : '') + '" data-target="k2">' +
+        '<input type="radio" name="konsentrasi_2" value="' + esc(id) + '"' + (d.konsentrasi_2 === id ? ' checked' : '') + '>' +
+        '<div class="k-info"><div class="k-name">' + esc(name) + '</div>' +
+        '<div class="k-id">' + esc(id) + '</div></div></label>';
+    });
+    return '<h2 class="step-title">Pilihan Konsentrasi</h2>' +
+      '<p class="step-desc">Pilih dua konsentrasi keahlian dengan urutan prioritas.</p>' +
+      '<h4 style="font-size:0.85rem;color:#1a5490;margin:12px 0 8px;">Pilihan 1 (Wajib)</h4>' +
+      '<div class="konsentrasi-list" id="list-k1">' + listHtml1 + '</div>' +
+      '<h4 style="font-size:0.85rem;color:#1a5490;margin:16px 0 8px;">Pilihan 2 (Opsional)</h4>' +
+      '<div class="konsentrasi-list" id="list-k2">' + listHtml2 + '</div>' +
+      navButtons(4);
+  }
+
+  function bindKonsentrasi() {
+    // Highlight pilihan
+    document.querySelectorAll('#list-k1 .konsentrasi-item').forEach(function (el) {
+      el.addEventListener('click', function () {
+        document.querySelectorAll('#list-k1 .konsentrasi-item').forEach(function (x) { x.classList.remove('selected'); });
+        el.classList.add('selected');
+      });
+    });
+    document.querySelectorAll('#list-k2 .konsentrasi-item').forEach(function (el) {
+      el.addEventListener('click', function () {
+        document.querySelectorAll('#list-k2 .konsentrasi-item').forEach(function (x) { x.classList.remove('selected'); });
+        el.classList.add('selected');
+      });
+    });
+    document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
+    document.getElementById('btn-next').addEventListener('click', function () {
+      var k1El = document.querySelector('input[name=konsentrasi_1]:checked');
+      var k2El = document.querySelector('input[name=konsentrasi_2]:checked');
+      var k1 = k1El ? k1El.value : '';
+      var k2 = k2El ? k2El.value : '';
+      if (!k1) { toast('Pilih konsentrasi 1', 'error'); return; }
+      if (k2 && k2 === k1) { toast('Konsentrasi 2 tidak boleh sama dengan 1', 'error'); return; }
+      goNext('konsentrasi', { konsentrasi_1: k1, konsentrasi_2: k2 });
+    });
+  }
+
+  /* ============================================================
+   * STEP 5: KELUARGA
+   * ============================================================ */
+  function stepKeluarga() {
+    return '<h2 class="step-title">Data Keluarga</h2>' +
+      '<p class="step-desc">Data ayah, ibu, dan wali (wali opsional).</p>' +
+      blokKeluarga('AYAH', 'Ayah', true) +
+      blokKeluarga('IBU', 'Ibu', true) +
+      blokKeluarga('WALI', 'Wali', false) +
+      navButtons(5);
+  }
+
+  function blokKeluarga(hub, label, required) {
+    var k = state.keluarga[hub] || {};
+    return '<div class="keluarga-block" data-hub="' + hub + '">' +
+      '<h4>' + esc(label) + ' <span class="tag">' + (required ? 'Wajib' : 'Opsional') + '</span></h4>' +
+      '<div class="grid">' +
+        field(hub + '_nama', 'Nama', 'text', k.nama, required) +
+        field(hub + '_nik', 'NIK', 'text', k.nik) +
+        field(hub + '_tahun_lahir', 'Tahun Lahir', 'text', k.tahun_lahir) +
+        field(hub + '_pendidikan', 'Pendidikan', 'text', k.pendidikan) +
+        field(hub + '_pekerjaan', 'Pekerjaan', 'text', k.pekerjaan) +
+        field(hub + '_penghasilan', 'Penghasilan', 'text', k.penghasilan) +
+        field(hub + '_nomor_hp', 'No. HP', 'tel', k.nomor_hp) +
+        field(hub + '_alamat', 'Alamat', 'text', k.alamat, false, 'full') +
+      '</div>' +
+    '</div>';
+  }
+
+  function bindKeluarga() {
+    bindInputs();
+    document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
+    document.getElementById('btn-next').addEventListener('click', function () {
+      var arr = [];
+      ['AYAH','IBU','WALI'].forEach(function (hub) {
+        var k = {
+          hubungan: hub,
+          nama: val(hub + '_nama'),
+          nik: val(hub + '_nik'),
+          tahun_lahir: val(hub + '_tahun_lahir'),
+          pendidikan: val(hub + '_pendidikan'),
+          pekerjaan: val(hub + '_pekerjaan'),
+          penghasilan: val(hub + '_penghasilan'),
+          nomor_hp: val(hub + '_nomor_hp'),
+          alamat: val(hub + '_alamat')
+        };
+        if (hub === 'AYAH' && !k.nama) { toast('Nama ayah wajib diisi', 'error'); return; }
+        if (hub === 'IBU' && !k.nama) { toast('Nama ibu wajib diisi', 'error'); return; }
+        if (hub === 'WALI' && !k.nama) return; // wali opsional
+        arr.push(k);
+        state.keluarga[hub] = k;
+      });
+      if (arr.length < 2) return;
+      goNext('keluarga', { keluarga: arr });
+    });
+  }
+
+  /* ============================================================
+   * STEP 6: DOKUMEN
+   * ============================================================ */
+  function stepDokumen() {
+    return '<h2 class="step-title">Unggah Dokumen</h2>' +
+      '<p class="step-desc">Format JPG/PNG. Foto akan dikompres otomatis. Maks 2 MB.</p>' +
+      '<div class="upload-grid">' +
+        uploadBox('FOTO', 'Foto Siswa', 'Pas foto 3x4, latar merah/biru') +
+        uploadBox('KK', 'Kartu Keluarga', 'Scan/foto KK yang jelas') +
+        uploadBox('AKTA', 'Akta Kelahiran', 'Scan/foto akta yang jelas') +
+      '</div>' +
+      '<div class="actions">' +
+        '<button class="btn btn-secondary" id="btn-prev">‹ Sebelumnya</button>' +
+        '<button class="btn btn-primary" id="btn-submit">Kirim Pendaftaran ✓</button>' +
+      '</div>';
+  }
+
+  function uploadBox(jenis, label, hint) {
+    var ok = state.dokumen[jenis];
+    return '<div class="upload-box' + (ok ? ' has-file' : '') + '" data-jenis="' + jenis + '">' +
+      '<div class="ub-ico">' + (ok ? '✅' : '📄') + '</div>' +
+      '<div class="ub-label">' + esc(label) + '</div>' +
+      '<div class="ub-hint">' + esc(hint) + '</div>' +
+      '<div class="ub-status' + (ok ? ' ok' : '') + '">' + (ok ? 'Sudah diunggah' : 'Klik untuk pilih file') + '</div>' +
+      '<div class="ub-progress"><div class="bar"></div></div>' +
+      '<input type="file" accept="image/jpeg,image/png,application/pdf">' +
+    '</div>';
+  }
+
+  function bindDokumen() {
+    document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
+    document.querySelectorAll('.upload-box').forEach(function (box) {
+      var jenis = box.getAttribute('data-jenis');
+      var input = box.querySelector('input[type=file]');
+      box.addEventListener('click', function (e) {
+        if (e.target === input) return;
+        input.click();
+      });
+      input.addEventListener('change', function () {
+        var f = input.files[0];
+        if (!f) return;
+        handleFile(box, jenis, f);
+      });
+    });
+    document.getElementById('btn-submit').addEventListener('click', submitFinal);
+  }
+
+  function handleFile(box, jenis, file) {
+    var status = box.querySelector('.ub-status');
+    var progress = box.querySelector('.ub-progress');
+    var bar = box.querySelector('.bar');
+
+    if (file.size > 2 * 1024 * 1024 && file.type !== 'image/jpeg' && file.type !== 'image/png') {
+      status.className = 'ub-status err';
+      status.textContent = 'File melebihi 2 MB';
+      return;
+    }
+
+    status.className = 'ub-status';
+    status.textContent = 'Memproses...';
+    progress.classList.add('show');
+    bar.style.width = '20%';
+
+    compressFile(file, function (b64, mime, nama) {
+      bar.style.width = '50%';
+      status.textContent = 'Mengunggah...';
+
+      api('registration.uploadDokumen', {
+        token: state.token,
+        jenis_dokumen: jenis,
+        base64: b64,
+        nama_file: nama,
+        mime_type: mime
+      }).then(function (res) {
+        bar.style.width = '100%';
+        if (res.success) {
+          state.dokumen[jenis] = true;
+          box.classList.add('has-file');
+          box.querySelector('.ub-ico').textContent = '✅';
+          status.className = 'ub-status ok';
+          status.textContent = 'Sudah diunggah (' + Math.round(res.data.ukuran_byte / 1024) + ' KB)';
+          toast(jenis + ' berhasil diunggah', 'success');
+        } else {
+          status.className = 'ub-status err';
+          status.textContent = res.message || 'Gagal mengunggah';
+          toast('Gagal: ' + res.message, 'error');
+        }
+        setTimeout(function () { progress.classList.remove('show'); }, 800);
+      }).catch(function (err) {
+        status.className = 'ub-status err';
+        status.textContent = 'Error: ' + err.message;
+        progress.classList.remove('show');
+      });
+    });
+  }
+
+  /**
+   * Kompres gambar via canvas. PDF dilewatkan apa adanya (max 2MB).
+   */
+  function compressFile(file, cb) {
+    if (file.type === 'application/pdf') {
+      var r = new FileReader();
+      r.onload = function () {
+        cb(r.result.split(',')[1], file.type, file.name);
+      };
+      r.readAsDataURL(file);
+      return;
+    }
+    // Gambar → kompres
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      var MAX = 1000;
+      var w = img.width, h = img.height;
+      if (w > h && w > MAX) { h = h * MAX / w; w = MAX; }
+      else if (h > MAX) { w = w * MAX / h; h = MAX; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      var b64 = dataUrl.split(',')[1];
+      var newName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+      cb(b64, 'image/jpeg', newName);
+    };
+    img.onerror = function () {
+      URL.revokeObjectURL(url);
+      toast('Gagal memuat gambar', 'error');
+    };
+    img.src = url;
+  }
+
+  function submitFinal() {
+    if (!state.dokumen.FOTO || !state.dokumen.KK || !state.dokumen.AKTA) {
+      toast('Lengkapi semua dokumen (Foto, KK, Akta)', 'error');
+      return;
+    }
+    if (!confirm('Kirim pendaftaran sekarang? Data tidak bisa diubah setelah dikirim.')) return;
+    showLoading('Mengirim pendaftaran...');
+    api('registration.submit', { token: state.token }).then(function (res) {
+      hideLoading();
+      if (res.success) {
+        state.submitted = res.data;
+        sessionStorage.removeItem(TOKEN_KEY);
+        renderSuccess();
+      } else {
+        toast('Gagal: ' + res.message, 'error');
+      }
+    }).catch(function (err) {
+      hideLoading();
+      toast('Error: ' + err.message, 'error');
+    });
+  }
+
+  /* ============================================================
+   * RENDER: SUKSES
+   * ============================================================ */
+  function renderSuccess() {
+    var d = state.submitted || {};
+    var wa = d.nomor_wa_panitia ? normalizeWa(d.nomor_wa_panitia) : '';
+    var pesan = encodeURIComponent(
+      'Assalamualaikum, saya ' + (d.nama_lengkap || '') +
+      ' dengan nomor pendaftaran ' + (d.nomor_pendaftaran || '') +
+      ' telah mendaftar di ' + (d.sekolah || 'SMK Muhammadiyah 1 Surakarta') +
+      '. Mohon konfirmasi. Terima kasih.'
+    );
+    var waUrl = wa ? ('https://wa.me/' + wa + '?text=' + pesan) : '';
+
+    document.getElementById('app').innerHTML =
+      '<div class="card success-box">' +
+        '<div class="ico">🎉</div>' +
+        '<h2>Pendaftaran Berhasil!</h2>' +
+        '<p style="color:#6b7280;">Simpan nomor pendaftaran Anda:</p>' +
+        '<div class="nomor">' + esc(d.nomor_pendaftaran || '-') + '</div>' +
+        '<p class="note">' +
+          'Terima kasih, <strong>' + esc(d.nama_lengkap || '') + '</strong>.<br>' +
+          'Pendaftaran Anda sedang menunggu verifikasi panitia.<br>' +
+          'Silakan simpan nomor pendaftaran untuk pengecekan status.' +
+        '</p>' +
+        (waUrl ? '<a class="btn-wa" href="' + waUrl + '" target="_blank" rel="noopener">💬 Konfirmasi via WhatsApp</a>' : '') +
+        '<div style="margin-top:20px;">' +
+          '<a href="index.html" class="btn btn-secondary">Kembali ke Beranda</a>' +
+        '</div>' +
+      '</div>';
+  }
+
+  /* ============================================================
+   * HELPER FORM
+   * ============================================================ */
+  function field(name, label, type, value, req, cls, hint) {
+    return '<div class="field ' + (cls || '') + '" data-name="' + name + '">' +
+      '<label>' + esc(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
+      '<input type="' + type + '" data-field="' + name + '" value="' + esc(value || '') + '">' +
+      (hint ? '<div class="hint">' + esc(hint) + '</div>' : '') +
+      '<div class="error-msg">Wajib diisi</div>' +
+    '</div>';
+  }
+
+  function select(name, label, opts, value, req) {
+    var h = '<div class="field" data-name="' + name + '">' +
+      '<label>' + esc(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
+      '<select data-field="' + name + '">';
+    opts.forEach(function (o) {
+      h += '<option value="' + esc(o[0]) + '"' + (String(value || '') === String(o[0]) ? ' selected' : '') + '>' + esc(o[1]) + '</option>';
+    });
+    h += '</select><div class="error-msg">Wajib diisi</div></div>';
+    return h;
+  }
+
+  function navButtons(step) {
+    var prev = step > 1 ? '<button class="btn btn-secondary" id="btn-prev">‹ Sebelumnya</button>' : '<span></span>';
+    return '<div class="actions">' + prev +
+      '<button class="btn btn-primary" id="btn-next">Lanjut ›</button></div>';
+  }
+
+  function bindInputs() {
+    document.querySelectorAll('input[data-field], select[data-field]').forEach(function (el) {
+      el.addEventListener('input', function () {
+        var f = el.closest('.field');
+        if (f) f.classList.remove('invalid');
+      });
+    });
+  }
+
+  function val(name) {
+    var el = document.querySelector('[data-field="' + name + '"]');
+    return el ? el.value.trim() : '';
+  }
+
+  function collectFields(names) {
+    var o = {};
+    names.forEach(function (n) { o[n] = val(n); });
+    return o;
+  }
+
+  function validateRequired(map, data) {
+    var ok = true;
+    Object.keys(map).forEach(function (k) {
+      var el = document.querySelector('[data-field="' + k + '"]');
+      if (!data[k]) {
+        if (el) el.closest('.field').classList.add('invalid');
+        ok = false;
+      }
+    });
+    if (!ok) toast('Lengkapi field yang wajib diisi', 'error');
+    return ok;
+  }
+
+  function toDateInput(v) {
+    if (!v) return '';
+    var d = new Date(v);
+    if (isNaN(d.getTime())) return '';
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + m + '-' + day;
+  }
+
+  function isValidWa(s) {
+    s = String(s || '').replace(/\D/g, '');
+    if (s.indexOf('0') === 0) s = '62' + s.substring(1);
+    else if (s.indexOf('8') === 0) s = '62' + s;
+    return /^628\d{7,13}$/.test(s);
+  }
+
+  function normalizeWa(s) {
+    s = String(s || '').replace(/\D/g, '');
+    if (s.indexOf('0') === 0) s = '62' + s.substring(1);
+    else if (s.indexOf('8') === 0) s = '62' + s;
+    return s;
+  }
+
+  /* ============================================================
+   * NAVIGASI & SIMPAN
+   * ============================================================ */
+  function goNext(step, data) {
+    showLoading('Menyimpan...');
+    api('registration.saveDraft', {
+      token: state.token,
+      step: step,
+      data: data
+    }).then(function (res) {
+      hideLoading();
+      if (!res.success) {
+        toast('Gagal menyimpan: ' + res.message, 'error');
+        return;
+      }
+      // Merge ke state
+      Object.keys(data).forEach(function (k) { state.data[k] = data[k]; });
+      state.step++;
+      renderApp();
+      window.scrollTo(0, 0);
+    }).catch(function (err) {
+      hideLoading();
+      toast('Error: ' + err.message, 'error');
+    });
+  }
+
+  /* ============================================================
+   * BOOT
+   * ============================================================ */
+  boot();
+
+})();
+</script>
+</body>
+</html>
