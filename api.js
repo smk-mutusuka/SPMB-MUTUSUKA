@@ -71,6 +71,52 @@ const Api = {
       });
   },
 
+    /**
+   * Upload data besar (base64 gambar) via POST.
+   * Kenapa POST? GET dengan ?data= terlalu panjang → ditolak Google.
+   * Kenapa Content-Type text/plain? Agar browser tidak kirim preflight
+   * OPTIONS (yang tidak di-handle Apps Script). "Simple request" CORS.
+   */
+  upload: function (action, payload, opts) {
+    opts = opts || {};
+    const timeout = opts.timeout || 120000;
+    if (!APP_CONFIG.APPS_SCRIPT_URL) {
+      return Promise.reject(new Error('APPS_SCRIPT_URL belum diisi'));
+    }
+
+    const body = {
+      action: action,
+      token: null, // upload selalu tanpa token petugas
+      payload: payload || {}
+    };
+
+    const controller = new AbortController();
+    const timer = setTimeout(function () { controller.abort(); }, timeout);
+
+    return fetch(APP_CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+      redirect: 'follow'
+    })
+      .then(function (res) {
+        clearTimeout(timer);
+        return res.text();
+      })
+      .then(function (text) {
+        let json;
+        try { json = JSON.parse(text); }
+        catch (e) { throw new Error('Respons server bukan JSON: ' + text.substring(0, 200)); }
+        return json;
+      })
+      .catch(function (err) {
+        clearTimeout(timer);
+        if (err.name === 'AbortError') throw new Error('Upload timeout. Coba lagi.');
+        throw err;
+      });
+  },
+
   /* ============================================================
    * Shortcut per modul
    * ============================================================ */
