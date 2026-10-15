@@ -247,5 +247,19 @@ const Api = {
     listLog: function (params) { return Api.call('notif.listLog', params || {}); }
   },
 
-  ping: function () { return Api.call('ping', {}, { useToken: false }); }
-};
+    /* ---- NOTIFIKASI WA ---- */
+  notif: {
+    preview: function (regId, templateCode, recipientType) {
+      return Api.call('notif.preview', {
+        registration_id: regId,
+        template_code: templateCode,
+        recipient_type: recipientType || 'SISWA'
+      });
+    },
+    log: function (d) { return Api.call('notif.log', d); },
+    listLog: function (params) { return Api.call('notif.listLog', params || {}); }
+  },
+
+  ping: function () {
+    return Api.call('ping', {}, { useToken: false });
+  }
