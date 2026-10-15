@@ -85,6 +85,10 @@
   }
   .field.invalid .error-msg { display: block; }
 
+  /* Auto-uppercase */
+  input.auto-upper, textarea.auto-upper { text-transform: uppercase; }
+  input.auto-upper::placeholder, textarea.auto-upper::placeholder { text-transform: none; }
+
   .actions {
     display: flex; gap: 10px; justify-content: space-between;
     margin-top: 24px; padding-top: 20px;
@@ -147,6 +151,7 @@
   .upload-box .ub-status { font-size: 0.72rem; margin-top: 6px; font-weight: 500; }
   .upload-box .ub-status.ok { color: #059669; }
   .upload-box .ub-status.err { color: #dc2626; }
+  .upload-box .ub-meta { font-size: 0.68rem; color: #9ca3af; margin-top: 3px; }
   .upload-box .ub-progress {
     margin-top: 8px; height: 4px; background: #e5e7eb;
     border-radius: 2px; overflow: hidden; display: none;
@@ -157,6 +162,12 @@
     transition: width 0.2s;
   }
   .upload-box input[type=file] { display: none; }
+
+  .info-kualitas {
+    background: #f0fdf4; border: 1px solid #bbf7d0;
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+    font-size: 0.78rem; color: #166534; line-height: 1.5;
+  }
 
   .success-box { text-align: center; padding: 20px 0; }
   .success-box .ico { font-size: 3.5rem; margin-bottom: 10px; }
@@ -193,16 +204,28 @@
     background: #eff6ff; border: 1px solid #bfdbfe;
     border-radius: 8px; padding: 10px 14px;
     font-size: 0.8rem; color: #1e40af;
-    margin-bottom: 16px; display: flex;
-    justify-content: space-between; align-items: center; gap: 10px;
-    flex-wrap: wrap;
+    margin-bottom: 12px;
   }
   .token-bar .tk {
     font-family: 'Consolas', monospace;
     background: #fff; padding: 3px 8px; border-radius: 4px;
     font-size: 0.75rem; word-break: break-all;
+    display: block; margin: 6px 0;
   }
   .token-bar .tb-note { font-size: 0.75rem; color: #1e40af; }
+
+  .nomor-bar {
+    background: #ecfdf5; border: 1px solid #a7f3d0;
+    border-radius: 8px; padding: 12px 16px;
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .nomor-bar .label { font-size: 0.8rem; color: #065f46; }
+  .nomor-bar .nomor {
+    font-size: 1.15rem; font-weight: 700; color: #065f46;
+    letter-spacing: 1px; font-family: 'Consolas', monospace;
+  }
 
   @media (max-width: 600px) {
     .card { padding: 18px; }
@@ -221,7 +244,7 @@
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script>
-/* ==== OVERRIDE TAHAN BANTING: pastikan showLoading/hideLoading selalu bekerja ==== */
+/* ==== OVERRIDE TAHAN BANTING ==== */
 (function () {
   if (typeof Utils === 'undefined') { window.Utils = {}; }
   Utils.showLoading = function (text) {
@@ -289,6 +312,7 @@
     totalSteps: 6,
     token: null,
     registration_id: null,
+    nomor_pendaftaran: '',
     konsentrasi: [],
     data: {},
     keluarga: {},
@@ -320,6 +344,7 @@
         }
         state.token = res.data.token;
         state.registration_id = res.data.registration_id;
+        state.nomor_pendaftaran = res.data.nomor_pendaftaran || '';
         state.tahun_ajaran = res.data.tahun_ajaran;
         sessionStorage.setItem(TOKEN_KEY, state.token);
         loadKonsentrasi().then(function () { renderApp(); });
@@ -355,6 +380,7 @@
         state.token = token;
         state.registration_id = res.data.registration_id;
         state.data = res.data.data || {};
+        state.nomor_pendaftaran = state.data.nomor_pendaftaran || '';
         state.tahun_ajaran = state.data.tahun_ajaran || '';
         state.keluarga = res.data.keluarga || {};
 
@@ -388,13 +414,6 @@
     });
   }
 
-  function namaKonsentrasi(id) {
-    for (var i = 0; i < state.konsentrasi.length; i++) {
-      if (state.konsentrasi[i].konsentrasi_id === id) return state.konsentrasi[i].nama_konsentrasi;
-    }
-    return id || '-';
-  }
-
   /* ============================================================
    * RENDER: ERROR
    * ============================================================ */
@@ -421,11 +440,19 @@
           '<div class="hsub">SMK Muhammadiyah 1 Surakarta • TP ' + Utils.escapeHtml(state.tahun_ajaran || '2027/2028') + '</div>' +
         '</div>' +
       '</div>' +
+      (state.nomor_pendaftaran
+        ? '<div class="nomor-bar">' +
+            '<div><div class="label">Nomor Pendaftaran Anda:</div>' +
+            '<div class="nomor">' + Utils.escapeHtml(state.nomor_pendaftaran) + '</div></div>' +
+            '<div class="label" style="text-align:right;max-width:280px;">' +
+              'Nomor ini tetap sama sampai Anda submit. Catat & simpan.' +
+            '</div>' +
+          '</div>'
+        : '') +
       '<div class="token-bar">' +
-        '<div>🔑 <strong>Simpan tautan ini</strong> untuk melanjutkan jika browser tertutup:' +
-          '<div class="tk">' + Utils.escapeHtml(location.origin + location.pathname + '?token=' + state.token) + '</div>' +
-          '<div class="tb-note">Sesi aktif 4 jam sejak aktivitas terakhir.</div>' +
-        '</div>' +
+        '🔑 <strong>Simpan tautan ini</strong> untuk melanjutkan jika browser tertutup:' +
+        '<div class="tk">' + Utils.escapeHtml(location.origin + location.pathname + '?token=' + state.token) + '</div>' +
+        '<div class="tb-note">Sesi aktif 4 jam sejak aktivitas terakhir.</div>' +
       '</div>' +
       '<div class="card">' +
         '<div class="stepper" id="stepper"></div>' +
@@ -605,7 +632,7 @@
   }
 
   /* ============================================================
-   * STEP 5: KELUARGA (KELUARGA_V2 — datar, 1 blok)
+   * STEP 5: KELUARGA
    * ============================================================ */
   function stepKeluarga() {
     var k = state.keluarga || {};
@@ -666,7 +693,11 @@
    * ============================================================ */
   function stepDokumen() {
     return '<h2 class="step-title">Unggah Dokumen</h2>' +
-      '<p class="step-desc">Format JPG/PNG. Foto dikompres otomatis (kualitas cetak 3×4 cm tetap jelas).</p>' +
+      '<p class="step-desc">Format JPG/PNG. Foto dikompres otomatis — tetap tajam untuk cetak 3×4 cm.</p>' +
+      '<div class="info-kualitas">' +
+        '📷 <strong>Cara foto yang baik:</strong> ambil dari atas lurus (bukan miring), pastikan cahaya cukup, ' +
+        'dan dokumen tidak terpotong. Untuk pas foto, gunakan latar merah/biru.' +
+      '</div>' +
       '<div class="upload-grid">' +
         uploadBox('FOTO', 'Foto Siswa', 'Pas foto 3x4, latar merah/biru') +
         uploadBox('KK', 'Kartu Keluarga', 'Scan/foto KK yang jelas') +
@@ -685,8 +716,9 @@
       '<div class="ub-label">' + Utils.escapeHtml(label) + '</div>' +
       '<div class="ub-hint">' + Utils.escapeHtml(hint) + '</div>' +
       '<div class="ub-status' + (ok ? ' ok' : '') + '">' + (ok ? 'Sudah diunggah' : 'Klik untuk pilih file') + '</div>' +
+      '<div class="ub-meta"></div>' +
       '<div class="ub-progress"><div class="bar"></div></div>' +
-      '<input type="file" accept="image/jpeg,image/png,application/pdf">' +
+      '<input type="file" accept="image/jpeg,image/png,application/pdf" capture="environment">' +
     '</div>';
   }
 
@@ -710,17 +742,21 @@
 
   function handleFile(box, jenis, file) {
     var status = box.querySelector('.ub-status');
+    var meta = box.querySelector('.ub-meta');
     var progress = box.querySelector('.ub-progress');
     var bar = box.querySelector('.bar');
 
     status.className = 'ub-status';
-    status.textContent = 'Memproses...';
+    status.textContent = 'Mengompres...';
+    meta.textContent = 'Ukuran asli: ' + Math.round(file.size / 1024) + ' KB';
     progress.classList.add('show');
     bar.style.width = '20%';
 
-    compressFile(file, function (b64, mime, nama) {
-      bar.style.width = '50%';
+    compressFile(file, function (b64, mime, nama, info) {
+      bar.style.width = '55%';
       status.textContent = 'Mengunggah...';
+      meta.textContent = 'Hasil kompres: ' + info.width + '×' + info.height + ' px • ' +
+                          Math.round(info.size / 1024) + ' KB • Level ' + info.level;
 
       Api.registration.uploadDokumen(state.token, jenis, b64, nama, mime)
         .then(function (res) {
@@ -730,7 +766,7 @@
             box.classList.add('has-file');
             box.querySelector('.ub-ico').textContent = '✅';
             status.className = 'ub-status ok';
-            status.textContent = 'Sudah diunggah (' + Math.round(res.data.ukuran_byte / 1024) + ' KB)';
+            status.textContent = 'Berhasil diunggah (' + Math.round(res.data.ukuran_byte / 1024) + ' KB)';
             Utils.toast(jenis + ' berhasil diunggah', 'success');
           } else {
             status.className = 'ub-status err';
@@ -748,36 +784,81 @@
   }
 
   /**
-   * Kompres gambar: max 700 px sisi panjang, kualitas 0.82.
-   * Cukup untuk cetak 3×4 cm (bahkan 3×4 di 300dpi hanya butuh ~350×450).
-   * Target hasil: 60–100 KB base64.
+   * Kompresi berjenjang — mulai dari kualitas tinggi, turun hanya jika perlu.
+   * Target base64 < 60 KB agar lolos URL limit, tapi resolusi tetap tinggi
+   * untuk cetak 3×4 cm (300 dpi butuh ~354×472 px).
+   *
+   * Level 1: 1600 px q0.85 → cetak 3×4 di ~1350 dpi
+   * Level 2: 1200 px q0.80 → cetak 3×4 di ~1000 dpi
+   * Level 3: 1000 px q0.75 → cetak 3×4 di ~850 dpi
+   * Level 4:  800 px q0.70 → cetak 3×4 di ~680 dpi
+   * Level 5:  600 px q0.60 → cetak 3×4 di ~500 dpi (fallback)
+   *
+   * Semua level >> 300 dpi → kualitas cetak 3×4 tetap tajam.
    */
   function compressFile(file, cb) {
+    // PDF: kirim apa adanya
     if (file.type === 'application/pdf') {
       var r = new FileReader();
-      r.onload = function () { cb(r.result.split(',')[1], file.type, file.name); };
+      r.onload = function () {
+        var b64 = r.result.split(',')[1];
+        cb(b64, file.type, file.name, { width: '-', height: '-', size: b64.length, level: 'PDF' });
+      };
       r.onerror = function () { Utils.toast('Gagal membaca file', 'error'); };
       r.readAsDataURL(file);
       return;
     }
+
     var img = new Image();
     var url = URL.createObjectURL(file);
     img.onload = function () {
       URL.revokeObjectURL(url);
-      var MAX = 700; // sisi panjang max 700 px — cetak 3x4 tetap tajam
-      var w = img.width, h = img.height;
-      if (w > h && w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-      else if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
-      var canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      var ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(img, 0, 0, w, h);
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-      var b64 = dataUrl.split(',')[1];
+
+      var levels = [
+        { maxPx: 1600, q: 0.85 },
+        { maxPx: 1200, q: 0.80 },
+        { maxPx: 1000, q: 0.75 },
+        { maxPx:  800, q: 0.70 },
+        { maxPx:  600, q: 0.60 }
+      ];
+      var TARGET_B64_BYTES = 60 * 1024;
+
+      var best = null;
+      for (var i = 0; i < levels.length; i++) {
+        var lv = levels[i];
+        var w = img.width, h = img.height;
+        var scale = Math.min(1, lv.maxPx / Math.max(w, h));
+        var nw = Math.max(1, Math.round(w * scale));
+        var nh = Math.max(1, Math.round(h * scale));
+
+        var canvas = document.createElement('canvas');
+        canvas.width = nw; canvas.height = nh;
+        var ctx = canvas.getContext('2d');
+        // Background putih (untuk PNG transparan)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, nw, nh);
+        // Kualitas smoothing tinggi agar hasil downscale tajam
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, nw, nh);
+
+        var dataUrl = canvas.toDataURL('image/jpeg', lv.q);
+        var b64 = dataUrl.split(',')[1];
+
+        best = {
+          b64: b64,
+          mime: 'image/jpeg',
+          width: nw,
+          height: nh,
+          size: b64.length,
+          level: (i + 1) + '/' + levels.length
+        };
+
+        if (b64.length <= TARGET_B64_BYTES) break;
+      }
+
       var newName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
-      cb(b64, 'image/jpeg', newName);
+      cb(best.b64, best.mime, newName, best);
     };
     img.onerror = function () {
       URL.revokeObjectURL(url);
@@ -873,15 +954,41 @@
   }
 
   function bindInputs() {
-    document.querySelectorAll('input[data-field], select[data-field]').forEach(function (el) {
+    document.querySelectorAll('input[data-field], select[data-field], textarea[data-field]').forEach(function (el) {
+      var f = el.closest('.field');
+
+      // Auto-uppercase untuk input teks & textarea (bukan email, tel, date, number)
+      if (el.tagName === 'TEXTAREA') {
+        el.classList.add('auto-upper');
+      } else if (el.tagName === 'INPUT') {
+        var t = (el.type || 'text').toLowerCase();
+        if (t === 'text' || t === 'search') el.classList.add('auto-upper');
+      }
+
+      var applyUpper = function () {
+        var isText = false;
+        if (el.tagName === 'TEXTAREA') isText = true;
+        else if (el.tagName === 'INPUT') {
+          var t = (el.type || 'text').toLowerCase();
+          isText = (t === 'text' || t === 'search');
+        }
+        if (!isText) return;
+        if (el.value !== el.value.toUpperCase()) {
+          var pos = el.selectionStart;
+          el.value = el.value.toUpperCase();
+          try { el.setSelectionRange(pos, pos); } catch (e) {}
+        }
+      };
+
       el.addEventListener('input', function () {
-        var f = el.closest('.field');
+        applyUpper();
         if (f) f.classList.remove('invalid');
       });
       el.addEventListener('change', function () {
-        var f = el.closest('.field');
+        applyUpper();
         if (f) f.classList.remove('invalid');
       });
+      el.addEventListener('blur', applyUpper);
     });
   }
 
