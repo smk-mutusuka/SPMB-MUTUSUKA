@@ -50,17 +50,14 @@ const Api = {
     opts = opts || {};
     const timeout = opts.timeout || 120000;
     if (!APP_CONFIG.APPS_SCRIPT_URL) return Promise.reject(new Error('APPS_SCRIPT_URL belum diisi'));
-
     const body = { action: action, token: null, payload: payload || {} };
     const controller = new AbortController();
     const timer = setTimeout(function () { controller.abort(); }, timeout);
-
     return fetch(APP_CONFIG.APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(body),
-      signal: controller.signal,
-      redirect: 'follow'
+      signal: controller.signal, redirect: 'follow'
     })
       .then(function (res) { clearTimeout(timer); return res.text(); })
       .then(function (text) {
@@ -154,6 +151,22 @@ const Api = {
     publish: function (publish) { return Api.call('selection.publish', { publish: publish }); },
     getResult: function (id) { return Api.call('selection.getResult', { registration_id: id }); },
     stats: function () { return Api.call('selection.stats', {}); }
+  },
+
+  gelombang: {
+    list: function () { return Api.call('gelombang.list', {}); },
+    getActive: function () { return Api.call('gelombang.getActive', {}, { useToken: false }); },
+    save: function (d) { return Api.call('gelombang.save', d); },
+    delete: function (id) { return Api.call('gelombang.delete', { gelombang_id: id }); }
+  },
+
+  daftarUlang: {
+    getByReg: function (regId) { return Api.call('daftarUlang.getByReg', { registration_id: regId }); },
+    updateStatus: function (id, status, catatan) {
+      return Api.call('daftarUlang.updateStatus', { daftar_ulang_id: id, status: status, catatan: catatan || '' });
+    },
+    list: function (params) { return Api.call('daftarUlang.list', params || {}); },
+    stats: function () { return Api.call('daftarUlang.stats', {}); }
   },
 
   report: {
