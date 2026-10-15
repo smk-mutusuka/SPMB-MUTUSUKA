@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifikasi WA — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa; color: #1f2937; min-height: 100vh; }
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 260px; background: #1a5490; color: #fff;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    transition: transform 0.3s ease; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 12px; }
+  .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
+  .sidebar-header .brand { font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+  .nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+  .nav-group-title { padding: 12px 20px 6px; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.5); }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem;
+    transition: background 0.15s; border-left: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.08); }
+  .nav-item.active { background: rgba(255,255,255,0.12);
+    border-left-color: #d4a017; color: #fff; font-weight: 500; }
+  .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
+    padding: 12px 24px; display: flex; align-items: center;
+    justify-content: space-between; gap: 16px; }
+  .btn-menu { display: none; background: none; border: none;
+    font-size: 1.4rem; cursor: pointer; color: #1a5490; padding: 4px; }
+  .topbar-title { font-size: 1.05rem; font-weight: 600; color: #1a5490; }
+  .user-info { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
+  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #1a5490;
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.9rem; }
+  .user-meta { text-align: right; line-height: 1.3; }
+  .user-name { font-weight: 600; }
+  .user-role { font-size: 0.75rem; color: #6b7280; }
+  .btn-logout { background: #fee2e2; color: #d93025; border: none;
+    padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
+    font-weight: 500; cursor: pointer; }
+  .btn-logout:hover { background: #fecaca; }
+
+  .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+  .layout { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
+
+  .panel { background: #fff; padding: 20px; border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
+  .panel-head { display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+  .panel-head h3 { font-size: 1rem; color: #1a5490; }
+
+  .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .field label { font-size: 0.78rem; color: #374151; font-weight: 500; }
+  .field input, .field select, .field textarea {
+    padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 0.9rem; font-family: inherit; background: #fff;
+    width: 100%; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: #1a5490;
+    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
+  .field textarea { min-height: 160px; resize: vertical;
+    font-family: 'Consolas', 'Courier New', monospace; font-size: 0.85rem; }
+
+  .btn { padding: 9px 16px; border: none; border-radius: 6px;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    font-family: inherit; transition: background 0.15s; }
+  .btn-primary { background: #1a5490; color: #fff; }
+  .btn-primary:hover { background: #143f6e; }
+  .btn-secondary { background: #e5e7eb; color: #1f2937; }
+  .btn-secondary:hover { background: #d1d5db; }
+  .btn-success { background: #25D366; color: #fff; }
+  .btn-success:hover { background: #1ebe5b; }
+  .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+  .btn-block { width: 100%; margin-bottom: 8px; }
+
+  .list-pendaftar { max-height: 600px; overflow-y: auto;
+    border: 1px solid #e5e7eb; border-radius: 8px; }
+  .list-item { padding: 12px 14px; border-bottom: 1px solid #f3f4f6;
+    cursor: pointer; transition: background 0.15s; }
+  .list-item:hover { background: #f9fafb; }
+  .list-item.active { background: #eff6ff; border-left: 3px solid #1a5490; }
+  .list-item:last-child { border-bottom: none; }
+  .list-item .li-nama { font-weight: 600; font-size: 0.88rem; color: #1f2937; }
+  .list-item .li-info { font-size: 0.75rem; color: #6b7280; margin-top: 2px; }
+  .list-item .li-status { display: inline-block; padding: 1px 6px;
+    border-radius: 8px; font-size: 0.65rem; font-weight: 600;
+    text-transform: uppercase; margin-left: 6px; }
+
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+  .filter-bar input, .filter-bar select {
+    padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 0.85rem; font-family: inherit; flex: 1; }
+  .filter-bar input:focus, .filter-bar select:focus {
+    outline: none; border-color: #1a5490; }
+
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 12px;
+    font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.3px; }
+  .st-DRAFT { background: #e5e7eb; color: #374151; }
+  .st-TERKIRIM { background: #dbeafe; color: #1e40af; }
+  .st-PERLU_PERBAIKAN { background: #fef3c7; color: #92400e; }
+  .st-TERVERIFIKASI { background: #d1fae5; color: #065f46; }
+  .st-DIBATALKAN { background: #fee2e2; color: #991b1b; }
+
+  .empty { text-align: center; padding: 40px 20px; color: #6b7280;
+    font-size: 0.88rem; }
+
+  .info-box { background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 14px;
+    font-size: 0.85rem; color: #1e40af; line-height: 1.6; }
+
+  .warn-box { background: #fef3c7; border: 1px solid #fde68a;
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 14px;
+    font-size: 0.85rem; color: #92400e; }
+
+  .pendaftar-info { background: #f9fafb; border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 16px;
+    border-left: 3px solid #1a5490; }
+  .pendaftar-info .pi-nama { font-weight: 700; color: #1a5490;
+    font-size: 1rem; margin-bottom: 4px; }
+  .pendaftar-info .pi-detail { font-size: 0.82rem; color: #6b7280;
+    line-height: 1.6; }
+  .pendaftar-info .pi-detail strong { color: #374151; }
+
+  .template-info { background: #f0fdf4; border: 1px solid #bbf7d0;
+    border-radius: 6px; padding: 10px 14px; margin-bottom: 12px;
+    font-size: 0.78rem; color: #166534; line-height: 1.5; }
+  .template-info code { background: #fff; padding: 1px 5px;
+    border-radius: 3px; font-size: 0.75rem; }
+
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+  .log-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .log-table th, .log-table td { padding: 8px 10px; text-align: left;
+    border-bottom: 1px solid #e5e7eb; }
+  .log-table th { background: #f9fafb; font-weight: 600;
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3px;
+    color: #374151; }
+
+  .overlay { display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 99; }
+  .overlay.show { display: block; }
+
+  .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.3px; }
+  .role-ADMIN { background: #dbeafe; color: #1e40af; }
+  .role-WAWANCARA { background: #fef3c7; color: #92400e; }
+  .role-BENDAHARA { background: #d1fae5; color: #065f46; }
+  .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
+
+  @media (max-width: 900px) {
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+      transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .btn-menu { display: block; }
+    .user-meta { display: none; }
+    .layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+      <div class="brand">SPMB<br>SMK Muhammadiyah 1 Surakarta</div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-footer">Versi 1.0.0</div>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn-menu" id="btn-menu">☰</button>
+        <div class="topbar-title">Notifikasi WhatsApp</div>
+      </div>
+      <div class="user-info">
+        <div class="user-meta">
+          <div class="user-name" id="user-name">-</div>
+          <div class="user-role" id="user-role">-</div>
+        </div>
+        <div class="user-avatar" id="user-avatar">?</div>
+        <button class="btn-logout" id="btn-logout">Keluar</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="layout">
+        <!-- KIRI: daftar pendaftar -->
+        <div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Pilih Pendaftar</h3>
+            </div>
+            <div class="filter-bar">
+              <input type="text" id="f-q" placeholder="Cari nama / NISN / no. daftar">
+              <select id="f-status">
+                <option value="">Semua</option>
+                <option value="TERKIRIM">TERKIRIM</option>
+                <option value="TERVERIFIKASI">TERVERIFIKASI</option>
+                <option value="PERLU_PERBAIKAN">PERLU PERBAIKAN</option>
+              </select>
+            </div>
+            <div class="list-pendaftar" id="list-pendaftar">
+              <div class="empty">Memuat...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KANAN: form notifikasi -->
+        <div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Kirim Notifikasi</h3>
+            </div>
+            <div id="form-area">
+              <div class="info-box">
+                📱 <strong>Cara pakai:</strong> pilih pendaftar di sebelah kiri, pilih template, klik
+                <strong>Buka WhatsApp</strong>. Pesan otomatis terisi. Kirim manual dari WhatsApp.
+                Setelah terkirim, klik <strong>Catat Log</strong>.
+              </div>
+              <div class="empty">← Pilih pendaftar dulu</div>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-log" style="display:none;">
+            <div class="panel-head">
+              <h3>Riwayat Notifikasi</h3>
+            </div>
+            <div id="log-area"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  if (!Auth.guard(['ADMIN', 'SELEKSI', 'WAWANCARA', 'BENDAHARA'])) return;
+
+  var user = Auth.getUser();
+  var role = user.role || '-';
+  var displayName = user.display_name || user.username || 'Petugas';
+
+  document.getElementById('user-name').textContent = displayName;
+  document.getElementById('user-role').innerHTML =
+    '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
+  document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
+
+  // Sidebar
+  var menus = {
+    ADMIN: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Pendaftaran', items: [
+        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
+        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
+      ]},
+      { group: 'Proses', items: [
+        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
+        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
+        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
+      ]},
+      { group: 'Sistem', items: [
+        { icon: '📊', label: 'Laporan', href: 'report.html' },
+        { icon: '📲', label: 'Notifikasi WA', href: 'notif.html', active: true },
+        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
+      ]}
+    ],
+    SELEKSI: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Seleksi', items: [
+        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }
+      ]},
+      { group: 'Sistem', items: [
+        { icon: '📊', label: 'Laporan', href: 'report.html' },
+        { icon: '📲', label: 'Notifikasi WA', href: 'notif.html', active: true }
+      ]}
+    ],
+    WAWANCARA: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Wawancara', items: [
+        { icon: '🔍', label: 'Cari Siswa', href: 'interview.html' }
+      ]},
+      { group: 'Sistem', items: [
+        { icon: '📲', label: 'Notifikasi WA', href: 'notif.html', active: true }
+      ]}
+    ],
+    BENDAHARA: [
+      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
+      { group: 'Pembayaran', items: [
+        { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' }
+      ]},
+      { group: 'Sistem', items: [
+        { icon: '📲', label: 'Notifikasi WA', href: 'notif.html', active: true }
+      ]}
+    ]
+  };
+  var nav = document.getElementById('nav');
+  var menu = menus[role] || menus.ADMIN;
+  var html = '';
+  menu.forEach(function (g) {
+    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
+    g.items.forEach(function (it) {
+      var cls = 'nav-item' + (it.active ? ' active' : '');
+      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
+              '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
+    });
+  });
+  nav.innerHTML = html;
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  document.getElementById('btn-menu').addEventListener('click', function () {
+    sidebar.classList.toggle('open'); overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function () {
+    sidebar.classList.remove('open'); overlay.classList.remove('show');
+  });
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    if (!confirm('Keluar dari aplikasi?')) return;
+    Auth.logout();
+  });
+
+  /* ============================================================
+   * STATE
+   * ============================================================ */
+  var state = {
+    q: '',
+    status: '',
+    pendaftarList: [],
+    selected: null, // { registration_id, nama_lengkap, nomor_pendaftaran, ... }
+    templates: [],
+    selectedTemplate: null,
+    recipientType: 'SISWA',
+    preview: null // { wa_url, phone, message }
+  };
+
+  /* ============================================================
+   * LOAD LIST PENDAFTAR
+   * ============================================================ */
+  function loadPendaftar() {
+    var listEl = document.getElementById('list-pendaftar');
+    listEl.innerHTML = '<div class="empty">Memuat...</div>';
+    Api.registration.list({ q: state.q, status: state.status, per_page: 100 })
+      .then(function (res) {
+        if (!res.success) {
+          listEl.innerHTML = '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
+          return;
+        }
+        state.pendaftarList = res.data.items || [];
+        renderListPendaftar();
+      })
+      .catch(function (err) {
+        listEl.innerHTML = '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+      });
+  }
+
+  function renderListPendaftar() {
+    var listEl = document.getElementById('list-pendaftar');
+    var items = state.pendaftarList;
+    if (!items.length) {
+      listEl.innerHTML = '<div class="empty">Tidak ada pendaftar.</div>';
+      return;
+    }
+    var html = '';
+    items.forEach(function (it) {
+      var st = String(it.status_pendaftaran || 'DRAFT');
+      var cls = 'st-' + st;
+      var active = state.selected && state.selected.registration_id === it.registration_id;
+      html += '<div class="list-item' + (active ? ' active' : '') + '" ' +
+              'data-id="' + Utils.escapeHtml(it.registration_id) + '">' +
+        '<div class="li-nama">' + Utils.escapeHtml(it.nama_lengkap || '-') +
+          '<span class="badge ' + cls + ' li-status">' + st.replace('_',' ') + '</span></div>' +
+        '<div class="li-info">' + Utils.escapeHtml(it.nomor_pendaftaran || '-') +
+          ' • NISN ' + Utils.escapeHtml(it.nisn || '-') + '</div>' +
+      '</div>';
+    });
+    listEl.innerHTML = html;
+
+    listEl.querySelectorAll('.list-item').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var id = el.getAttribute('data-id');
+        var p = state.pendaftarList.filter(function (x) { return x.registration_id === id; })[0];
+        if (!p) return;
+        selectPendaftar(p);
+      });
+    });
+  }
+
+  document.getElementById('f-q').addEventListener('input', function (e) {
+    state.q = e.target.value.trim();
+    clearTimeout(window.__searchTimer);
+    window.__searchTimer = setTimeout(loadPendaftar, 400);
+  });
+  document.getElementById('f-status').addEventListener('change', function (e) {
+    state.status = e.target.value;
+    loadPendaftar();
+  });
+
+  /* ============================================================
+   * LOAD TEMPLATE
+   * ============================================================ */
+  function loadTemplates() {
+    Api.admin.listTemplate().then(function (res) {
+      if (res.success && res.data && res.data.template) {
+        state.templates = res.data.template.filter(function (t) { return t.aktif; });
+      }
+    }).catch(function () {});
+  }
+
+  /* ============================================================
+   * PILIH PENDAFTAR → TAMPILKAN FORM
+   * ============================================================ */
+  function selectPendaftar(p) {
+    state.selected = p;
+    state.selectedTemplate = null;
+    state.preview = null;
+    renderListPendaftar();
+    renderForm();
+    loadLog(p.registration_id);
+  }
+
+  function renderForm() {
+    var p = state.selected;
+    if (!p) {
+      document.getElementById('form-area').innerHTML =
+        '<div class="info-box">📱 Pilih pendaftar di sebelah kiri untuk mulai.</div>' +
+        '<div class="empty">← Pilih pendaftar dulu</div>';
+      document.getElementById('panel-log').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('panel-log').style.display = 'block';
+
+    var templateOptions = '<option value="">-- Pilih Template --</option>';
+    state.templates.forEach(function (t) {
+      templateOptions += '<option value="' + Utils.escapeHtml(t.template_code) + '">' +
+        Utils.escapeHtml(t.template_code + ' — ' + t.nama) + '</option>';
+    });
+
+    var html =
+      '<div class="pendaftar-info">' +
+        '<div class="pi-nama">' + Utils.escapeHtml(p.nama_lengkap || '-') + '</div>' +
+        '<div class="pi-detail">' +
+          'No. Pendaftaran: <strong>' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</strong><br>' +
+          'NISN: <strong>' + Utils.escapeHtml(p.nisn || '-') + '</strong><br>' +
+          'Konsentrasi: <strong>' + Utils.escapeHtml(p.konsentrasi_1 || '-') + '</strong><br>' +
+          'Status: <strong>' + Utils.escapeHtml(p.status_pendaftaran || '-') + '</strong>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="template-info">' +
+        'Variabel tersedia: <code>{{nama}}</code> <code>{{nomor}}</code> ' +
+        '<code>{{sekolah}}</code> <code>{{tahun_ajaran}}</code> ' +
+        '<code>{{konsentrasi}}</code> <code>{{batas_daftar_ulang}}</code> ' +
+        '<code>{{catatan}}</code>' +
+      '</div>' +
+
+      '<div class="field">' +
+        '<label>Template Pesan</label>' +
+        '<select id="sel-template">' + templateOptions + '</select>' +
+      '</div>' +
+
+      '<div class="field">' +
+        '<label>Penerima</label>' +
+        '<select id="sel-recipient">' +
+          '<option value="SISWA">Siswa</option>' +
+          '<option value="ORANGTUA">Orang Tua / Wali</option>' +
+        '</select>' +
+      '</div>' +
+
+      '<div class="field">' +
+        '<label>Preview Pesan</label>' +
+        '<textarea id="preview-text" readonly placeholder="Pilih template untuk melihat preview..."></textarea>' +
+      '</div>' +
+
+      '<div class="btn-row">' +
+        '<button class="btn btn-success" id="btn-buka-wa" disabled>💬 Buka WhatsApp</button>' +
+        '<button class="btn btn-secondary" id="btn-copy" disabled>📋 Copy Pesan</button>' +
+        '<button class="btn btn-primary" id="btn-log" disabled>✓ Catat Log</button>' +
+      '</div>' +
+      '<div id="preview-info" style="font-size:0.78rem;color:#6b7280;margin-top:8px;"></div>';
+
+    document.getElementById('form-area').innerHTML = html;
+
+    document.getElementById('sel-template').addEventListener('change', onTemplateChange);
+    document.getElementById('sel-recipient').addEventListener('change', function (e) {
+      state.recipientType = e.target.value;
+      if (state.selectedTemplate) loadPreview();
+    });
+
+    document.getElementById('btn-buka-wa').addEventListener('click', openWhatsApp);
+    document.getElementById('btn-copy').addEventListener('click', copyMessage);
+    document.getElementById('btn-log').addEventListener('click', logNotif);
+  }
+
+  function onTemplateChange(e) {
+    var code = e.target.value;
+    state.selectedTemplate = code || null;
+    if (!code) {
+      document.getElementById('preview-text').value = '';
+      document.getElementById('btn-buka-wa').disabled = true;
+      document.getElementById('btn-copy').disabled = true;
+      document.getElementById('btn-log').disabled = true;
+      document.getElementById('preview-info').textContent = '';
+      return;
+    }
+    loadPreview();
+  }
+
+  function loadPreview() {
+    if (!state.selected || !state.selectedTemplate) return;
+    var previewEl = document.getElementById('preview-text');
+    previewEl.value = 'Memuat...';
+    Api.notif.preview(state.selected.registration_id, state.selectedTemplate, state.recipientType)
+      .then(function (res) {
+        if (!res.success) {
+          previewEl.value = 'Gagal: ' + res.message;
+          return;
+        }
+        state.preview = res.data;
+        previewEl.value = res.data.message || '';
+        var info = document.getElementById('preview-info');
+        var phone = res.data.phone || '';
+        if (!phone) {
+          info.innerHTML = '<span style="color:#dc2626;">⚠ Nomor WA tidak tersedia untuk penerima ini.</span>';
+          document.getElementById('btn-buka-wa').disabled = true;
+        } else {
+          info.innerHTML = '📞 Nomor tujuan: <strong>' + Utils.escapeHtml(phone) + '</strong>';
+          document.getElementById('btn-buka-wa').disabled = false;
+        }
+        document.getElementById('btn-copy').disabled = false;
+        document.getElementById('btn-log').disabled = false;
+      })
+      .catch(function (err) {
+        previewEl.value = 'Error: ' + err.message;
+      });
+  }
+
+  function openWhatsApp() {
+    if (!state.preview || !state.preview.wa_url) {
+      Utils.toast('Nomor WA tidak tersedia', 'error');
+      return;
+    }
+    window.open(state.preview.wa_url, '_blank');
+    Utils.toast('WhatsApp dibuka di tab baru. Kirim pesan, lalu klik "Catat Log".', 'info');
+  }
+
+  function copyMessage() {
+    if (!state.preview) return;
+    var text = state.preview.message || '';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        Utils.toast('Pesan disalin ke clipboard', 'success');
+      }).catch(function () {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      Utils.toast('Pesan disalin', 'success');
+    } catch (e) {
+      Utils.toast('Gagal menyalin', 'error');
+    }
+    document.body.removeChild(ta);
+  }
+
+  function logNotif() {
+    if (!state.preview || !state.selected) return;
+    if (!confirm('Catat pengiriman WA ini ke log?')) return;
+    Utils.showLoading('Menyimpan log...');
+    Api.notif.log({
+      registration_id: state.selected.registration_id,
+      template_code: state.selectedTemplate,
+      recipient_type: state.recipientType,
+      phone: state.preview.phone,
+      message: state.preview.message
+    }).then(function (res) {
+      Utils.hideLoading();
+      if (res.success) {
+        Utils.toast('Log tersimpan', 'success');
+        loadLog(state.selected.registration_id);
+      } else {
+        Utils.toast('Gagal: ' + res.message, 'error');
+      }
+    }).catch(function (err) {
+      Utils.hideLoading();
+      Utils.toast('Error: ' + err.message, 'error');
+    });
+  }
+
+  /* ============================================================
+   * RIWAYAT LOG
+   * ============================================================ */
+  function loadLog(regId) {
+    var logEl = document.getElementById('log-area');
+    logEl.innerHTML = '<div class="empty">Memuat...</div>';
+    Api.notif.listLog({ registration_id: regId }).then(function (res) {
+      if (!res.success) {
+        logEl.innerHTML = '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
+        return;
+      }
+      var items = res.data.items || [];
+      if (!items.length) {
+        logEl.innerHTML = '<div class="empty">Belum ada notifikasi terkirim untuk pendaftar ini.</div>';
+        return;
+      }
+      var h = '<table class="log-table"><thead><tr>' +
+        '<th>Waktu</th><th>Template</th><th>Penerima</th><th>Nomor</th><th>Status</th>' +
+        '</tr></thead><tbody>';
+      items.forEach(function (it) {
+        h += '<tr>' +
+          '<td>' + Utils.formatDateTime(it.sent_at) + '</td>' +
+          '<td>' + Utils.escapeHtml(it.template_code || '-') + '</td>' +
+          '<td>' + Utils.escapeHtml(it.recipient_type || '-') + '</td>' +
+          '<td>' + Utils.escapeHtml(it.recipient_masked || '-') + '</td>' +
+          '<td>' + Utils.escapeHtml(it.status || '-') + '</td>' +
+        '</tr>';
+      });
+      h += '</tbody></table>';
+      logEl.innerHTML = h;
+    }).catch(function (err) {
+      logEl.innerHTML = '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+    });
+  }
+
+  /* ============================================================
+   * BOOT
+   * ============================================================ */
+  loadTemplates();
+  loadPendaftar();
+
+})();
+</script>
+</body>
+</html>
