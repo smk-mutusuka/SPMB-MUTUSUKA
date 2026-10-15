@@ -10,10 +10,8 @@
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: #f5f7fa; color: #1f2937; min-height: 100vh; }
   .app { display: flex; min-height: 100vh; }
-
   .sidebar { width: 260px; background: #1a5490; color: #fff;
-    display: flex; flex-direction: column; flex-shrink: 0;
-    transition: transform 0.3s ease; }
+    display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease; }
   .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; align-items: center; gap: 12px; }
   .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
@@ -30,7 +28,6 @@
   .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
   .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.75rem; color: rgba(255,255,255,0.6); }
-
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
     padding: 12px 24px; display: flex; align-items: center;
@@ -49,25 +46,18 @@
     padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
     font-weight: 500; cursor: pointer; }
   .btn-logout:hover { background: #fecaca; }
-
   .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
-
-  .summary {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 14px; margin-bottom: 20px;
-  }
+  .summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px; margin-bottom: 20px; }
   .sum-card { background: #fff; padding: 16px 18px; border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    border-left: 4px solid #1a5490; }
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left: 4px solid #1a5490; }
   .sum-label { font-size: 0.78rem; color: #6b7280; margin-bottom: 4px; }
   .sum-value { font-size: 1.4rem; font-weight: 700; color: #1a5490; }
-
   .panel { background: #fff; padding: 20px; border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
   .panel-head { display: flex; justify-content: space-between;
     align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
   .panel-head h3 { font-size: 1rem; color: #1a5490; }
-
   .filters { display: grid; grid-template-columns: 2fr 1fr 1fr auto;
     gap: 10px; align-items: end; }
   .filters .field { display: flex; flex-direction: column; gap: 4px; }
@@ -76,9 +66,7 @@
     padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px;
     font-size: 0.9rem; font-family: inherit; background: #fff; }
   .filters input:focus, .filters select:focus {
-    outline: none; border-color: #1a5490;
-    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
-
+    outline: none; border-color: #1a5490; box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
   .btn { padding: 9px 16px; border: none; border-radius: 6px;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: inherit; transition: background 0.15s; }
@@ -91,7 +79,6 @@
   .btn-danger { background: #fee2e2; color: #991b1b; }
   .btn-danger:hover { background: #fecaca; }
   .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
-
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
@@ -100,16 +87,12 @@
   tbody tr:hover { background: #f9fafb; }
   td.actions { white-space: nowrap; }
   td.actions .btn { margin-right: 4px; }
-
   .badge { display: inline-block; padding: 3px 9px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px; }
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .bg-sah { background: #d1fae5; color: #065f46; }
   .bg-batal { background: #fee2e2; color: #991b1b; }
   .bg-koreksi { background: #fef3c7; color: #92400e; }
-
   .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
-
   .modal-bg { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 200;
     align-items: center; justify-content: center; padding: 20px; }
@@ -124,113 +107,56 @@
     width: 100%; padding: 9px 12px; border: 1px solid #d1d5db;
     border-radius: 6px; font-size: 0.9rem; font-family: inherit; }
   .modal input:focus, .modal select:focus, .modal textarea:focus {
-    outline: none; border-color: #1a5490;
-    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
+    outline: none; border-color: #1a5490; box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
   .modal textarea { min-height: 80px; resize: vertical; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-
   .overlay { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.4); z-index: 99; }
   .overlay.show { display: block; }
-
   .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px; }
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .role-ADMIN { background: #dbeafe; color: #1e40af; }
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
-
-  /* ============================================================
-   * PRINT AREA — KUITANSI A5 PORTRAIT
-   * ============================================================ */
   #print-area { display: none; }
-
   @media print {
     @page { size: A5 portrait; margin: 8mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
-    #print-area {
-      display: block !important;
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%;
-      font-family: 'Times New Roman', Times, serif;
-      color: #000;
-    }
+    #print-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%;
+      font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
-
     .kuitansi { padding: 2mm 2mm 0 2mm; }
-    .kuitansi .kop {
-      display: flex; align-items: center; gap: 5mm; margin-bottom: 2mm;
-    }
-    .kuitansi .kop-logo {
-      width: 20mm; height: 20mm; object-fit: contain; flex-shrink: 0;
-    }
+    .kuitansi .kop { display: flex; align-items: center; gap: 5mm; margin-bottom: 2mm; }
+    .kuitansi .kop-logo { width: 20mm; height: 20mm; object-fit: contain; flex-shrink: 0; }
     .kuitansi .kop-teks { flex: 1; text-align: center; }
-    .kuitansi .kop-teks h2 {
-      font-size: 13pt; font-weight: 700; margin: 0;
-      line-height: 1.2; letter-spacing: 0.3px;
-    }
-    .kuitansi .kop-teks .kop-sub {
-      font-size: 8.5pt; line-height: 1.3; margin-top: 0.5mm;
-    }
-    .kuitansi .kop-line {
-      border: none; border-top: 2px solid #000;
-      border-bottom: 1px solid #000; height: 1.5mm;
-      margin: 1mm 0 4mm 0;
-    }
-    .kuitansi .kuitansi-title {
-      text-align: center; font-size: 12pt; font-weight: 700;
-      text-decoration: underline; letter-spacing: 1px; margin-bottom: 1mm;
-    }
-    .kuitansi .kuitansi-nomor {
-      text-align: center; font-size: 9pt; margin-bottom: 4mm;
-    }
-
-    .kuitansi .ktbl {
-      width: 100%; font-size: 10pt;
-      border-collapse: collapse; margin-bottom: 4mm;
-    }
-    .kuitansi .ktbl td {
-      padding: 1.2mm 0; vertical-align: top;
-    }
+    .kuitansi .kop-teks h2 { font-size: 13pt; font-weight: 700; margin: 0; line-height: 1.2; }
+    .kuitansi .kop-teks .kop-sub { font-size: 8.5pt; line-height: 1.3; margin-top: 0.5mm; }
+    .kuitansi .kop-line { border: none; border-top: 2px solid #000; border-bottom: 1px solid #000;
+      height: 1.5mm; margin: 1mm 0 4mm 0; }
+    .kuitansi .kuitansi-title { text-align: center; font-size: 12pt; font-weight: 700;
+      text-decoration: underline; letter-spacing: 1px; margin-bottom: 1mm; }
+    .kuitansi .kuitansi-nomor { text-align: center; font-size: 9pt; margin-bottom: 4mm; }
+    .kuitansi .ktbl { width: 100%; font-size: 10pt; border-collapse: collapse; margin-bottom: 4mm; }
+    .kuitansi .ktbl td { padding: 1.2mm 0; vertical-align: top; }
     .kuitansi .ktbl td.lbl { width: 33%; }
     .kuitansi .ktbl td.colon { width: 3%; }
     .kuitansi .ktbl td.val { width: 64%; font-weight: 500; }
-
-    .kuitansi .jumlah-box {
-      border: 1.5px solid #000; border-radius: 2mm;
-      padding: 3mm 4mm; background: #f5f5f5;
-      font-size: 11pt; font-weight: 700; text-align: center;
-      margin: 3mm 0; letter-spacing: 0.5px;
-    }
-    .kuitansi .jumlah-box .jumlah-label {
-      font-size: 8.5pt; font-weight: 400;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      display: block; margin-bottom: 1mm;
-    }
-
-    .kuitansi .keterangan {
-      font-size: 8.5pt; font-style: italic;
-      margin-top: 3mm; color: #333;
-    }
-
-    .kuitansi .ttd {
-      margin-top: 8mm; text-align: right; font-size: 10pt;
-    }
+    .kuitansi .jumlah-box { border: 1.5px solid #000; border-radius: 2mm;
+      padding: 3mm 4mm; background: #f5f5f5; font-size: 11pt; font-weight: 700;
+      text-align: center; margin: 3mm 0; letter-spacing: 0.5px; }
+    .kuitansi .jumlah-box .jumlah-label { font-size: 8.5pt; font-weight: 400;
+      text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 1mm; }
+    .kuitansi .keterangan { font-size: 8.5pt; font-style: italic; margin-top: 3mm; color: #333; }
+    .kuitansi .ttd { margin-top: 8mm; text-align: right; font-size: 10pt; }
     .kuitansi .ttd .ttd-kota { margin-bottom: 1mm; }
     .kuitansi .ttd .ttd-jabatan { margin-bottom: 18mm; }
-    .kuitansi .ttd .ttd-nama {
-      font-weight: 700; text-decoration: underline;
-      display: inline-block;
-    }
+    .kuitansi .ttd .ttd-nama { font-weight: 700; text-decoration: underline; display: inline-block; }
   }
-
   @media (max-width: 900px) {
-    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-      transform: translateX(-100%); }
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .btn-menu { display: block; }
     .user-meta { display: none; }
@@ -241,7 +167,6 @@
 </style>
 </head>
 <body>
-
 <div class="app no-print">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -251,9 +176,7 @@
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-footer">Versi 1.0.0</div>
   </aside>
-
   <div class="overlay" id="overlay"></div>
-
   <main class="main">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -269,10 +192,8 @@
         <button class="btn-logout" id="btn-logout">Keluar</button>
       </div>
     </header>
-
     <div class="content">
       <div class="summary" id="summary"></div>
-
       <div class="panel">
         <div class="panel-head">
           <h3>Riwayat Transaksi</h3>
@@ -300,70 +221,25 @@
     </div>
   </main>
 </div>
-
-<div class="modal-bg" id="modal-bg">
-  <div class="modal" id="modal"></div>
-</div>
-
+<div class="modal-bg" id="modal-bg"><div class="modal" id="modal"></div></div>
 <div id="print-area"></div>
-
 <script src="config.js"></script>
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
+<script src="nav.js"></script>
 <script>
 (function () {
   'use strict';
-
   if (!Auth.guard(['ADMIN', 'BENDAHARA'])) return;
-
   var user = Auth.getUser();
   var role = user.role;
   var displayName = user.display_name || user.username;
-
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-role').innerHTML =
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
-
-  var menus = {
-    ADMIN: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pendaftaran', items: [
-        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-      ]},
-      { group: 'Proses', items: [
-        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
-        { icon: '💰', label: 'Pembayaran', href: 'payment.html', active: true },
-        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: '#' },
-        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
-      ]}
-    ],
-    BENDAHARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pembayaran', items: [
-        { icon: '💵', label: 'Input Pembayaran', href: 'payment.html', active: true },
-        { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html' }
-      ]}
-    ]
-  };
-  var nav = document.getElementById('nav');
-  var menu = menus[role] || menus.BENDAHARA;
-  var html = '';
-  menu.forEach(function (g) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
-    g.items.forEach(function (it) {
-      var cls = 'nav-item' + (it.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
-        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
-    });
-  });
-  nav.innerHTML = html;
-
+  Nav.render('payment');
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   document.getElementById('btn-menu').addEventListener('click', function () {
@@ -376,48 +252,24 @@
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
-
   var modalBg = document.getElementById('modal-bg');
-  function openModal(html) {
-    document.getElementById('modal').innerHTML = html;
-    modalBg.classList.add('show');
-  }
-  function closeModal() {
-    modalBg.classList.remove('show');
-    document.getElementById('modal').innerHTML = '';
-  }
-  modalBg.addEventListener('click', function (e) {
-    if (e.target === modalBg) closeModal();
-  });
-
+  function openModal(html) { document.getElementById('modal').innerHTML = html; modalBg.classList.add('show'); }
+  function closeModal() { modalBg.classList.remove('show'); document.getElementById('modal').innerHTML = ''; }
+  modalBg.addEventListener('click', function (e) { if (e.target === modalBg) closeModal(); });
   var state = { q: '', jenis: '', status: '' };
-
-  /* ============================================================
-   * KONSENTRASI MAP: { K01: 'Teknik Pengelasan', ... }
-   * ============================================================ */
   var konsentrasiMap = {};
-
   function loadKonsentrasiMap() {
     return Api.settings.listKonsentrasi().then(function (res) {
       if (res && res.success && res.data && res.data.konsentrasi) {
-        res.data.konsentrasi.forEach(function (k) {
-          konsentrasiMap[k.konsentrasi_id] = k.nama_konsentrasi;
-        });
+        res.data.konsentrasi.forEach(function (k) { konsentrasiMap[k.konsentrasi_id] = k.nama_konsentrasi; });
       }
     }).catch(function () {});
   }
-
-  function namaKonsentrasi(id) {
-    if (!id) return '-';
-    return konsentrasiMap[id] || id;
-  }
-
   function labelKonsentrasi(id) {
     if (!id) return '-';
     var nama = konsentrasiMap[id];
     return nama ? (id + ' — ' + nama) : id;
   }
-
   function loadSummary() {
     Api.payment.summary().then(function (res) {
       if (!res.success) return;
@@ -433,25 +285,19 @@
       document.getElementById('summary').innerHTML = html;
     });
   }
-
   function loadList() {
     Utils.showLoading('Memuat transaksi...');
     Api.payment.list(state).then(function (res) {
       Utils.hideLoading();
       if (!res.success) {
-        document.getElementById('tbl').innerHTML =
-          '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
+        document.getElementById('tbl').innerHTML = '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
         return;
       }
       var items = res.data.items || [];
-      if (!items.length) {
-        document.getElementById('tbl').innerHTML = '<div class="empty">Belum ada transaksi.</div>';
-        return;
-      }
+      if (!items.length) { document.getElementById('tbl').innerHTML = '<div class="empty">Belum ada transaksi.</div>'; return; }
       var html = '<table><thead><tr>' +
         '<th>No. Kuitansi</th><th>Tanggal</th><th>Nama</th><th>No. Pendaftaran</th>' +
-        '<th>Jenis</th><th>Nominal</th><th>Metode</th><th>Status</th><th>Aksi</th>' +
-        '</tr></thead><tbody>';
+        '<th>Jenis</th><th>Nominal</th><th>Metode</th><th>Status</th><th>Aksi</th></tr></thead><tbody>';
       items.forEach(function (it) {
         var st = String(it.status || '').toUpperCase();
         var cls = st === 'SAH' ? 'bg-sah' : (st === 'DIBATALKAN' ? 'bg-batal' : 'bg-koreksi');
@@ -466,14 +312,11 @@
           '<td><span class="badge ' + cls + '">' + st + '</span></td>' +
           '<td class="actions">' +
             '<button class="btn btn-secondary btn-sm" data-print="' + Utils.escapeHtml(it.transaction_id) + '">Cetak</button>' +
-            (st === 'SAH' ?
-              '<button class="btn btn-danger btn-sm" data-cancel="' + Utils.escapeHtml(it.transaction_id) + '">Batalkan</button>' : '') +
-          '</td>' +
-        '</tr>';
+            (st === 'SAH' ? '<button class="btn btn-danger btn-sm" data-cancel="' + Utils.escapeHtml(it.transaction_id) + '">Batalkan</button>' : '') +
+          '</td></tr>';
       });
       html += '</tbody></table>';
       document.getElementById('tbl').innerHTML = html;
-
       document.querySelectorAll('[data-print]').forEach(function (b) {
         b.addEventListener('click', function () { printKuitansi(b.getAttribute('data-print')); });
       });
@@ -482,47 +325,35 @@
       });
     }).catch(function (err) {
       Utils.hideLoading();
-      document.getElementById('tbl').innerHTML =
-        '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+      document.getElementById('tbl').innerHTML = '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
     });
   }
-
   document.getElementById('btn-filter').addEventListener('click', function () {
     state.q = document.getElementById('f-q').value.trim();
     state.jenis = document.getElementById('f-jenis').value;
     state.status = document.getElementById('f-status').value;
     loadList();
   });
-
   document.getElementById('btn-new').addEventListener('click', function () {
     openModal(
       '<h3>Input Pembayaran</h3>' +
       '<div class="field"><label>Cari Pendaftar (nama / no. pendaftaran)</label>' +
         '<input id="p-cari" type="text" placeholder="Min 3 karakter..." autocomplete="off">' +
         '<div id="p-hasil" style="margin-top:6px;max-height:200px;overflow-y:auto;"></div></div>' +
-      '<div id="p-terpilih" style="display:none;background:#eff6ff;padding:10px 14px;' +
-        'border-radius:6px;font-size:0.85rem;margin-bottom:12px;"></div>' +
+      '<div id="p-terpilih" style="display:none;background:#eff6ff;padding:10px 14px;border-radius:6px;font-size:0.85rem;margin-bottom:12px;"></div>' +
       '<div class="field"><label>Jenis Pembayaran</label>' +
-        '<select id="p-jenis">' +
-        '<option value="BIAYA_PENDAFTARAN">BIAYA PENDAFTARAN</option>' +
-        '<option value="BIAYA_DAFTAR_ULANG">BIAYA DAFTAR ULANG</option>' +
-        '</select></div>' +
-      '<div class="field"><label>Nominal (Rp)</label>' +
-        '<input id="p-nominal" type="number" min="0" step="1000" placeholder="0"></div>' +
+        '<select id="p-jenis"><option value="BIAYA_PENDAFTARAN">BIAYA PENDAFTARAN</option>' +
+        '<option value="BIAYA_DAFTAR_ULANG">BIAYA DAFTAR ULANG</option></select></div>' +
+      '<div class="field"><label>Nominal (Rp)</label><input id="p-nominal" type="number" min="0" step="1000" placeholder="0"></div>' +
       '<div class="field"><label>Metode</label>' +
         '<select id="p-metode"><option value="TUNAI">TUNAI</option>' +
         '<option value="TRANSFER">TRANSFER</option><option value="QRIS">QRIS</option></select></div>' +
-      '<div class="field"><label>Keterangan (opsional)</label>' +
-        '<textarea id="p-desc" placeholder="Catatan..."></textarea></div>' +
-      '<div class="modal-actions">' +
-        '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
-        '<button class="btn btn-primary" id="m-save" disabled>Simpan</button>' +
-      '</div>'
+      '<div class="field"><label>Keterangan (opsional)</label><textarea id="p-desc" placeholder="Catatan..."></textarea></div>' +
+      '<div class="modal-actions"><button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+        '<button class="btn btn-primary" id="m-save" disabled>Simpan</button></div>'
     );
-
     var selectedReg = null;
     document.getElementById('m-cancel').addEventListener('click', closeModal);
-
     var cariEl = document.getElementById('p-cari');
     var timer = null;
     cariEl.addEventListener('input', function () {
@@ -534,19 +365,15 @@
           if (!res.success) return;
           var items = res.data.items || [];
           if (!items.length) {
-            document.getElementById('p-hasil').innerHTML =
-              '<div style="font-size:0.8rem;color:#6b7280;padding:8px;">Tidak ditemukan.</div>';
+            document.getElementById('p-hasil').innerHTML = '<div style="font-size:0.8rem;color:#6b7280;padding:8px;">Tidak ditemukan.</div>';
             return;
           }
           var h = '';
           items.forEach(function (it) {
             h += '<div data-pick="' + Utils.escapeHtml(it.registration_id) + '" ' +
-              'style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:6px;' +
-              'margin-bottom:4px;cursor:pointer;font-size:0.85rem;">' +
-              '<strong>' + Utils.escapeHtml(it.nama_lengkap) + '</strong> — ' +
-              Utils.escapeHtml(it.nomor_pendaftaran || '-') +
-              ' <span style="color:#6b7280;">(' + Utils.escapeHtml(it.nisn || '-') + ')</span>' +
-              '</div>';
+              'style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:0.85rem;">' +
+              '<strong>' + Utils.escapeHtml(it.nama_lengkap) + '</strong> — ' + Utils.escapeHtml(it.nomor_pendaftaran || '-') +
+              ' <span style="color:#6b7280;">(' + Utils.escapeHtml(it.nisn || '-') + ')</span></div>';
           });
           var c = document.getElementById('p-hasil');
           c.innerHTML = h;
@@ -559,8 +386,8 @@
               document.getElementById('p-terpilih').style.display = 'block';
               document.getElementById('p-terpilih').innerHTML =
                 '✓ Terpilih: <strong>' + Utils.escapeHtml(picked.nama_lengkap) + '</strong> (' +
-                Utils.escapeHtml(picked.nomor_pendaftaran || '-') + ')' +
-                '<br><span style="color:#6b7280;">Konsentrasi: ' + Utils.escapeHtml(labelKonsentrasi(picked.konsentrasi_1)) + '</span>';
+                Utils.escapeHtml(picked.nomor_pendaftaran || '-') + ')<br>' +
+                '<span style="color:#6b7280;">Konsentrasi: ' + Utils.escapeHtml(labelKonsentrasi(picked.konsentrasi_1)) + '</span>';
               document.getElementById('p-hasil').innerHTML = '';
               cariEl.value = picked.nama_lengkap;
               document.getElementById('m-save').disabled = false;
@@ -569,7 +396,6 @@
         });
       }, 350);
     });
-
     document.getElementById('m-save').addEventListener('click', function () {
       if (!selectedReg) { Utils.toast('Pilih pendaftar dulu', 'error'); return; }
       var amount = Number(document.getElementById('p-nominal').value) || 0;
@@ -586,27 +412,20 @@
         Utils.hideLoading();
         if (res.success) {
           Utils.toast('Pembayaran tersimpan: ' + res.data.receipt_number, 'success');
-          closeModal();
-          loadSummary();
-          loadList();
-        } else {
-          Utils.toast('Gagal: ' + res.message, 'error');
-        }
+          closeModal(); loadSummary(); loadList();
+        } else Utils.toast('Gagal: ' + res.message, 'error');
       }).catch(function (err) {
         Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
       });
     });
   });
-
   function cancelTx(txId) {
     openModal(
       '<h3>Batalkan Transaksi</h3>' +
       '<div class="field"><label>Alasan pembatalan</label>' +
         '<textarea id="c-alasan" placeholder="Contoh: salah input nominal..."></textarea></div>' +
-      '<div class="modal-actions">' +
-        '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
-        '<button class="btn btn-danger" id="m-save">Batalkan Transaksi</button>' +
-      '</div>'
+      '<div class="modal-actions"><button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+        '<button class="btn btn-danger" id="m-save">Batalkan Transaksi</button></div>'
     );
     document.getElementById('m-cancel').addEventListener('click', closeModal);
     document.getElementById('m-save').addEventListener('click', function () {
@@ -615,20 +434,11 @@
       Utils.showLoading('Memproses...');
       Api.payment.cancel(txId, alasan).then(function (res) {
         Utils.hideLoading();
-        if (res.success) {
-          Utils.toast('Transaksi dibatalkan', 'success');
-          closeModal(); loadSummary(); loadList();
-        } else Utils.toast('Gagal: ' + res.message, 'error');
-      }).catch(function (err) {
-        Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
-      });
+        if (res.success) { Utils.toast('Transaksi dibatalkan', 'success'); closeModal(); loadSummary(); loadList(); }
+        else Utils.toast('Gagal: ' + res.message, 'error');
+      }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
   }
-
-  /* ============================================================
-   * CETAK KUITANSI — A5 PORTRAIT
-   * Konsentrasi ditampilkan sebagai NAMA (bukan kode)
-   * ============================================================ */
   function printKuitansi(txId) {
     Utils.showLoading('Menyiapkan kuitansi...');
     Api.payment.getForPrint(txId).then(function (res) {
@@ -636,11 +446,9 @@
       if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
       var d = res.data;
       var t = d.transaksi, p = d.pendaftar, s = d.sekolah;
-
       var totalRp = Utils.formatRupiah(t.amount);
       var terbilang = angkaKeHuruf(t.amount) + ' rupiah';
       var konsentrasiTampil = labelKonsentrasi(p.konsentrasi_1);
-
       var kop =
         '<div class="kop">' +
           '<img src="logo.png" alt="Logo" class="kop-logo" onerror="this.style.display=\'none\'">' +
@@ -648,51 +456,31 @@
             '<h2>' + Utils.escapeHtml(s.nama_sekolah || '') + '</h2>' +
             '<div class="kop-sub">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</div>' +
             '<div class="kop-sub">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
-              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</div>' +
-          '</div>' +
-        '</div>' +
+              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</div></div></div>' +
         '<hr class="kop-line">';
-
       document.getElementById('print-area').innerHTML =
-        '<div class="kuitansi">' +
-          kop +
+        '<div class="kuitansi">' + kop +
           '<div class="kuitansi-title">KUITANSI PEMBAYARAN</div>' +
           '<div class="kuitansi-nomor">No: <strong>' + Utils.escapeHtml(t.receipt_number || '-') + '</strong></div>' +
           '<table class="ktbl">' +
-            '<tr><td class="lbl">Telah diterima dari</td><td class="colon">:</td>' +
-              '<td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
-            '<tr><td class="lbl">Nomor Pendaftaran</td><td class="colon">:</td>' +
-              '<td class="val">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</td></tr>' +
-            '<tr><td class="lbl">NISN</td><td class="colon">:</td>' +
-              '<td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Konsentrasi Keahlian</td><td class="colon">:</td>' +
-              '<td class="val">' + Utils.escapeHtml(konsentrasiTampil) + '</td></tr>' +
-            '<tr><td class="lbl">Untuk Pembayaran</td><td class="colon">:</td>' +
-              '<td class="val">' + Utils.escapeHtml(t.payment_type) + '</td></tr>' +
-            '<tr><td class="lbl">Metode</td><td class="colon">:</td>' +
-              '<td class="val">' + Utils.escapeHtml(t.payment_method) + '</td></tr>' +
-            '<tr><td class="lbl">Tanggal</td><td class="colon">:</td>' +
-              '<td class="val">' + Utils.formatTanggal(t.transaction_date) + '</td></tr>' +
+            '<tr><td class="lbl">Telah diterima dari</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
+            '<tr><td class="lbl">Nomor Pendaftaran</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</td></tr>' +
+            '<tr><td class="lbl">NISN</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
+            '<tr><td class="lbl">Konsentrasi Keahlian</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(konsentrasiTampil) + '</td></tr>' +
+            '<tr><td class="lbl">Untuk Pembayaran</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(t.payment_type) + '</td></tr>' +
+            '<tr><td class="lbl">Metode</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(t.payment_method) + '</td></tr>' +
+            '<tr><td class="lbl">Tanggal</td><td class="colon">:</td><td class="val">' + Utils.formatTanggal(t.transaction_date) + '</td></tr>' +
           '</table>' +
-          '<div class="jumlah-box">' +
-            '<span class="jumlah-label">Jumlah</span>' +
-            totalRp +
-          '</div>' +
+          '<div class="jumlah-box"><span class="jumlah-label">Jumlah</span>' + totalRp + '</div>' +
           '<div class="keterangan">Terbilang: <strong>' + Utils.escapeHtml(terbilang) + '</strong></div>' +
           (t.description ? '<div class="keterangan">Catatan: ' + Utils.escapeHtml(t.description) + '</div>' : '') +
           '<div class="ttd">' +
             '<div class="ttd-kota">Surakarta, ' + Utils.formatTanggal(t.transaction_date) + '</div>' +
             '<div class="ttd-jabatan">Bendahara,</div>' +
-            '<div class="ttd-nama">' + Utils.escapeHtml(s.bendahara || '_______________') + '</div>' +
-          '</div>' +
-        '</div>';
+            '<div class="ttd-nama">' + Utils.escapeHtml(s.bendahara || '_______________') + '</div></div></div>';
       setTimeout(function () { window.print(); }, 300);
-    }).catch(function (err) {
-      Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
-    });
+    }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
   }
-
-  /* Konversi angka ke huruf (Bahasa Indonesia) */
   function angkaKeHuruf(n) {
     n = Math.floor(Number(n) || 0);
     if (n === 0) return 'nol';
@@ -713,15 +501,7 @@
     }
     return toHuruf(n);
   }
-
-  /* ============================================================
-   * BOOT
-   * ============================================================ */
-  loadKonsentrasiMap().then(function () {
-    loadSummary();
-    loadList();
-  });
-
+  loadKonsentrasiMap().then(function () { loadSummary(); loadList(); });
 })();
 </script>
 </body>
