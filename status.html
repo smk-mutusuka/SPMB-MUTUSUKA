@@ -4,33 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cek Status — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
     min-height: 100vh; padding: 24px 16px; color: #1f2937; }
-
   .wrap { max-width: 640px; margin: 0 auto; }
-
   .card { background: #fff; border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    padding: 32px; margin-bottom: 20px; }
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15); padding: 32px; margin-bottom: 20px; }
   .card.center { text-align: center; }
-
   .logo { width: 72px; height: 72px; object-fit: contain; margin-bottom: 12px; }
   h1 { font-size: 1.3rem; font-weight: 700; color: #1a5490; margin-bottom: 6px; }
   .subtitle { font-size: 0.9rem; color: #6b7280; margin-bottom: 24px; }
-
   label { display: block; font-size: 0.82rem; font-weight: 500;
     color: #374151; margin-bottom: 6px; }
-  input[type=text] {
-    width: 100%; padding: 11px 14px; border: 1px solid #d1d5db;
-    border-radius: 8px; font-size: 0.95rem; font-family: inherit;
-    margin-bottom: 14px; }
-  input[type=text]:focus {
-    outline: none; border-color: #1a5490;
+  input[type=text] { width: 100%; padding: 11px 14px;
+    border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem;
+    font-family: inherit; margin-bottom: 14px; }
+  input[type=text]:focus { outline: none; border-color: #1a5490;
     box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
-
   .btn { width: 100%; padding: 12px 22px; border: none; border-radius: 8px;
     font-size: 0.95rem; font-weight: 600; cursor: pointer;
     font-family: inherit; transition: background 0.15s; }
@@ -39,48 +32,32 @@
   .btn-primary:disabled { background: #93b3d4; cursor: not-allowed; }
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
-
   .info-box { background: #eff6ff; border-left: 4px solid #1a5490;
     padding: 14px 18px; border-radius: 8px; margin-bottom: 18px;
     font-size: 0.85rem; color: #1e40af; line-height: 1.6; }
-
-  /* Status */
   .status-card { background: #fff; border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15); padding: 28px;
-    margin-bottom: 20px; }
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15); padding: 28px; margin-bottom: 20px; }
   .status-head { display: flex; align-items: center; gap: 14px;
-    margin-bottom: 20px; padding-bottom: 16px;
-    border-bottom: 2px solid #e5e7eb; }
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb; }
   .status-head .ico { font-size: 2.4rem; }
-  .status-head .info h2 { font-size: 1.1rem; color: #1a5490;
-    margin-bottom: 3px; }
+  .status-head .info h2 { font-size: 1.1rem; color: #1a5490; margin-bottom: 3px; }
   .status-head .info p { font-size: 0.82rem; color: #6b7280; }
-
   .badge { display: inline-block; padding: 5px 12px; border-radius: 14px;
-    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.4px; }
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
   .bg-DRAFT { background: #e5e7eb; color: #374151; }
   .bg-TERKIRIM { background: #dbeafe; color: #1e40af; }
   .bg-PERLU_PERBAIKAN { background: #fef3c7; color: #92400e; }
   .bg-TERVERIFIKASI { background: #d1fae5; color: #065f46; }
   .bg-DIBATALKAN { background: #fee2e2; color: #991b1b; }
-
-  .data-list { margin: 16px 0; }
   .data-row { display: flex; justify-content: space-between; gap: 14px;
-    padding: 10px 0; border-bottom: 1px dashed #e5e7eb;
-    font-size: 0.88rem; }
+    padding: 10px 0; border-bottom: 1px dashed #e5e7eb; font-size: 0.88rem; }
   .data-row:last-child { border-bottom: none; }
   .data-row .lbl { color: #6b7280; }
-  .data-row .val { font-weight: 500; text-align: right;
-    word-break: break-word; }
-
+  .data-row .val { font-weight: 500; text-align: right; word-break: break-word; }
   .catatan-box { background: #fef3c7; border-left: 4px solid #d97706;
     padding: 12px 16px; border-radius: 8px; margin-top: 14px;
     font-size: 0.85rem; color: #92400e; }
-
-  /* Hasil seleksi */
-  .hasil-box { text-align: center; padding: 24px;
-    border-radius: 12px; margin: 20px 0; }
+  .hasil-box { text-align: center; padding: 24px; border-radius: 12px; margin: 20px 0; }
   .hasil-box.DITERIMA { background: #d1fae5; }
   .hasil-box.TIDAK_DITERIMA { background: #fee2e2; }
   .hasil-box.CADANGAN { background: #fef3c7; }
@@ -90,38 +67,9 @@
   .hasil-box.TIDAK_DITERIMA h2 { color: #991b1b; }
   .hasil-box.CADANGAN h2 { color: #92400e; }
   .hasil-box p { font-size: 0.9rem; color: #374151; }
-
-  #global-loading { display: none; position: fixed; inset: 0;
-    background: rgba(255,255,255,0.8); z-index: 999;
-    align-items: center; justify-content: center; }
-  #global-loading.show { display: flex; }
-  .spinner { width: 42px; height: 42px; border: 4px solid #e5e7eb;
-    border-top-color: #1a5490; border-radius: 50%;
-    animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  #toast-container { position: fixed; top: 20px; right: 20px; z-index: 1000;
-    display: flex; flex-direction: column; gap: 8px; }
-  .toast { background: #1f2937; color: #fff; padding: 12px 18px;
-    border-radius: 8px; font-size: 0.88rem; min-width: 220px; max-width: 340px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    opacity: 0; transform: translateY(-10px);
-    transition: opacity 0.25s, transform 0.25s; }
-  .toast.show { opacity: 1; transform: translateY(0); }
-  .toast-success { background: #065f46; }
-  .toast-error { background: #991b1b; }
-  .toast-warning { background: #92400e; }
-
-  @media (max-width: 500px) {
-    .card, .status-card { padding: 22px; }
-    .status-head .ico { font-size: 2rem; }
-  }
 </style>
 </head>
 <body>
-
-<div id="toast-container"></div>
-<div id="global-loading"><div style="text-align:center;"><div class="spinner"></div><div id="loading-text">Memuat...</div></div></div>
 
 <div class="wrap" id="app"></div>
 
@@ -130,8 +78,6 @@
 <script>
 (function () {
   'use strict';
-
-  var TOKEN_KEY = 'spmb_reg_token';
 
   function renderForm() {
     document.getElementById('app').innerHTML =
@@ -142,11 +88,10 @@
       '</div>' +
       '<div class="card">' +
         '<div class="info-box">' +
-          '💡 Masukkan <strong>nomor pendaftaran</strong> Anda untuk melihat status.<br>' +
-          'Nomor pendaftaran diberikan setelah Anda mengirim formulir pendaftaran.' +
+          '💡 Masukkan <strong>nomor pendaftaran</strong> Anda (contoh: <strong>PMB-2728-001</strong>) untuk melihat status.' +
         '</div>' +
         '<label>Nomor Pendaftaran</label>' +
-        '<input type="text" id="nomor" placeholder="Contoh: M1-2728-001" ' +
+        '<input type="text" id="nomor" placeholder="Contoh: PMB-2728-001" ' +
           'value="' + Utils.escapeHtml(sessionStorage.getItem('spmb_last_nomor') || '') + '">' +
         '<button class="btn btn-primary" id="btn-cek">Cek Status</button>' +
       '</div>';
@@ -158,27 +103,22 @@
 
   function renderLoading() {
     document.getElementById('app').innerHTML =
-      '<div class="card center"><div class="spinner"></div>' +
-      '<p class="subtitle">Memeriksa status...</p></div>';
+      '<div class="card center">' +
+        '<div style="width:42px;height:42px;border:4px solid #e5e7eb;' +
+        'border-top-color:#1a5490;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;"></div>' +
+        '<style>@keyframes spin{to{transform:rotate(360deg)}}</style>' +
+        '<p class="subtitle">Memeriksa status...</p></div>';
   }
 
   function renderResult(data) {
     var status = String(data.status_pendaftaran || 'DRAFT');
-    var ico = {
-      'DRAFT': '📝',
-      'TERKIRIM': '📬',
-      'PERLU_PERBAIKAN': '⚠️',
-      'TERVERIFIKASI': '✅',
-      'DIBATALKAN': '❌'
-    }[status] || '📋';
-
-    var statusText = {
-      'DRAFT': 'Draft (belum dikirim)',
+    var ico = { 'DRAFT': '📝', 'TERKIRIM': '📬', 'PERLU_PERBAIKAN': '⚠️',
+      'TERVERIFIKASI': '✅', 'DIBATALKAN': '❌' }[status] || '📋';
+    var statusText = { 'DRAFT': 'Draft (belum dikirim)',
       'TERKIRIM': 'Terkirim (menunggu verifikasi)',
       'PERLU_PERBAIKAN': 'Perlu Perbaikan',
       'TERVERIFIKASI': 'Terverifikasi',
-      'DIBATALKAN': 'Dibatalkan'
-    }[status] || status;
+      'DIBATALKAN': 'Dibatalkan' }[status] || status;
 
     var html = '<div class="status-card">' +
       '<div class="status-head">' +
@@ -191,18 +131,14 @@
       '<div style="text-align:center;margin-bottom:16px;">' +
         '<span class="badge bg-' + status + '">' + Utils.escapeHtml(statusText) + '</span>' +
       '</div>' +
-      '<div class="data-list">' +
-        (data.submitted_at ?
-          '<div class="data-row"><span class="lbl">Dikirim</span>' +
+      '<div>' +
+        (data.submitted_at ? '<div class="data-row"><span class="lbl">Dikirim</span>' +
           '<span class="val">' + Utils.formatDateTime(data.submitted_at) + '</span></div>' : '') +
-        (data.tanggal_daftar ?
-          '<div class="data-row"><span class="lbl">Tanggal Daftar</span>' +
+        (data.tanggal_daftar ? '<div class="data-row"><span class="lbl">Tanggal Daftar</span>' +
           '<span class="val">' + Utils.formatTanggal(data.tanggal_daftar) + '</span></div>' : '') +
-        (data.konsentrasi_1 ?
-          '<div class="data-row"><span class="lbl">Konsentrasi 1</span>' +
+        (data.konsentrasi_1 ? '<div class="data-row"><span class="lbl">Konsentrasi 1</span>' +
           '<span class="val">' + Utils.escapeHtml(data.konsentrasi_1) + '</span></div>' : '') +
-        (data.konsentrasi_2 ?
-          '<div class="data-row"><span class="lbl">Konsentrasi 2</span>' +
+        (data.konsentrasi_2 ? '<div class="data-row"><span class="lbl">Konsentrasi 2</span>' +
           '<span class="val">' + Utils.escapeHtml(data.konsentrasi_2) + '</span></div>' : '') +
       '</div>';
 
@@ -211,12 +147,9 @@
         Utils.escapeHtml(data.catatan_perbaikan) + '</div>';
     }
 
-    // Hasil seleksi (kalau ada)
     if (data.hasil_seleksi && data.hasil_seleksi.decision) {
       var dec = String(data.hasil_seleksi.decision);
-      var iconHasil = dec === 'DITERIMA' ? '🎉' :
-                      dec === 'CADANGAN' ? '⏳' :
-                      dec === 'TIDAK_DITERIMA' ? '😔' : '📋';
+      var iconHasil = dec === 'DITERIMA' ? '🎉' : dec === 'CADANGAN' ? '⏳' : dec === 'TIDAK_DITERIMA' ? '😔' : '📋';
       var labelHasil = dec === 'DITERIMA' ? 'SELAMAT! ANDA DITERIMA' :
                        dec === 'CADANGAN' ? 'ANDA MASUK DAFTAR CADANGAN' :
                        dec === 'TIDAK_DITERIMA' ? 'MOHON MAAF, ANDA TIDAK DITERIMA' : dec;
@@ -226,8 +159,6 @@
         (data.hasil_seleksi.letter_number ?
           '<p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">' +
           'No. Surat: ' + Utils.escapeHtml(data.hasil_seleksi.letter_number) + '</p>' : '') +
-        (data.hasil_seleksi.decision_notes ?
-          '<p style="margin-top:10px;">' + Utils.escapeHtml(data.hasil_seleksi.decision_notes) + '</p>' : '') +
         '</div>';
     } else if (status === 'TERVERIFIKASI') {
       html += '<div class="info-box" style="margin-top:16px;">' +
@@ -239,9 +170,7 @@
     '</div></div>';
 
     document.getElementById('app').innerHTML = html;
-    document.getElementById('btn-kembali').addEventListener('click', function () {
-      renderForm();
-    });
+    document.getElementById('btn-kembali').addEventListener('click', renderForm);
   }
 
   function renderNotFound(nomor) {
@@ -250,26 +179,16 @@
         '<div style="font-size:3rem;margin-bottom:10px;">🔍</div>' +
         '<h2 style="color:#dc2626;margin-bottom:8px;">Nomor Tidak Ditemukan</h2>' +
         '<p class="subtitle">Nomor pendaftaran <strong>' + Utils.escapeHtml(nomor) + '</strong> ' +
-        'tidak terdaftar atau belum diverifikasi.</p>' +
-        '<button class="btn btn-primary" id="btn-kembali" ' +
-        'style="margin-top:10px;">← Coba Lagi</button>' +
+        'tidak terdaftar.</p>' +
+        '<button class="btn btn-primary" id="btn-kembali" style="margin-top:10px;">← Coba Lagi</button>' +
       '</div>';
     document.getElementById('btn-kembali').addEventListener('click', renderForm);
   }
 
   function doCek() {
     var nomor = document.getElementById('nomor').value.trim();
-    if (!nomor) {
-      Utils.toast('Masukkan nomor pendaftaran', 'error');
-      return;
-    }
-
+    if (!nomor) { Utils.toast('Masukkan nomor pendaftaran', 'error'); return; }
     renderLoading();
-
-    // Pakai registration.status publik? Tidak ada endpoint publik untuk cek by nomor.
-    // Kita buat lewat endpoint baru: status.cekNomor → ini yang perlu ditambahkan backend.
-    // Sementara: pakai endpoint publik via action "public.checkStatus" yang belum ada.
-    // → KITA PANGGIL endpoint yang akan ditambahkan di backend patch berikut.
 
     var url = APP_CONFIG.APPS_SCRIPT_URL + '?data=' +
       encodeURIComponent(Utils.b64UrlEncode(JSON.stringify({
@@ -298,7 +217,6 @@
   }
 
   renderForm();
-
 })();
 </script>
 </body>
