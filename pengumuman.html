@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengumuman SPMB — SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
+    color: #1f2937; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+  .card { background: #fff; border-radius: 16px;
+    max-width: 720px; width: 100%; padding: 32px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+
+  .head { text-align: center; margin-bottom: 24px; }
+  .head img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
+  .head h1 { font-size: 1.2rem; color: #1a5490; margin-bottom: 4px; }
+  .head p { font-size: 0.85rem; color: #6b7280; }
+
+  .form-row { display: flex; gap: 10px; margin-bottom: 20px; }
+  .form-row input { flex: 1; padding: 14px 18px; border: 2px solid #d1d5db;
+    border-radius: 10px; font-size: 1rem; font-family: inherit;
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .form-row input:focus { outline: none; border-color: #1a5490;
+    box-shadow: 0 0 0 4px rgba(26,84,144,0.1); }
+  .form-row button { padding: 14px 24px; background: #1a5490; color: #fff;
+    border: none; border-radius: 10px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .form-row button:hover { background: #143f6e; }
+  .form-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .back-link { text-align: center; margin-top: 16px; }
+  .back-link a { color: #6b7280; text-decoration: none; font-size: 0.85rem; }
+  .back-link a:hover { color: #1a5490; }
+
+  /* Hasil */
+  .result { display: none; }
+  .result.show { display: block; }
+
+  .result-head { text-align: center; padding: 20px; border-radius: 12px;
+    margin-bottom: 20px; }
+  .result-head.ACC { background: #ecfdf5; border: 2px solid #059669; }
+  .result-head.CAD { background: #fef3c7; border: 2px solid #d97706; }
+  .result-head.REJ { background: #fee2e2; border: 2px solid #dc2626; }
+  .result-head .icon { font-size: 3rem; margin-bottom: 8px; }
+  .result-head .title { font-size: 1.3rem; font-weight: 700; }
+  .result-head.ACC .title { color: #065f46; }
+  .result-head.CAD .title { color: #92400e; }
+  .result-head.REJ .title { color: #991b1b; }
+  .result-head .sub { font-size: 0.88rem; margin-top: 6px; color: #6b7280; }
+
+  .info-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .info-table td { padding: 9px 4px; border-bottom: 1px dashed #e5e7eb;
+    font-size: 0.9rem; vertical-align: top; }
+  .info-table td.k { color: #6b7280; width: 40%; }
+  .info-table td.v { color: #1f2937; font-weight: 600; text-align: right; }
+
+  .notice { padding: 14px 18px; border-radius: 10px; font-size: 0.85rem;
+    line-height: 1.6; margin-bottom: 16px; }
+  .notice.info { background: #eff6ff; border-left: 4px solid #1a5490; color: #1e40af; }
+  .notice.warn { background: #fef3c7; border-left: 4px solid #d97706; color: #92400e; }
+  .notice.err { background: #fee2e2; border-left: 4px solid #dc2626; color: #991b1b; }
+
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .actions button, .actions a { flex: 1; min-width: 140px;
+    padding: 12px 20px; border: none; border-radius: 10px;
+    font-size: 0.92rem; font-weight: 600; cursor: pointer;
+    font-family: inherit; text-decoration: none; text-align: center;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-print { background: #1a5490; color: #fff; }
+  .btn-print:hover { background: #143f6e; }
+  .btn-secondary { background: #e5e7eb; color: #1f2937; }
+  .btn-secondary:hover { background: #d1d5db; }
+
+  .loading { text-align: center; padding: 30px; color: #6b7280; }
+  .loading .spinner { width: 40px; height: 40px; border: 4px solid #e5e7eb;
+    border-top-color: #1a5490; border-radius: 50%; margin: 0 auto 12px;
+    animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .footer-note { text-align: center; margin-top: 20px; font-size: 0.78rem;
+    color: #9ca3af; }
+
+  /* ============================================================
+   * PRINT AREA — PENGUMUMAN A4 PORTRAIT
+   * ============================================================ */
+  #print-area { display: none; }
+
+  @media print {
+    @page { size: A4 portrait; margin: 15mm 18mm; }
+    html, body { background: #fff !important; }
+    body * { visibility: hidden; }
+    #print-area, #print-area * { visibility: visible; }
+    #print-area { display: block !important;
+      position: absolute; left: 0; top: 0; width: 100%;
+      font-family: 'Times New Roman', Times, serif; color: #000; }
+    .no-print { display: none !important; }
+
+    .doc { padding: 0; font-size: 11.5pt; line-height: 1.5; }
+
+    .doc .kop-img { width: 100%; max-height: 30mm; object-fit: contain;
+      display: block; margin-bottom: 3mm; }
+    .doc .kop-fallback {
+      display: flex; align-items: center; gap: 5mm;
+      border-bottom: 2px solid #000; padding-bottom: 3mm; margin-bottom: 5mm;
+    }
+    .doc .kop-fallback img { width: 22mm; height: 22mm; object-fit: contain; }
+    .doc .kop-fallback .teks { flex: 1; text-align: center; }
+    .doc .kop-fallback .teks h2 { font-size: 14pt; font-weight: 700; margin: 0; }
+    .doc .kop-fallback .teks p { font-size: 9pt; margin: 1mm 0 0; }
+
+    .doc .judul { text-align: center; margin: 6mm 0 2mm; }
+    .doc .judul h3 { font-size: 13pt; font-weight: 700;
+      text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
+    .doc .judul .nomor { font-size: 10.5pt; margin-top: 2mm; }
+
+    .doc .pembuka { margin: 5mm 0; text-align: justify; }
+
+    .doc .data-siswa { margin: 4mm 0 5mm 8mm;
+      border-collapse: collapse; width: calc(100% - 8mm); }
+    .doc .data-siswa td { padding: 1mm 0; vertical-align: top; font-size: 11.5pt; }
+    .doc .data-siswa td.k { width: 40mm; }
+    .doc .data-siswa td.c { width: 5mm; }
+    .doc .data-siswa td.v { font-weight: 600; }
+
+    .doc .keputusan-box { border: 2px solid #000; padding: 4mm;
+      text-align: center; margin: 5mm 0; background: #f5f5f5; }
+    .doc .keputusan-box .kecil { font-size: 10pt; }
+    .doc .keputusan-box .besar { font-size: 18pt; font-weight: 700;
+      letter-spacing: 3px; margin: 1.5mm 0; }
+
+    .doc .penutup { margin: 5mm 0; text-align: justify; }
+
+    .doc .info-du { border: 1px solid #000; padding: 3mm 4mm;
+      margin: 4mm 0; font-size: 10.5pt; }
+    .doc .info-du .judul-du { font-weight: 700;
+      border-bottom: 1px solid #000; padding-bottom: 1mm; margin-bottom: 2mm; }
+    .doc .info-du ul { margin: 0; padding-left: 5mm; }
+    .doc .info-du li { margin-bottom: 1mm; }
+
+    .doc .ttd { margin-top: 10mm; text-align: right; font-size: 11.5pt; }
+    .doc .ttd .kota { margin-bottom: 1mm; }
+    .doc .ttd .jabatan { margin-bottom: 20mm; }
+    .doc .ttd .nama { font-weight: 700; text-decoration: underline;
+      display: inline-block; }
+
+    .doc .catatan-kaki { margin-top: 8mm; padding-top: 3mm;
+      border-top: 1px solid #666; font-size: 8.5pt;
+      font-style: italic; color: #444; text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    .card { padding: 22px; }
+    .form-row { flex-direction: column; }
+    .form-row button { width: 100%; }
+    .info-table td { display: block; width: 100% !important;
+      text-align: left !important; padding: 4px 0; border: none; }
+    .info-table td.k { font-weight: 600; margin-top: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card no-print">
+  <div class="head">
+    <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+    <h1>Pengumuman Hasil Seleksi</h1>
+    <p>SPMB SMK Muhammadiyah 1 Surakarta — TP 2027/2028</p>
+  </div>
+
+  <div id="search-box">
+    <div class="form-row">
+      <input type="text" id="inp-nomor" placeholder="PMB-2728-XXX"
+        autocomplete="off" maxlength="20">
+      <button id="btn-cari">🔍 Cek</button>
+    </div>
+    <div class="back-link">
+      <a href="index.html">← Kembali ke halaman utama</a>
+    </div>
+  </div>
+
+  <div id="loading" class="loading" style="display:none;">
+    <div class="spinner"></div>
+    <div>Memuat data pengumuman...</div>
+  </div>
+
+  <div id="result" class="result"></div>
+
+  <div class="footer-note" id="footer-note" style="display:none;">
+    Powered by SPMB SMK Muhammadiyah 1 Surakarta
+  </div>
+</div>
+
+<!-- Print area (hanya muncul saat print) -->
+<div id="print-area"></div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="api.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var state = { nomor: '', data: null, konsentrasiMap: {} };
+
+  var inpNomor = document.getElementById('inp-nomor');
+  var btnCari = document.getElementById('btn-cari');
+  var loading = document.getElementById('loading');
+  var result = document.getElementById('result');
+  var searchBox = document.getElementById('search-box');
+  var footerNote = document.getElementById('footer-note');
+
+  // Auto-uppercase input
+  inpNomor.addEventListener('input', function () {
+    this.value = this.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+  });
+
+  inpNomor.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') btnCari.click();
+  });
+
+  // Auto-fill dari query param ?nomor=...
+  var qNomor = Utils.getQueryParam('nomor');
+  if (qNomor) {
+    inpNomor.value = qNomor.toUpperCase();
+    setTimeout(function () { btnCari.click(); }, 300);
+  }
+
+  btnCari.addEventListener('click', doSearch);
+
+  function doSearch() {
+    var nomor = inpNomor.value.trim().toUpperCase();
+    if (!nomor) {
+      Utils.toast('Masukkan nomor pendaftaran', 'error');
+      inpNomor.focus();
+      return;
+    }
+    state.nomor = nomor;
+
+    searchBox.style.display = 'none';
+    result.classList.remove('show');
+    result.innerHTML = '';
+    loading.style.display = 'block';
+    footerNote.style.display = 'none';
+
+    // Load konsentrasi map parallel (untuk fallback kalau backend kirim kode saja)
+    var pKons = Api.settings.listKonsentrasi().then(function (res) {
+      if (res && res.success && res.data && res.data.konsentrasi) {
+        res.data.konsentrasi.forEach(function (k) {
+          state.konsentrasiMap[k.konsentrasi_id] = k.nama_konsentrasi;
+        });
+      }
+    }).catch(function () {});
+
+    var pData = Api.public.getPengumuman(nomor);
+
+    Promise.all([pKons, pData]).then(function (results) {
+      loading.style.display = 'none';
+      var res = results[1];
+
+      if (!res || !res.success) {
+        showError(res && res.message ? res.message : 'Gagal memuat data',
+          res && res.code ? res.code : '');
+        return;
+      }
+      state.data = res.data;
+      showResult(res.data);
+    }).catch(function (err) {
+      loading.style.display = 'none';
+      showError(err.message || 'Terjadi kesalahan', '');
+    });
+  }
+
+  function showError(message, code) {
+    searchBox.style.display = 'block';
+    footerNote.style.display = 'block';
+    var cls = 'err';
+    var icon = '❌';
+    if (code === 'FORBIDDEN') { cls = 'warn'; icon = '⏳'; }
+    else if (code === 'NOT_FOUND') { cls = 'warn'; icon = '🔍'; }
+
+    result.innerHTML =
+      '<div class="notice ' + cls + '">' +
+        '<div style="font-size:2rem;text-align:center;margin-bottom:8px;">' + icon + '</div>' +
+        '<div style="text-align:center;font-weight:600;">' + Utils.escapeHtml(message) + '</div>' +
+      '</div>' +
+      '<div class="actions">' +
+        '<button class="btn-secondary" onclick="location.reload()">← Coba Nomor Lain</button>' +
+      '</div>';
+    result.classList.add('show');
+  }
+
+  function showResult(d) {
+    footerNote.style.display = 'block';
+    var kep = String(d.keputusan || '').toUpperCase();
+    var headCls = 'CAD';
+    var headIcon = '⏳';
+    var headTitle = 'HASIL BELUM DIUMUMKAN';
+    var headSub = 'Silakan cek kembali nanti.';
+
+    if (kep === 'DITERIMA') {
+      headCls = 'ACC'; headIcon = '🎉';
+      headTitle = 'SELAMAT, ANDA DITERIMA!';
+      headSub = 'Anda dinyatakan LULUS seleksi SPMB SMK Muhammadiyah 1 Surakarta.';
+    } else if (kep === 'CADANGAN') {
+      headCls = 'CAD'; headIcon = '⏳';
+      headTitle = 'ANDA MASUK DAFTAR CADANGAN';
+      headSub = 'Anda akan dihubungi jika ada kuota yang tersedia.';
+    } else if (kep === 'TIDAK_DITERIMA') {
+      headCls = 'REJ'; headIcon = '😔';
+      headTitle = 'MAAF, BELUM DITERIMA';
+      headSub = 'Terima kasih atas partisipasi Anda. Tetap semangat!';
+    }
+
+    var kons1 = d.konsentrasi_1 || '-';
+    var kons2 = state.konsentrasiMap[d.konsentrasi_1] ? '' : '';
+
+    var html = '';
+
+    // Result head
+    html += '<div class="result-head ' + headCls + '">' +
+      '<div class="icon">' + headIcon + '</div>' +
+      '<div class="title">' + Utils.escapeHtml(headTitle) + '</div>' +
+      '<div class="sub">' + Utils.escapeHtml(headSub) + '</div>' +
+      '</div>';
+
+    // Info pendaftar
+    html += '<table class="info-table">' +
+      '<tr><td class="k">Nomor Pendaftaran</td><td class="v">' +
+        Utils.escapeHtml(d.nomor_pendaftaran) + '</td></tr>' +
+      '<tr><td class="k">Nama Lengkap</td><td class="v">' +
+        Utils.escapeHtml(d.nama_lengkap) + '</td></tr>' +
+      '<tr><td class="k">NISN</td><td class="v">' +
+        Utils.escapeHtml(d.nisn || '-') + '</td></tr>' +
+      '<tr><td class="k">Sekolah Asal</td><td class="v">' +
+        Utils.escapeHtml(d.sekolah_asal || '-') + '</td></tr>' +
+      '<tr><td class="k">Konsentrasi Keahlian</td><td class="v">' +
+        Utils.escapeHtml(kons1) + '</td></tr>' +
+    '</table>';
+
+    // Info daftar ulang (kalau DITERIMA)
+    if (kep === 'DITERIMA' && d.daftar_ulang) {
+      var batas = d.daftar_ulang.batas_daftar_ulang;
+      html += '<div class="notice info">' +
+        '📌 <strong>Wajib Daftar Ulang</strong><br>' +
+        'Batas daftar ulang: <strong>' + Utils.formatTanggal(batas) + '</strong><br>' +
+        'Datang ke sekolah dengan membawa: fotokopi KK, fotokopi Akta, foto 3×4 (2 lembar), ' +
+        'dan kuitansi pendaftaran.' +
+      '</div>';
+    }
+
+    if (kep === 'CADANGAN') {
+      html += '<div class="notice warn">' +
+        '⏳ <strong>Status Cadangan</strong><br>' +
+        'Jika ada calon siswa DITERIMA yang tidak daftar ulang, Anda akan dihubungi ' +
+        'oleh panitia SPMB.' +
+      '</div>';
+    }
+
+    if (d.decision_notes) {
+      html += '<div class="notice info">' +
+        '<strong>Catatan Panitia:</strong><br>' +
+        Utils.escapeHtml(d.decision_notes) + '</div>';
+    }
+
+    // Actions
+    html += '<div class="actions">';
+    if (kep === 'DITERIMA') {
+      html += '<button class="btn-print" id="btn-print">🖨️ Cetak Pengumuman</button>';
+    }
+    html += '<button class="btn-secondary" id="btn-again">← Cek Nomor Lain</button>';
+    html += '</div>';
+
+    result.innerHTML = html;
+    result.classList.add('show');
+
+    if (kep === 'DITERIMA') {
+      document.getElementById('btn-print').addEventListener('click', function () {
+        renderPrintArea(d);
+        setTimeout(function () { window.print(); }, 300);
+      });
+    }
+    document.getElementById('btn-again').addEventListener('click', function () {
+      result.classList.remove('show');
+      result.innerHTML = '';
+      inpNomor.value = '';
+      inpNomor.focus();
+      searchBox.style.display = 'block';
+    });
+  }
+
+  /* ============================================================
+   * CETAK PENGUMUMAN A4
+   * ============================================================ */
+  function renderPrintArea(d) {
+    var s = d.sekolah || {};
+    var tglKeputusan = d.decision_date ? new Date(d.decision_date) : new Date();
+    var kons1 = d.konsentrasi_1 || '-';
+
+    // Pilih KOP: prioritaskan kop-spmb.png, fallback ke kop-fallback
+    var kopHtml =
+      '<img src="kop-spmb.png" class="kop-img" alt="KOP" ' +
+      'onerror="this.outerHTML=window.__kopFallbackHtml__">';
+
+    var kopFallback =
+      '<div class="kop-fallback">' +
+        '<img src="logo.png" alt="Logo" onerror="this.style.display=\'none\'">' +
+        '<div class="teks">' +
+          '<h2>' + Utils.escapeHtml(s.nama_sekolah || 'SMK MUHAMMADIYAH 1 SURAKARTA') + '</h2>' +
+          '<p>' + Utils.escapeHtml(s.alamat_sekolah || '') + '</p>' +
+          '<p>Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
+            ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</p>' +
+        '</div>' +
+      '</div>';
+
+    // Simpan fallback di window untuk dipakai onerror
+    window.__kopFallbackHtml__ = kopFallback;
+
+    var html =
+      '<div class="doc">' +
+        kopHtml +
+
+        '<div class="judul">' +
+          '<h3>PENGUMUMAN HASIL SELEKSI PENERIMAAN MURID BARU</h3>' +
+          '<div class="nomor">' +
+            (d.letter_number ? 'Nomor: ' + Utils.escapeHtml(d.letter_number) : '') +
+          '</div>' +
+        '</div>' +
+
+        '<div class="pembuka">' +
+          'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
+          Utils.escapeHtml(s.nama_sekolah || 'SMK Muhammadiyah 1 Surakarta') +
+          ' Tahun Pelajaran ' + Utils.escapeHtml(s.tahun_ajaran || '2027/2028') +
+          ', dengan ini kami sampaikan bahwa:' +
+        '</div>' +
+
+        '<table class="data-siswa">' +
+          '<tr><td class="k">Nama Lengkap</td><td class="c">:</td>' +
+            '<td class="v">' + Utils.escapeHtml(d.nama_lengkap) + '</td></tr>' +
+          '<tr><td class="k">Nomor Pendaftaran</td><td class="c">:</td>' +
+            '<td class="v">' + Utils.escapeHtml(d.nomor_pendaftaran) + '</td></tr>' +
+          '<tr><td class="k">NISN</td><td class="c">:</td>' +
+            '<td class="v">' + Utils.escapeHtml(d.nisn || '-') + '</td></tr>' +
+          '<tr><td class="k">Tempat, Tanggal Lahir</td><td class="c">:</td>' +
+            '<td class="v">' + Utils.escapeHtml(d.tempat_lahir || '-') +
+            (d.tanggal_lahir ? ', ' + Utils.formatTanggal(d.tanggal_lahir) : '') +
+            '</td></tr>' +
+          '<tr><td class="k">Sekolah Asal</td><td class="c">:</td>' +
+            '<td class="v">' + Utils.escapeHtml(d.sekolah_asal || '-') + '</td></tr>' +
+          '<tr><td class="k">Konsentrasi Keahlian</td><td class="c">:</td>' +
+            '<td class="v">' + Utils.escapeHtml(kons1) + '</td></tr>' +
+        '</table>' +
+
+        '<div class="keputusan-box">' +
+          '<div class="kecil">DINYATAKAN</div>' +
+          '<div class="besar">DITERIMA</div>' +
+          '<div class="kecil">sebagai calon peserta didik baru</div>' +
+        '</div>' +
+
+        '<div class="penutup">' +
+          'Peserta yang dinyatakan DITERIMA wajib melakukan <strong>daftar ulang</strong> ' +
+          'sesuai jadwal yang telah ditentukan. Apabila sampai batas waktu yang ditentukan ' +
+          'peserta tidak melakukan daftar ulang, maka dianggap <em>mengundurkan diri</em> ' +
+          'dan kuota akan dialihkan kepada peserta cadangan.' +
+        '</div>';
+
+    // Info daftar ulang
+    if (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) {
+      html +=
+        '<div class="info-du">' +
+          '<div class="judul-du">📌 INFORMASI DAFTAR ULANG</div>' +
+          '<ul>' +
+            '<li>Batas akhir daftar ulang: <strong>' +
+              Utils.formatTanggal(d.daftar_ulang.batas_daftar_ulang) + '</strong></li>' +
+            '<li>Tempat: ' + Utils.escapeHtml(s.nama_sekolah || '') +
+              (s.alamat_sekolah ? ' — ' + Utils.escapeHtml(s.alamat_sekolah) : '') + '</li>' +
+            '<li>Membawa: fotokopi Kartu Keluarga, fotokopi Akta Kelahiran, ' +
+              'foto 3×4 (2 lembar), dan kuitansi pendaftaran</li>' +
+          '</ul>' +
+        '</div>';
+    }
+
+    // Tanda tangan
+    html +=
+      '<div class="ttd">' +
+        'Surakarta, ' + Utils.formatTanggal(tglKeputusan.toISOString()) + '<br>' +
+        '<div class="jabatan">Kepala Sekolah,</div>' +
+        '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div>' +
+      '</div>' +
+
+      '<div class="catatan-kaki">' +
+        'Dokumen ini dicetak otomatis dari sistem SPMB ' +
+        Utils.escapeHtml(s.nama_sekolah || '') + '. ' +
+        'Sah tanpa tanda tangan basah selama data sesuai dengan database resmi sekolah.' +
+      '</div>' +
+
+      '</div>';
+
+    document.getElementById('print-area').innerHTML = html;
+  }
+
+})();
+</script>
+</body>
+</html>
