@@ -4,93 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #f5f7fa; color: #1f2937; min-height: 100vh;
-  }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa; color: #1f2937; min-height: 100vh; }
   .app { display: flex; min-height: 100vh; }
 
-  .sidebar {
-    width: 260px; background: #1a5490; color: #fff;
-    display: flex; flex-direction: column; flex-shrink: 0;
-    transition: transform 0.3s ease;
-  }
-  .sidebar-header {
-    padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
-    display: flex; align-items: center; gap: 12px;
-  }
+  .sidebar { width: 260px; background: #1a5490; color: #fff;
+    display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 12px; }
   .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
   .sidebar-header .brand { font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
   .nav { flex: 1; padding: 12px 0; overflow-y: auto; }
-  .nav-group-title {
-    padding: 12px 20px 6px; font-size: 0.7rem; text-transform: uppercase;
-    letter-spacing: 0.5px; color: rgba(255,255,255,0.5);
-  }
-  .nav-item {
-    display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+  .nav-group-title { padding: 12px 20px 6px; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.5); }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 20px;
     color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem;
-    transition: background 0.15s; border-left: 3px solid transparent;
-  }
+    transition: background 0.15s; border-left: 3px solid transparent; }
   .nav-item:hover { background: rgba(255,255,255,0.08); }
-  .nav-item.active {
-    background: rgba(255,255,255,0.12); border-left-color: #d4a017;
-    color: #fff; font-weight: 500;
-  }
+  .nav-item.active { background: rgba(255,255,255,0.12);
+    border-left-color: #d4a017; color: #fff; font-weight: 500; }
   .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
-  .sidebar-footer {
-    padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
-    font-size: 0.75rem; color: rgba(255,255,255,0.6);
-  }
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.75rem; color: rgba(255,255,255,0.6); }
 
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .topbar {
-    background: #fff; border-bottom: 1px solid #e5e7eb;
+  .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
     padding: 12px 24px; display: flex; align-items: center;
-    justify-content: space-between; gap: 16px;
-  }
-  .btn-menu {
-    display: none; background: none; border: none;
-    font-size: 1.4rem; cursor: pointer; color: #1a5490; padding: 4px;
-  }
+    justify-content: space-between; gap: 16px; }
+  .btn-menu { display: none; background: none; border: none;
+    font-size: 1.4rem; cursor: pointer; color: #1a5490; padding: 4px; }
   .topbar-title { font-size: 1.05rem; font-weight: 600; color: #1a5490; }
   .user-info { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
-  .user-avatar {
-    width: 36px; height: 36px; border-radius: 50%; background: #1a5490;
+  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #1a5490;
     color: #fff; display: flex; align-items: center; justify-content: center;
-    font-weight: 600; font-size: 0.9rem;
-  }
+    font-weight: 600; font-size: 0.9rem; }
   .user-meta { text-align: right; line-height: 1.3; }
   .user-name { font-weight: 600; }
   .user-role { font-size: 0.75rem; color: #6b7280; }
-  .btn-logout {
-    background: #fee2e2; color: #d93025; border: none;
+  .btn-logout { background: #fee2e2; color: #d93025; border: none;
     padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
-    font-weight: 500; cursor: pointer;
-  }
+    font-weight: 500; cursor: pointer; }
   .btn-logout:hover { background: #fecaca; }
 
   .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
 
-  .welcome-card {
-    background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
+  .welcome-card { background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
     color: #fff; padding: 24px 28px; border-radius: 12px;
-    margin-bottom: 24px; box-shadow: 0 4px 12px rgba(26,84,144,0.15);
-  }
+    margin-bottom: 24px; box-shadow: 0 4px 12px rgba(26,84,144,0.15); }
   .welcome-card h2 { font-size: 1.3rem; margin-bottom: 6px; }
   .welcome-card p { opacity: 0.9; font-size: 0.9rem; }
 
-  .stats {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 16px; margin-bottom: 24px;
-  }
-  .stat-card {
-    background: #fff; padding: 18px 20px; border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    border-left: 4px solid #1a5490;
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: #fff; padding: 18px 20px; border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left: 4px solid #1a5490;
+    transition: transform 0.15s, box-shadow 0.15s; }
   .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
   .stat-label { font-size: 0.78rem; color: #6b7280; margin-bottom: 6px; }
   .stat-value { font-size: 1.6rem; font-weight: 700; color: #1a5490; line-height: 1; }
@@ -105,61 +76,35 @@
   .stat-card.sc-batal { border-left-color: #dc2626; }
   .stat-card.sc-batal .stat-value { color: #dc2626; }
 
-  .stat-card.loading .stat-value {
-    color: transparent;
-    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
-    background-size: 200% 100%; animation: shimmer 1.2s infinite;
-    border-radius: 4px; display: inline-block; min-width: 40px; height: 1.6rem;
-  }
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  .section-title {
-    font-size: 1rem; font-weight: 600; color: #1f2937;
-    margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb;
-  }
-  .panel {
-    background: #fff; padding: 20px; border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px;
-  }
+  .section-title { font-size: 1rem; font-weight: 600; color: #1f2937;
+    margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
+  .panel { background: #fff; padding: 20px; border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
   .panel p { color: #6b7280; font-size: 0.9rem; line-height: 1.6; }
 
-  .quick-actions {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px; margin-top: 12px;
-  }
-  .qa-btn {
-    display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+  .quick-actions { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px; margin-top: 12px; }
+  .qa-btn { display: flex; align-items: center; gap: 10px; padding: 14px 16px;
     background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;
     text-decoration: none; color: #1f2937; font-size: 0.9rem; font-weight: 500;
-    transition: background 0.15s, border-color 0.15s;
-  }
+    transition: background 0.15s, border-color 0.15s; }
   .qa-btn:hover { background: #eff6ff; border-color: #1a5490; color: #1a5490; }
   .qa-btn .qa-ico { font-size: 1.2rem; }
 
-  .badge-role {
-    display: inline-block; padding: 3px 10px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px;
-  }
+  .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .role-ADMIN { background: #dbeafe; color: #1e40af; }
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
 
-  .overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4); z-index: 99;
-  }
+  .overlay { display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 99; }
   .overlay.show { display: block; }
 
   @media (max-width: 900px) {
-    .sidebar {
-      position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-      transform: translateX(-100%);
-    }
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+      transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .btn-menu { display: block; }
     .user-meta { display: none; }
@@ -183,9 +128,7 @@
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-footer">Versi 1.0.0</div>
   </aside>
-
   <div class="overlay" id="overlay"></div>
-
   <main class="main">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -201,50 +144,43 @@
         <button class="btn-logout" id="btn-logout">Keluar</button>
       </div>
     </header>
-
     <div class="content">
       <div class="welcome-card">
         <h2 id="welcome-title">Selamat datang</h2>
         <p id="welcome-sub">Anda login sebagai petugas SPMB.</p>
       </div>
-
       <h3 class="section-title">Ringkasan Pendaftaran</h3>
       <div class="stats">
-        <div class="stat-card loading" id="card-total">
+        <div class="stat-card" id="card-total">
           <div class="stat-label">Total Pendaftar</div>
           <div class="stat-value" id="stat-total">—</div>
         </div>
-        <div class="stat-card sc-draft loading" id="card-draft">
+        <div class="stat-card sc-draft" id="card-draft">
           <div class="stat-label">Draft</div>
           <div class="stat-value" id="stat-draft">—</div>
         </div>
-        <div class="stat-card sc-terkirim loading" id="card-terkirim">
+        <div class="stat-card sc-terkirim" id="card-terkirim">
           <div class="stat-label">Formulir Terkirim</div>
           <div class="stat-value" id="stat-terkirim">—</div>
         </div>
-        <div class="stat-card sc-verif loading" id="card-terverifikasi">
+        <div class="stat-card sc-verif" id="card-terverifikasi">
           <div class="stat-label">Terverifikasi</div>
           <div class="stat-value" id="stat-terverifikasi">—</div>
         </div>
-        <div class="stat-card sc-perbaikan loading" id="card-perbaikan">
+        <div class="stat-card sc-perbaikan" id="card-perbaikan">
           <div class="stat-label">Perlu Perbaikan</div>
           <div class="stat-value" id="stat-perbaikan">—</div>
         </div>
-        <div class="stat-card sc-batal loading" id="card-dibatalkan">
+        <div class="stat-card sc-batal" id="card-dibatalkan">
           <div class="stat-label">Dibatalkan</div>
           <div class="stat-value" id="stat-dibatalkan">—</div>
         </div>
       </div>
-
       <h3 class="section-title">Aksi Cepat</h3>
-      <div class="panel">
-        <div class="quick-actions" id="quick-actions"></div>
-      </div>
-
+      <div class="panel"><div class="quick-actions" id="quick-actions"></div></div>
       <h3 class="section-title">Informasi</h3>
       <div class="panel">
         <p>Dashboard ini adalah pusat kendali petugas SPMB. Menu di sebelah kiri menampilkan fitur sesuai <strong>role</strong> Anda.</p>
-        <p style="margin-top:10px;">Statistik di atas diambil langsung dari database pendaftaran dan diperbarui setiap kali halaman ini dimuat.</p>
       </div>
     </div>
   </main>
@@ -257,15 +193,12 @@
 <script>
 (function () {
   'use strict';
-
-  // Guard: harus login, semua role petugas boleh masuk
   if (!Auth.guard([])) return;
 
   var user = Auth.getUser();
-  var displayName = user.display_name || user.username || 'Petugas';
   var role = user.role || '-';
+  var displayName = user.display_name || user.username || 'Petugas';
 
-  // ================= ISI UI =================
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-role').innerHTML =
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
@@ -275,15 +208,10 @@
     'Anda login sebagai ' + roleLabel(role) + ' SPMB SMK Muhammadiyah 1 Surakarta.';
 
   function roleLabel(r) {
-    return {
-      'ADMIN': 'Administrator',
-      'WAWANCARA': 'Petugas Wawancara',
-      'BENDAHARA': 'Bendahara',
-      'SELEKSI': 'Panitia Seleksi'
-    }[r] || r;
+    return { 'ADMIN': 'Administrator', 'WAWANCARA': 'Petugas Wawancara',
+      'BENDAHARA': 'Bendahara', 'SELEKSI': 'Panitia Seleksi' }[r] || r;
   }
 
-  // ================= MENU =================
   var menus = {
     ADMIN: [
       { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', active: true }]},
@@ -297,15 +225,19 @@
         { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
       ]},
       { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: '#' },
+        { icon: '📊', label: 'Laporan', href: 'report.html' },
+        { icon: '📲', label: 'Notifikasi WA', href: 'notif.html' },
         { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
       ]}
     ],
     WAWANCARA: [
       { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', active: true }]},
+      { group: 'Pendaftaran', items: [
+        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
+        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
+      ]},
       { group: 'Wawancara', items: [
-        { icon: '🔍', label: 'Cari Siswa', href: 'interview.html' },
-        { icon: '📝', label: 'Riwayat Wawancara', href: 'interview.html' }
+        { icon: '🎤', label: 'Wawancara', href: 'interview.html' }
       ]}
     ],
     BENDAHARA: [
@@ -313,39 +245,37 @@
       { group: 'Pembayaran', items: [
         { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' },
         { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html' }
+      ]},
+      { group: 'Sistem', items: [
+        { icon: '📊', label: 'Laporan', href: 'report.html' }
       ]}
     ],
     SELEKSI: [
       { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', active: true }]},
       { group: 'Seleksi', items: [
-        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' },
-        { icon: '📄', label: 'Cetak Pengumuman', href: 'selection.html' }
+        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }
       ]}
     ]
   };
-
   var nav = document.getElementById('nav');
   var menu = menus[role] || menus.ADMIN;
   var html = '';
-  menu.forEach(function (group) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(group.group) + '</div>';
-    group.items.forEach(function (item) {
-      var cls = 'nav-item' + (item.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(item.href) + '" class="' + cls + '">' +
-        '<span class="ico">' + item.icon + '</span>' +
-        '<span>' + Utils.escapeHtml(item.label) + '</span></a>';
+  menu.forEach(function (g) {
+    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
+    g.items.forEach(function (it) {
+      var cls = 'nav-item' + (it.active ? ' active' : '');
+      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
+        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
     });
   });
   nav.innerHTML = html;
 
-  // ================= AKSI CEPAT =================
   var quickByRole = {
     ADMIN: [
       { icon: '👥', label: 'Lihat Pendaftar', href: 'admin.html' },
-      { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' },
       { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
     ],
-    WAWANCARA: [{ icon: '🔍', label: 'Mulai Wawancara', href: 'interview.html' }],
+    WAWANCARA: [{ icon: '🎤', label: 'Mulai Wawancara', href: 'interview.html' }],
     BENDAHARA: [{ icon: '💵', label: 'Input Pembayaran', href: 'payment.html' }],
     SELEKSI: [{ icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }]
   };
@@ -357,7 +287,6 @@
   });
   document.getElementById('quick-actions').innerHTML = qaHtml;
 
-  // ================= TOGGLE SIDEBAR =================
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   document.getElementById('btn-menu').addEventListener('click', function () {
@@ -366,14 +295,11 @@
   overlay.addEventListener('click', function () {
     sidebar.classList.remove('open'); overlay.classList.remove('show');
   });
-
-  // ================= LOGOUT =================
   document.getElementById('btn-logout').addEventListener('click', function () {
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
 
-  // ================= STATISTIK =================
   function setStat(id, cardId, value) {
     var el = document.getElementById(id);
     var card = document.getElementById(cardId);
@@ -381,41 +307,26 @@
     if (card) card.classList.remove('loading');
   }
 
-  function clearLoading() {
-    ['card-total','card-draft','card-terkirim','card-terverifikasi','card-perbaikan','card-dibatalkan']
-      .forEach(function (c) {
-        var el = document.getElementById(c);
-        if (el) el.classList.remove('loading');
-      });
-  }
-
-  Api.registration.stats()
-    .then(function (res) {
-      if (!res || !res.success) {
-        clearLoading();
-        setStat('stat-total', 'card-total', 0);
-        setStat('stat-draft', 'card-draft', 0);
-        setStat('stat-terkirim', 'card-terkirim', 0);
-        setStat('stat-terverifikasi', 'card-terverifikasi', 0);
-        setStat('stat-perbaikan', 'card-perbaikan', 0);
-        setStat('stat-dibatalkan', 'card-dibatalkan', 0);
-        if (res && res.message) Utils.toast(res.message, 'warning');
-        return;
-      }
-      var d = res.data || {};
-      setStat('stat-total', 'card-total', d.total || 0);
-      setStat('stat-draft', 'card-draft', d.draft || 0);
-      setStat('stat-terkirim', 'card-terkirim', d.terkirim || 0);
-      setStat('stat-terverifikasi', 'card-terverifikasi', d.terverifikasi || 0);
-      setStat('stat-perbaikan', 'card-perbaikan', d.perlu_perbaikan || 0);
-      setStat('stat-dibatalkan', 'card-dibatalkan', d.dibatalkan || 0);
-    })
-    .catch(function (err) {
-      clearLoading();
-      if (err.message !== 'SESSION_EXPIRED') {
-        Utils.toast('Gagal memuat statistik: ' + err.message, 'error');
-      }
-    });
+  Api.registration.stats().then(function (res) {
+    if (!res || !res.success) {
+      setStat('stat-total', 'card-total', 0);
+      setStat('stat-draft', 'card-draft', 0);
+      setStat('stat-terkirim', 'card-terkirim', 0);
+      setStat('stat-terverifikasi', 'card-terverifikasi', 0);
+      setStat('stat-perbaikan', 'card-perbaikan', 0);
+      setStat('stat-dibatalkan', 'card-dibatalkan', 0);
+      return;
+    }
+    var d = res.data || {};
+    setStat('stat-total', 'card-total', d.total || 0);
+    setStat('stat-draft', 'card-draft', d.draft || 0);
+    setStat('stat-terkirim', 'card-terkirim', d.terkirim || 0);
+    setStat('stat-terverifikasi', 'card-terverifikasi', d.terverifikasi || 0);
+    setStat('stat-perbaikan', 'card-perbaikan', d.perlu_perbaikan || 0);
+    setStat('stat-dibatalkan', 'card-dibatalkan', d.dibatalkan || 0);
+  }).catch(function (err) {
+    console.warn('[SPMB] gagal memuat statistik:', err.message);
+  });
 
 })();
 </script>
