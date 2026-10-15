@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pengaturan — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -173,13 +174,13 @@
 
     <div class="content">
       <div class="tabs" id="tabs">
-     <button class="tab active" data-tab="pengaturan">Pengaturan Umum</button>
-     <button class="tab" data-tab="gelombang">Gelombang</button>
-     <button class="tab" data-tab="users">Pengguna</button>
-     <button class="tab" data-tab="konsentrasi">Konsentrasi</button>
-     <button class="tab" data-tab="pertanyaan">Pertanyaan Wawancara</button>
-     <button class="tab" data-tab="template">Template WA</button>
-   </div>
+        <button class="tab active" data-tab="pengaturan">Pengaturan Umum</button>
+        <button class="tab" data-tab="gelombang">Gelombang</button>
+        <button class="tab" data-tab="users">Pengguna</button>
+        <button class="tab" data-tab="konsentrasi">Konsentrasi</button>
+        <button class="tab" data-tab="pertanyaan">Pertanyaan Wawancara</button>
+        <button class="tab" data-tab="template">Template WA</button>
+      </div>
       <div id="tab-content"></div>
     </div>
   </main>
@@ -194,6 +195,7 @@
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
+<script src="nav.js"></script>
 <script>
 (function () {
   'use strict';
@@ -210,36 +212,8 @@
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
 
-  // Sidebar
-    var menus = [
-    { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-    { group: 'Pendaftaran', items: [
-      { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-      { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-    ]},
-    { group: 'Proses', items: [
-      { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
-      { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
-      { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' },
-      { icon: '🎓', label: 'Daftar Ulang', href: 'daftar-ulang.html' }
-    ]},
-    { group: 'Sistem', items: [
-      { icon: '📊', label: 'Laporan', href: 'report.html' },
-      { icon: '📲', label: 'Notifikasi WA', href: 'notif.html' },
-      { icon: '⚙️', label: 'Pengaturan', href: 'settings.html', active: true }
-    ]}
-  ];
-  var nav = document.getElementById('nav');
-  var html = '';
-  menus.forEach(function (g) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
-    g.items.forEach(function (it) {
-      var cls = 'nav-item' + (it.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
-        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
-    });
-  });
-  nav.innerHTML = html;
+  // Sidebar — pakai Nav (sumber tunggal)
+  Nav.render('settings');
 
   // Toggle sidebar
   var sidebar = document.getElementById('sidebar');
@@ -266,7 +240,7 @@
     renderTab();
   });
 
-    function renderTab() {
+  function renderTab() {
     var c = document.getElementById('tab-content');
     c.innerHTML = '<div class="panel"><div class="empty">Memuat...</div></div>';
     if (currentTab === 'pengaturan') renderPengaturan();
@@ -336,9 +310,8 @@
     });
   }
 
-   /* ============ GELOMBANG ============ */
+  /* ============ GELOMBANG ============ */
   function renderGelombang() {
-    // Muat 2 hal paralel: info aktif + daftar lengkap
     Promise.all([
       Api.gelombang.getActive().catch(function () { return null; }),
       Api.gelombang.list()
@@ -355,7 +328,6 @@
       var list = listRes.data.gelombang || [];
       var activeNow = (activeRes && activeRes.success && activeRes.data) ? activeRes.data.aktif : null;
 
-      // Info box gelombang aktif
       var infoHtml = '';
       if (activeNow) {
         infoHtml =
@@ -377,7 +349,6 @@
           '</div>';
       }
 
-      // Tabel
       var html = '<div class="panel">' + infoHtml +
         '<div class="panel-head"><h3>Gelombang Pendaftaran</h3></div>' +
         '<div class="table-wrap"><table><thead><tr>' +
@@ -416,7 +387,6 @@
       html += '</tbody></table></div></div>';
       document.getElementById('tab-content').innerHTML = html;
 
-      // Bind edit
       document.querySelectorAll('[data-edit-g]').forEach(function (b) {
         b.addEventListener('click', function () {
           var id = b.getAttribute('data-edit-g');
@@ -504,7 +474,7 @@
       });
     });
   }
- 
+
   /* ============ USERS ============ */
   function renderUsers() {
     Api.admin.listUsers().then(function (res) {
