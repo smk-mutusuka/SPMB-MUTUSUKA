@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pembayaran — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -109,7 +110,6 @@
 
   .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
 
-  /* Modal */
   .modal-bg { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 200;
     align-items: center; justify-content: center; padding: 20px; }
@@ -141,22 +141,129 @@
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
 
-  /* Print kuitansi */
+  /* ============================================================
+   * PRINT AREA — KUITANSI A5 PORTRAIT
+   * ============================================================ */
   #print-area { display: none; }
+
   @media print {
+    @page { size: A5 portrait; margin: 8mm; }
+    html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
-    #print-area { display: block !important; position: absolute;
-      left: 0; top: 0; width: 100%; padding: 20mm; }
+    #print-area {
+      display: block !important;
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+      font-family: 'Times New Roman', Times, serif;
+      color: #000;
+    }
     .no-print { display: none !important; }
-    .kuitansi { border: 2px solid #000; padding: 20px; }
-    .kuitansi h2 { text-align: center; margin-bottom: 4px; }
-    .kuitansi .sub { text-align: center; margin-bottom: 20px;
-      border-bottom: 2px solid #000; padding-bottom: 8px; }
-    .kuitansi table { width: 100%; margin: 16px 0; }
-    .kuitansi td { padding: 4px 0; vertical-align: top; }
-    .kuitansi .label { width: 40%; }
-    .kuitansi .ttd { margin-top: 60px; text-align: right; }
+
+    /* Kop surat */
+    .kuitansi { padding: 2mm 2mm 0 2mm; }
+    .kuitansi .kop {
+      display: flex;
+      align-items: center;
+      gap: 5mm;
+      margin-bottom: 2mm;
+    }
+    .kuitansi .kop-logo {
+      width: 20mm;
+      height: 20mm;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .kuitansi .kop-teks { flex: 1; text-align: center; }
+    .kuitansi .kop-teks h2 {
+      font-size: 13pt;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: 0.3px;
+    }
+    .kuitansi .kop-teks .kop-sub {
+      font-size: 8.5pt;
+      line-height: 1.3;
+      margin-top: 0.5mm;
+    }
+    .kuitansi .kop-line {
+      border: none;
+      border-top: 2px solid #000;
+      border-bottom: 1px solid #000;
+      height: 1.5mm;
+      margin: 1mm 0 4mm 0;
+    }
+    .kuitansi .kuitansi-title {
+      text-align: center;
+      font-size: 12pt;
+      font-weight: 700;
+      text-decoration: underline;
+      letter-spacing: 1px;
+      margin-bottom: 1mm;
+    }
+    .kuitansi .kuitansi-nomor {
+      text-align: center;
+      font-size: 9pt;
+      margin-bottom: 4mm;
+    }
+
+    /* Body kuitansi */
+    .kuitansi .ktbl {
+      width: 100%;
+      font-size: 10pt;
+      border-collapse: collapse;
+      margin-bottom: 4mm;
+    }
+    .kuitansi .ktbl td {
+      padding: 1.2mm 0;
+      vertical-align: top;
+    }
+    .kuitansi .ktbl td.lbl { width: 33%; }
+    .kuitansi .ktbl td.colon { width: 3%; }
+    .kuitansi .ktbl td.val { width: 64%; font-weight: 500; }
+
+    .kuitansi .jumlah-box {
+      border: 1.5px solid #000;
+      border-radius: 2mm;
+      padding: 3mm 4mm;
+      background: #f5f5f5;
+      font-size: 11pt;
+      font-weight: 700;
+      text-align: center;
+      margin: 3mm 0;
+      letter-spacing: 0.5px;
+    }
+    .kuitansi .jumlah-box .jumlah-label {
+      font-size: 8.5pt;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 1mm;
+    }
+
+    .kuitansi .keterangan {
+      font-size: 8.5pt;
+      font-style: italic;
+      margin-top: 3mm;
+      color: #333;
+    }
+
+    /* Tanda tangan */
+    .kuitansi .ttd {
+      margin-top: 8mm;
+      text-align: right;
+      font-size: 10pt;
+    }
+    .kuitansi .ttd .ttd-kota { margin-bottom: 1mm; }
+    .kuitansi .ttd .ttd-jabatan { margin-bottom: 18mm; }
+    .kuitansi .ttd .ttd-nama {
+      font-weight: 700;
+      text-decoration: underline;
+      display: inline-block;
+    }
   }
 
   @media (max-width: 900px) {
@@ -232,12 +339,10 @@
   </main>
 </div>
 
-<!-- Modal Input -->
 <div class="modal-bg" id="modal-bg">
   <div class="modal" id="modal"></div>
 </div>
 
-<!-- Area cetak -->
 <div id="print-area"></div>
 
 <script src="config.js"></script>
@@ -325,7 +430,6 @@
 
   var state = { q: '', jenis: '', status: '' };
 
-  /* ============ SUMMARY ============ */
   function loadSummary() {
     Api.payment.summary().then(function (res) {
       if (!res.success) return;
@@ -342,7 +446,6 @@
     });
   }
 
-  /* ============ LIST ============ */
   function loadList() {
     Utils.showLoading('Memuat transaksi...');
     Api.payment.list(state).then(function (res) {
@@ -384,14 +487,10 @@
       document.getElementById('tbl').innerHTML = html;
 
       document.querySelectorAll('[data-print]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          printKuitansi(b.getAttribute('data-print'));
-        });
+        b.addEventListener('click', function () { printKuitansi(b.getAttribute('data-print')); });
       });
       document.querySelectorAll('[data-cancel]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          cancelTx(b.getAttribute('data-cancel'));
-        });
+        b.addEventListener('click', function () { cancelTx(b.getAttribute('data-cancel')); });
       });
     }).catch(function (err) {
       Utils.hideLoading();
@@ -407,7 +506,6 @@
     loadList();
   });
 
-  /* ============ NEW PAYMENT ============ */
   document.getElementById('btn-new').addEventListener('click', function () {
     openModal(
       '<h3>Input Pembayaran</h3>' +
@@ -435,7 +533,6 @@
     );
 
     var selectedReg = null;
-
     document.getElementById('m-cancel').addEventListener('click', closeModal);
 
     var cariEl = document.getElementById('p-cari');
@@ -443,10 +540,7 @@
     cariEl.addEventListener('input', function () {
       clearTimeout(timer);
       var q = cariEl.value.trim();
-      if (q.length < 3) {
-        document.getElementById('p-hasil').innerHTML = '';
-        return;
-      }
+      if (q.length < 3) { document.getElementById('p-hasil').innerHTML = ''; return; }
       timer = setTimeout(function () {
         Api.registration.list({ q: q, per_page: 10 }).then(function (res) {
           if (!res.success) return;
@@ -515,7 +609,6 @@
     });
   });
 
-  /* ============ CANCEL ============ */
   function cancelTx(txId) {
     openModal(
       '<h3>Batalkan Transaksi</h3>' +
@@ -543,7 +636,9 @@
     });
   }
 
-  /* ============ CETAK KUITANSI ============ */
+  /* ============================================================
+   * CETAK KUITANSI — A5 PORTRAIT + LOGO DI KOP KIRI
+   * ============================================================ */
   function printKuitansi(txId) {
     Utils.showLoading('Menyiapkan kuitansi...');
     Api.payment.getForPrint(txId).then(function (res) {
@@ -551,33 +646,81 @@
       if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
       var d = res.data;
       var t = d.transaksi, p = d.pendaftar, s = d.sekolah;
+
+      var totalRp = Utils.formatRupiah(t.amount);
+      var terbilang = angkaKeHuruf(t.amount) + ' rupiah';
+
+      var kop =
+        '<div class="kop">' +
+          '<img src="logo.png" alt="Logo" class="kop-logo" onerror="this.style.display=\'none\'">' +
+          '<div class="kop-teks">' +
+            '<h2>' + Utils.escapeHtml(s.nama_sekolah || '') + '</h2>' +
+            '<div class="kop-sub">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</div>' +
+            '<div class="kop-sub">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
+              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<hr class="kop-line">';
+
       document.getElementById('print-area').innerHTML =
         '<div class="kuitansi">' +
-          '<h2>' + Utils.escapeHtml(s.nama_sekolah || '') + '</h2>' +
-          '<div class="sub">' + Utils.escapeHtml(s.alamat_sekolah || '') +
-            '<br>Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '') + '</div>' +
-          '<h3 style="text-align:center;margin-bottom:20px;">KUITANSI PEMBAYARAN</h3>' +
-          '<table>' +
-            '<tr><td class="label">No. Kuitansi</td><td>: <strong>' + Utils.escapeHtml(t.receipt_number) + '</strong></td></tr>' +
-            '<tr><td class="label">Tanggal</td><td>: ' + Utils.formatTanggal(t.transaction_date) + '</td></tr>' +
-            '<tr><td class="label">Diterima dari</td><td>: ' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
-            '<tr><td class="label">No. Pendaftaran</td><td>: ' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</td></tr>' +
-            '<tr><td class="label">NISN</td><td>: ' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
-            '<tr><td class="label">Untuk Pembayaran</td><td>: ' + Utils.escapeHtml(t.payment_type) + '</td></tr>' +
-            '<tr><td class="label">Keterangan</td><td>: ' + Utils.escapeHtml(t.description || '-') + '</td></tr>' +
-            '<tr><td class="label">Metode</td><td>: ' + Utils.escapeHtml(t.payment_method) + '</td></tr>' +
-            '<tr><td class="label"><strong>Jumlah</strong></td><td>: <strong style="font-size:1.2em;">' + Utils.formatRupiah(t.amount) + '</strong></td></tr>' +
+          kop +
+          '<div class="kuitansi-title">KUITANSI PEMBAYARAN</div>' +
+          '<div class="kuitansi-nomor">No: <strong>' + Utils.escapeHtml(t.receipt_number || '-') + '</strong></div>' +
+          '<table class="ktbl">' +
+            '<tr><td class="lbl">Telah diterima dari</td><td class="colon">:</td>' +
+              '<td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
+            '<tr><td class="lbl">Nomor Pendaftaran</td><td class="colon">:</td>' +
+              '<td class="val">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</td></tr>' +
+            '<tr><td class="lbl">NISN</td><td class="colon">:</td>' +
+              '<td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
+            '<tr><td class="lbl">Konsentrasi</td><td class="colon">:</td>' +
+              '<td class="val">' + Utils.escapeHtml(p.konsentrasi_1 || '-') + '</td></tr>' +
+            '<tr><td class="lbl">Untuk Pembayaran</td><td class="colon">:</td>' +
+              '<td class="val">' + Utils.escapeHtml(t.payment_type) + '</td></tr>' +
+            '<tr><td class="lbl">Metode</td><td class="colon">:</td>' +
+              '<td class="val">' + Utils.escapeHtml(t.payment_method) + '</td></tr>' +
+            '<tr><td class="lbl">Tanggal</td><td class="colon">:</td>' +
+              '<td class="val">' + Utils.formatTanggal(t.transaction_date) + '</td></tr>' +
           '</table>' +
+          '<div class="jumlah-box">' +
+            '<span class="jumlah-label">Jumlah</span>' +
+            totalRp +
+          '</div>' +
+          '<div class="keterangan">Terbilang: <strong>' + Utils.escapeHtml(terbilang) + '</strong></div>' +
+          (t.description ? '<div class="keterangan">Catatan: ' + Utils.escapeHtml(t.description) + '</div>' : '') +
           '<div class="ttd">' +
-            'Surakarta, ' + Utils.formatTanggal(t.transaction_date) + '<br>' +
-            'Bendahara,<br><br><br><br>' +
-            '<strong>' + Utils.escapeHtml(s.bendahara || '_______________') + '</strong>' +
+            '<div class="ttd-kota">Surakarta, ' + Utils.formatTanggal(t.transaction_date) + '</div>' +
+            '<div class="ttd-jabatan">Bendahara,</div>' +
+            '<div class="ttd-nama">' + Utils.escapeHtml(s.bendahara || '_______________') + '</div>' +
           '</div>' +
         '</div>';
-      setTimeout(function () { window.print(); }, 200);
+      setTimeout(function () { window.print(); }, 300);
     }).catch(function (err) {
       Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
     });
+  }
+
+  /* Konversi angka ke huruf (Bahasa Indonesia) */
+  function angkaKeHuruf(n) {
+    n = Math.floor(Number(n) || 0);
+    if (n === 0) return 'nol';
+    var satuan = ['', 'satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan',
+      'sepuluh','sebelas','dua belas','tiga belas','empat belas','lima belas','enam belas',
+      'tujuh belas','delapan belas','sembilan belas'];
+    function toHuruf(x) {
+      if (x < 12) return satuan[x];
+      if (x < 20) return satuan[x];
+      if (x < 100) return satuan[Math.floor(x/10)] + ' puluh' + (x%10 ? ' ' + satuan[x%10] : '');
+      if (x < 200) return 'seratus' + (x%100 ? ' ' + toHuruf(x%100) : '');
+      if (x < 1000) return satuan[Math.floor(x/100)] + ' ratus' + (x%100 ? ' ' + toHuruf(x%100) : '');
+      if (x < 2000) return 'seribu' + (x%1000 ? ' ' + toHuruf(x%1000) : '');
+      if (x < 1000000) return toHuruf(Math.floor(x/1000)) + ' ribu' + (x%1000 ? ' ' + toHuruf(x%1000) : '');
+      if (x < 1000000000) return toHuruf(Math.floor(x/1000000)) + ' juta' + (x%1000000 ? ' ' + toHuruf(x%1000000) : '');
+      if (x < 1000000000000) return toHuruf(Math.floor(x/1000000000)) + ' miliar' + (x%1000000000 ? ' ' + toHuruf(x%1000000000) : '');
+      return toHuruf(Math.floor(x/1000000000000)) + ' triliun' + (x%1000000000000 ? ' ' + toHuruf(x%1000000000000) : '');
+    }
+    return toHuruf(n);
   }
 
   loadSummary();
