@@ -4,15 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hasil Seleksi — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: #f5f7fa; color: #1f2937; min-height: 100vh; }
   .app { display: flex; min-height: 100vh; }
-
   .sidebar { width: 260px; background: #1a5490; color: #fff;
-    display: flex; flex-direction: column; flex-shrink: 0;
-    transition: transform 0.3s ease; }
+    display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease; }
   .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; align-items: center; gap: 12px; }
   .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
@@ -29,7 +28,6 @@
   .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
   .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.75rem; color: rgba(255,255,255,0.6); }
-
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
     padding: 12px 24px; display: flex; align-items: center;
@@ -48,13 +46,9 @@
     padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
     font-weight: 500; cursor: pointer; }
   .btn-logout:hover { background: #fecaca; }
-
   .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
-
-  .summary {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px; margin-bottom: 20px;
-  }
+  .summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px; margin-bottom: 20px; }
   .sum-card { background: #fff; padding: 16px 18px; border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left: 4px solid #1a5490; }
   .sum-label { font-size: 0.78rem; color: #6b7280; margin-bottom: 4px; }
@@ -65,18 +59,15 @@
   .sum-card.sc-tidak .sum-value { color: #dc2626; }
   .sum-card.sc-cadangan { border-left-color: #d97706; }
   .sum-card.sc-cadangan .sum-value { color: #d97706; }
-
   .panel { background: #fff; padding: 20px; border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
   .panel-head { display: flex; justify-content: space-between;
     align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
   .panel-head h3 { font-size: 1rem; color: #1a5490; }
-
   .publish-bar { display: flex; align-items: center; gap: 12px;
     background: #fef3c7; padding: 12px 16px; border-radius: 8px;
     margin-bottom: 14px; font-size: 0.88rem; }
   .publish-bar.on { background: #d1fae5; }
-
   .filters { display: grid; grid-template-columns: 2fr 1fr auto;
     gap: 10px; align-items: end; }
   .filters .field { display: flex; flex-direction: column; gap: 4px; }
@@ -84,10 +75,8 @@
   .filters input, .filters select {
     padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px;
     font-size: 0.9rem; font-family: inherit; background: #fff; }
-  .filters input:focus, .filters select:focus {
-    outline: none; border-color: #1a5490;
+  .filters input:focus, .filters select:focus { outline: none; border-color: #1a5490;
     box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
-
   .btn { padding: 9px 16px; border: none; border-radius: 6px;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: inherit; transition: background 0.15s; }
@@ -95,14 +84,7 @@
   .btn-primary:hover { background: #143f6e; }
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
-  .btn-success { background: #d1fae5; color: #065f46; }
-  .btn-success:hover { background: #a7f3d0; }
-  .btn-warn { background: #fef3c7; color: #92400e; }
-  .btn-warn:hover { background: #fde68a; }
-  .btn-danger { background: #fee2e2; color: #991b1b; }
-  .btn-danger:hover { background: #fecaca; }
   .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
-
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
@@ -111,18 +93,13 @@
   tbody tr:hover { background: #f9fafb; }
   td.actions { white-space: nowrap; }
   td.actions .btn { margin-right: 4px; }
-
   .badge { display: inline-block; padding: 3px 9px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px; }
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .bg-belum { background: #e5e7eb; color: #374151; }
   .bg-diterima { background: #d1fae5; color: #065f46; }
   .bg-tidak { background: #fee2e2; color: #991b1b; }
   .bg-cadangan { background: #fef3c7; color: #92400e; }
-
   .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
-
-  /* Modal */
   .modal-bg { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 200;
     align-items: center; justify-content: center; padding: 20px; }
@@ -137,42 +114,39 @@
     width: 100%; padding: 9px 12px; border: 1px solid #d1d5db;
     border-radius: 6px; font-size: 0.9rem; font-family: inherit; }
   .modal input:focus, .modal select:focus, .modal textarea:focus {
-    outline: none; border-color: #1a5490;
-    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
+    outline: none; border-color: #1a5490; box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
   .modal textarea { min-height: 80px; resize: vertical; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-
-  .overlay { display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4); z-index: 99; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
   .overlay.show { display: block; }
-
   .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px; }
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .role-ADMIN { background: #dbeafe; color: #1e40af; }
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
-
-  /* Print surat */
   #print-area { display: none; }
   @media print {
+    @page { size: A4 portrait; margin: 15mm 18mm; }
+    html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
-    #print-area { display: block !important; position: absolute;
-      left: 0; top: 0; width: 100%; padding: 20mm; }
+    #print-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%;
+      font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
-    .surat { font-family: 'Times New Roman', serif; }
-    .surat h2 { text-align: center; margin-bottom: 4px; }
-    .surat .sub { text-align: center; margin-bottom: 20px;
-      border-bottom: 3px double #000; padding-bottom: 8px; }
-    .surat .isi { line-height: 1.7; }
-    .surat .ttd { margin-top: 60px; text-align: right; }
+    .surat { font-size: 11.5pt; line-height: 1.5; }
+    .surat .kop-img { width: 100%; max-height: 30mm; object-fit: contain;
+      display: block; margin-bottom: 3mm; }
+    .surat .judul { text-align: center; margin: 6mm 0 2mm; }
+    .surat .judul h3 { font-size: 13pt; font-weight: 700;
+      text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
+    .surat .judul .nomor { font-size: 10.5pt; margin-top: 2mm; }
+    .surat .isi { margin: 5mm 0; text-align: justify; }
+    .surat .ttd { margin-top: 10mm; text-align: right; }
+    .surat .ttd .jabatan { margin-bottom: 20mm; }
   }
-
   @media (max-width: 900px) {
-    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-      transform: translateX(-100%); }
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .btn-menu { display: block; }
     .user-meta { display: none; }
@@ -181,7 +155,6 @@
 </style>
 </head>
 <body>
-
 <div class="app no-print">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -191,9 +164,7 @@
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-footer">Versi 1.0.0</div>
   </aside>
-
   <div class="overlay" id="overlay"></div>
-
   <main class="main">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -209,11 +180,9 @@
         <button class="btn-logout" id="btn-logout">Keluar</button>
       </div>
     </header>
-
     <div class="content">
       <div id="publish-bar"></div>
       <div class="summary" id="summary"></div>
-
       <div class="panel">
         <div class="panel-head">
           <h3>Kandidat Seleksi</h3>
@@ -237,70 +206,25 @@
     </div>
   </main>
 </div>
-
-<div class="modal-bg" id="modal-bg">
-  <div class="modal" id="modal"></div>
-</div>
-
+<div class="modal-bg" id="modal-bg"><div class="modal" id="modal"></div></div>
 <div id="print-area"></div>
-
 <script src="config.js"></script>
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
+<script src="nav.js"></script>
 <script>
 (function () {
   'use strict';
-
   if (!Auth.guard(['ADMIN', 'SELEKSI'])) return;
-
   var user = Auth.getUser();
   var role = user.role;
   var displayName = user.display_name || user.username;
-
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-role').innerHTML =
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
-
-  var menus = {
-    ADMIN: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pendaftaran', items: [
-        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-      ]},
-      { group: 'Proses', items: [
-        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
-        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
-        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html', active: true }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: '#' },
-        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
-      ]}
-    ],
-    SELEKSI: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Seleksi', items: [
-        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html', active: true },
-        { icon: '📄', label: 'Cetak Pengumuman', href: 'selection.html' }
-      ]}
-    ]
-  };
-  var nav = document.getElementById('nav');
-  var menu = menus[role] || menus.SELEKSI;
-  var html = '';
-  menu.forEach(function (g) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
-    g.items.forEach(function (it) {
-      var cls = 'nav-item' + (it.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
-        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
-    });
-  });
-  nav.innerHTML = html;
-
+  Nav.render('selection');
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   document.getElementById('btn-menu').addEventListener('click', function () {
@@ -313,23 +237,11 @@
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
-
   var modalBg = document.getElementById('modal-bg');
-  function openModal(html) {
-    document.getElementById('modal').innerHTML = html;
-    modalBg.classList.add('show');
-  }
-  function closeModal() {
-    modalBg.classList.remove('show');
-    document.getElementById('modal').innerHTML = '';
-  }
-  modalBg.addEventListener('click', function (e) {
-    if (e.target === modalBg) closeModal();
-  });
-
+  function openModal(html) { document.getElementById('modal').innerHTML = html; modalBg.classList.add('show'); }
+  function closeModal() { modalBg.classList.remove('show'); document.getElementById('modal').innerHTML = ''; }
+  modalBg.addEventListener('click', function (e) { if (e.target === modalBg) closeModal(); });
   var state = { q: '', decision: '' };
-
-  /* ============ SUMMARY + PUBLISH BAR ============ */
   function loadSummary() {
     Api.selection.stats().then(function (res) {
       if (!res.success) return;
@@ -345,7 +257,6 @@
           '<div class="sum-value">' + (d.tidak_diterima || 0) + '</div></div>';
       document.getElementById('summary').innerHTML = html;
     });
-
     Api.settings.getPublic().then(function (res) {
       if (!res.success) return;
       var pub = res.data.settings.pengumuman_publik;
@@ -354,11 +265,9 @@
         '<div class="publish-bar' + (pub ? ' on' : '') + '">' +
           '<strong>Publikasi hasil:</strong> ' +
           (pub ? '✓ AKTIF — pendaftar bisa cek di halaman status' :
-                 '✗ NONAKTIF — pendaftar belum bisa melihat hasil') +
-        '</div>';
+                 '✗ NONAKTIF — pendaftar belum bisa melihat hasil') + '</div>';
     });
   }
-
   document.getElementById('btn-publish').addEventListener('click', function () {
     if (!confirm('Ubah status publikasi hasil seleksi?')) return;
     Utils.showLoading('Memproses...');
@@ -367,36 +276,20 @@
       return Api.selection.publish(!cur);
     }).then(function (r) {
       Utils.hideLoading();
-      if (r.success) {
-        Utils.toast('Publikasi diubah', 'success');
-        loadSummary();
-      } else {
-        Utils.toast('Gagal: ' + r.message, 'error');
-      }
-    }).catch(function (err) {
-      Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
-    });
+      if (r.success) { Utils.toast('Publikasi diubah', 'success'); loadSummary(); }
+      else Utils.toast('Gagal: ' + r.message, 'error');
+    }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
   });
-
-  /* ============ LIST ============ */
   function loadList() {
     Utils.showLoading('Memuat kandidat...');
     Api.selection.listCandidates(state).then(function (res) {
       Utils.hideLoading();
-      if (!res.success) {
-        document.getElementById('tbl').innerHTML =
-          '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
-        return;
-      }
+      if (!res.success) { document.getElementById('tbl').innerHTML = '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>'; return; }
       var items = res.data.items || [];
-      if (!items.length) {
-        document.getElementById('tbl').innerHTML = '<div class="empty">Tidak ada kandidat.</div>';
-        return;
-      }
+      if (!items.length) { document.getElementById('tbl').innerHTML = '<div class="empty">Tidak ada kandidat.</div>'; return; }
       var html = '<table><thead><tr>' +
         '<th>No. Pendaftaran</th><th>Nama</th><th>NISN</th><th>Konsentrasi</th>' +
-        '<th>Wawancara</th><th>Keputusan</th><th>Surat</th><th>Aksi</th>' +
-        '</tr></thead><tbody>';
+        '<th>Wawancara</th><th>Keputusan</th><th>Surat</th><th>Aksi</th></tr></thead><tbody>';
       items.forEach(function (it) {
         var dec = String(it.decision || 'BELUM_DIPUTUSKAN');
         var cls = dec === 'DITERIMA' ? 'bg-diterima' :
@@ -414,12 +307,10 @@
             '<button class="btn btn-primary btn-sm" data-set="' + Utils.escapeHtml(it.registration_id) + '">Set</button>' +
             (dec !== 'BELUM_DIPUTUSKAN' ?
               '<button class="btn btn-secondary btn-sm" data-print="' + Utils.escapeHtml(it.registration_id) + '">Cetak</button>' : '') +
-          '</td>' +
-        '</tr>';
+          '</td></tr>';
       });
       html += '</tbody></table>';
       document.getElementById('tbl').innerHTML = html;
-
       document.querySelectorAll('[data-set]').forEach(function (b) {
         b.addEventListener('click', function () {
           var rid = b.getAttribute('data-set');
@@ -428,46 +319,35 @@
         });
       });
       document.querySelectorAll('[data-print]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          printSurat(b.getAttribute('data-print'));
-        });
+        b.addEventListener('click', function () { printSurat(b.getAttribute('data-print')); });
       });
     }).catch(function (err) {
       Utils.hideLoading();
-      document.getElementById('tbl').innerHTML =
-        '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+      document.getElementById('tbl').innerHTML = '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
     });
   }
-
   document.getElementById('btn-filter').addEventListener('click', function () {
     state.q = document.getElementById('f-q').value.trim();
     state.decision = document.getElementById('f-decision').value;
     loadList();
   });
-
-  /* ============ SET DECISION ============ */
   function showSetForm(it) {
     openModal(
       '<h3>Tetapkan Keputusan</h3>' +
-      '<div style="background:#eff6ff;padding:10px 14px;border-radius:6px;' +
-        'font-size:0.85rem;margin-bottom:14px;">' +
+      '<div style="background:#eff6ff;padding:10px 14px;border-radius:6px;font-size:0.85rem;margin-bottom:14px;">' +
         '<strong>' + Utils.escapeHtml(it.nama_lengkap) + '</strong><br>' +
-        Utils.escapeHtml(it.nomor_pendaftaran || '-') + ' • ' +
-        Utils.escapeHtml(it.konsentrasi_1 || '-') +
-      '</div>' +
+        Utils.escapeHtml(it.nomor_pendaftaran || '-') + ' • ' + Utils.escapeHtml(it.konsentrasi_1 || '-') + '</div>' +
       '<div class="field"><label>Keputusan</label>' +
         '<select id="d-decision">' +
-        '<option value="DITERIMA"' + (it.decision === 'DITERIMA' ? ' selected' : '') + '>DITERIMA</option>' +
-        '<option value="CADANGAN"' + (it.decision === 'CADANGAN' ? ' selected' : '') + '>CADANGAN</option>' +
-        '<option value="TIDAK_DITERIMA"' + (it.decision === 'TIDAK_DITERIMA' ? ' selected' : '') + '>TIDAK DITERIMA</option>' +
-        '<option value="BELUM_DIPUTUSKAN"' + (it.decision === 'BELUM_DIPUTUSKAN' ? ' selected' : '') + '>BELUM DIPUTUSKAN</option>' +
+          '<option value="DITERIMA"' + (it.decision === 'DITERIMA' ? ' selected' : '') + '>DITERIMA</option>' +
+          '<option value="CADANGAN"' + (it.decision === 'CADANGAN' ? ' selected' : '') + '>CADANGAN</option>' +
+          '<option value="TIDAK_DITERIMA"' + (it.decision === 'TIDAK_DITERIMA' ? ' selected' : '') + '>TIDAK DITERIMA</option>' +
+          '<option value="BELUM_DIPUTUSKAN"' + (it.decision === 'BELUM_DIPUTUSKAN' ? ' selected' : '') + '>BELUM DIPUTUSKAN</option>' +
         '</select></div>' +
       '<div class="field"><label>Catatan (opsional)</label>' +
         '<textarea id="d-notes" placeholder="Catatan keputusan...">' + Utils.escapeHtml(it.decision_notes || '') + '</textarea></div>' +
-      '<div class="modal-actions">' +
-        '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
-        '<button class="btn btn-primary" id="m-save">Simpan</button>' +
-      '</div>'
+      '<div class="modal-actions"><button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+        '<button class="btn btn-primary" id="m-save">Simpan</button></div>'
     );
     document.getElementById('m-cancel').addEventListener('click', closeModal);
     document.getElementById('m-save').addEventListener('click', function () {
@@ -478,20 +358,12 @@
         Utils.hideLoading();
         if (res.success) {
           Utils.toast('Keputusan disimpan', 'success');
-          if (res.data && res.data.letter_number) {
-            Utils.toast('No. surat: ' + res.data.letter_number, 'info');
-          }
+          if (res.data && res.data.letter_number) Utils.toast('No. surat: ' + res.data.letter_number, 'info');
           closeModal(); loadList(); loadSummary();
-        } else {
-          Utils.toast('Gagal: ' + res.message, 'error');
-        }
-      }).catch(function (err) {
-        Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
-      });
+        } else Utils.toast('Gagal: ' + res.message, 'error');
+      }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
   }
-
-  /* ============ CETAK SURAT ============ */
   function printSurat(regId) {
     Utils.showLoading('Menyiapkan surat...');
     Api.selection.getResult(regId).then(function (res) {
@@ -502,26 +374,12 @@
       var decision = String(h.decision);
       var isDiterima = decision === 'DITERIMA';
       var isCadangan = decision === 'CADANGAN';
-
-      var kalimat = '';
-      if (isDiterima) {
-        kalimat = 'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
-          Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
-          Utils.escapeHtml(s.tahun_ajaran || '') + ', dengan ini kami nyatakan bahwa:';
-      } else if (isCadangan) {
-        kalimat = 'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
-          Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
-          Utils.escapeHtml(s.tahun_ajaran || '') + ', dengan ini kami nyatakan bahwa:';
-      } else {
-        kalimat = 'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
-          Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
-          Utils.escapeHtml(s.tahun_ajaran || '') + ', dengan ini kami sampaikan bahwa:';
-      }
-
+      var kalimat = 'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
+        Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
+        Utils.escapeHtml(s.tahun_ajaran || '') + ', dengan ini kami nyatakan bahwa:';
       var hasilTeks = isDiterima ? '<strong>DITERIMA</strong>' :
                       isCadangan ? '<strong>CADANGAN</strong>' :
                       '<strong>TIDAK DITERIMA</strong>';
-
       var next = isDiterima
         ? '<p>Peserta diharapkan melakukan daftar ulang paling lambat ' +
           Utils.escapeHtml(s.batas_daftar_ulang || 'yang akan diinformasikan lebih lanjut') +
@@ -529,17 +387,22 @@
         : isCadangan
         ? '<p>Peserta akan dihubungi kembali apabila terdapat kuota yang tersedia.</p>'
         : '<p>Kami mengucapkan terima kasih atas partisipasi peserta dalam seleksi ini.</p>';
-
+      var kop =
+        '<img src="kop-spmb.png" class="kop-img" alt="KOP" ' +
+        'onerror="this.outerHTML=window.__suratKopFallback__">';
+      window.__suratKopFallback__ =
+        '<div style="display:flex;align-items:center;gap:5mm;border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
+          '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" onerror="this.style.display=\'none\'">' +
+          '<div style="flex:1;text-align:center;">' +
+            '<h2 style="font-size:14pt;font-weight:700;margin:0;">' + Utils.escapeHtml(s.nama_sekolah || 'SMK MUHAMMADIYAH 1 SURAKARTA') + '</h2>' +
+            '<p style="font-size:9pt;margin:1mm 0 0;">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</p>' +
+            '<p style="font-size:9pt;margin:0;">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
+              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</p></div></div>';
       document.getElementById('print-area').innerHTML =
-        '<div class="surat">' +
-          '<h2>' + Utils.escapeHtml(s.nama_sekolah || '') + '</h2>' +
-          '<div class="sub">' + Utils.escapeHtml(s.alamat_sekolah || '') +
-            '<br>Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '') +
-            ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '') + '</div>' +
-          '<div style="text-align:right;margin-bottom:16px;">' +
-            'Nomor: ' + Utils.escapeHtml(h.letter_number || '-') +
-          '</div>' +
-          '<h3 style="text-align:center;margin-bottom:20px;">SURAT KETERANGAN HASIL SELEKSI</h3>' +
+        '<div class="surat">' + kop +
+          '<div class="judul">' +
+            '<h3>SURAT KETERANGAN HASIL SELEKSI</h3>' +
+            '<div class="nomor">Nomor: ' + Utils.escapeHtml(h.letter_number || '-') + '</div></div>' +
           '<div class="isi">' +
             '<p>' + kalimat + '</p>' +
             '<table style="margin:16px 0 16px 30px;">' +
@@ -548,25 +411,17 @@
               '<tr><td style="padding:3px 10px;">No. Pendaftaran</td><td>: ' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</td></tr>' +
               '<tr><td style="padding:3px 10px;">Konsentrasi</td><td>: ' + Utils.escapeHtml(p.konsentrasi_1 || '-') + '</td></tr>' +
             '</table>' +
-            '<p style="margin:14px 0;">dinyatakan: ' + hasilTeks + '</p>' +
-            next +
-            '<p style="margin-top:24px;">Demikian surat ini disampaikan untuk dipergunakan sebagaimana mestinya.</p>' +
-          '</div>' +
+            '<p style="margin:14px 0;">dinyatakan: ' + hasilTeks + '</p>' + next +
+            '<p style="margin-top:24px;">Demikian surat ini disampaikan untuk dipergunakan sebagaimana mestinya.</p></div>' +
           '<div class="ttd">' +
             'Surakarta, ' + Utils.formatTanggal(h.decision_date) + '<br>' +
             'Kepala Sekolah,<br><br><br><br>' +
-            '<strong>' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</strong>' +
-          '</div>' +
-        '</div>';
+            '<strong>' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</strong></div></div>';
       setTimeout(function () { window.print(); }, 200);
-    }).catch(function (err) {
-      Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
-    });
+    }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
   }
-
   loadSummary();
   loadList();
-
 })();
 </script>
 </body>
