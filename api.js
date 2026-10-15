@@ -226,6 +226,13 @@ const Api = {
     getResult: function (id) { return Api.call('selection.getResult', { registration_id: id }); },
     stats: function () { return Api.call('selection.stats', {}); }
   },
+  
+  /* ---- LAPORAN ---- */
+  report: {
+    dashboard: function () { return Api.call('report.dashboard', {}); },
+    exportData: function (params) { return Api.call('report.exportData', params || {}); },
+    daftarHadir: function (params) { return Api.call('report.daftarHadir', params || {}); }
+  },
 
   /* ---- NOTIFIKASI WA ---- */
   notif: {
