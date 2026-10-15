@@ -4,42 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px; background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
   }
   .card {
-    background: #fff;
-    border-radius: 12px;
+    background: #fff; border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    padding: 40px 32px;
-    max-width: 480px;
-    width: 100%;
-    text-align: center;
+    padding: 40px 32px; max-width: 480px; width: 100%; text-align: center;
   }
   .logo { max-width: 100px; margin-bottom: 16px; }
   h1 { font-size: 1.4rem; font-weight: 700; color: #1a5490; margin-bottom: 8px; }
   .subtitle { font-size: 0.95rem; color: #6b7280; margin-bottom: 32px; line-height: 1.5; }
   .btn {
-    display: block;
-    padding: 14px 24px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    text-decoration: none;
-    text-align: center;
-    margin-bottom: 12px;
-    transition: all 0.2s;
+    display: block; padding: 14px 24px; border-radius: 8px;
+    font-size: 1rem; font-weight: 500; text-decoration: none;
+    text-align: center; margin-bottom: 12px; transition: all 0.2s;
   }
   .btn-primary { background: #1a5490; color: #fff; }
   .btn-primary:hover { background: #143f6e; }
+  .btn-status { background: #d1fae5; color: #065f46; }
+  .btn-status:hover { background: #a7f3d0; }
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
   .footnote { font-size: 0.75rem; color: #6b7280; margin-top: 20px; }
@@ -52,11 +41,11 @@
   <h1 id="school-name">SMK Muhammadiyah 1 Surakarta</h1>
   <p class="subtitle">
     Sistem Penerimaan Murid Baru<br>
-    Tahun Pelajaran <span id="tahun-ajaran">...</span>
+    Tahun Pelajaran <span id="tahun-ajaran">2027/2028</span>
   </p>
 
   <a href="register.html" class="btn btn-primary">Daftar Sekarang</a>
-  <a href="status.html" class="btn btn-secondary" style="background:#d1fae5;color:#065f46;">Cek Status Pendaftaran</a>
+  <a href="status.html" class="btn btn-status">Cek Status Pendaftaran</a>
   <a href="login.html" class="btn btn-secondary">Login Petugas</a>
 
   <p class="footnote">
@@ -64,18 +53,13 @@
   </p>
 </div>
 
+<script src="config.js"></script>
+<script src="utils.js"></script>
 <script>
 (function () {
-  var APPS_URL = 'https://script.google.com/macros/s/AKfycby8LtbUq51b2exJNsESeQN2iTOtLgkMfDrl6lrzLXuBe65I0kNFsOuoF7qpFZGpDH3K/exec';
-
-  function b64encode(str) {
-    var utf8 = unescape(encodeURIComponent(str));
-    return btoa(utf8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  }
-
   var payload = { action: 'settings.getPublic', token: null, payload: {} };
-  var b64 = b64encode(JSON.stringify(payload));
-  var url = APPS_URL + '?data=' + encodeURIComponent(b64);
+  var b64 = Utils.b64UrlEncode(JSON.stringify(payload));
+  var url = APP_CONFIG.APPS_SCRIPT_URL + '?data=' + encodeURIComponent(b64);
 
   fetch(url, { method: 'GET', redirect: 'follow' })
     .then(function (r) { return r.text(); })
