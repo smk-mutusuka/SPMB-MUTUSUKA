@@ -190,6 +190,7 @@
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
+<script src="nav.js"></script>
 <script>
 (function () {
   'use strict';
@@ -212,72 +213,27 @@
       'BENDAHARA': 'Bendahara', 'SELEKSI': 'Panitia Seleksi' }[r] || r;
   }
 
-  var menus = {
-    ADMIN: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', active: true }]},
-      { group: 'Pendaftaran', items: [
-        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-      ]},
-      { group: 'Proses', items: [
-        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
-        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
-        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html' },
-        { icon: '📲', label: 'Notifikasi WA', href: 'notif.html' },
-        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
-      ]}
-    ],
-    WAWANCARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', active: true }]},
-      { group: 'Pendaftaran', items: [
-        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-      ]},
-      { group: 'Wawancara', items: [
-        { icon: '🎤', label: 'Wawancara', href: 'interview.html' }
-      ]}
-    ],
-    BENDAHARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', active: true }]},
-      { group: 'Pembayaran', items: [
-        { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' },
-        { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html' }
-      ]}
-    ],
-    SELEKSI: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', active: true }]},
-      { group: 'Seleksi', items: [
-        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }
-      ]}
-    ]
-  };
-  var nav = document.getElementById('nav');
-  var menu = menus[role] || menus.ADMIN;
-  var html = '';
-  menu.forEach(function (g) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
-    g.items.forEach(function (it) {
-      var cls = 'nav-item' + (it.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
-        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
-    });
-  });
-  nav.innerHTML = html;
+  // Sidebar — pakai Nav (sumber tunggal)
+  Nav.render('dashboard');
 
+  // Aksi cepat per role
   var quickByRole = {
     ADMIN: [
       { icon: '👥', label: 'Lihat Pendaftar', href: 'admin.html' },
+      { icon: '🎓', label: 'Daftar Ulang', href: 'daftar-ulang.html' },
       { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
     ],
-    WAWANCARA: [{ icon: '🎤', label: 'Mulai Wawancara', href: 'interview.html' }],
-    BENDAHARA: [{ icon: '💵', label: 'Input Pembayaran', href: 'payment.html' }],
-    SELEKSI: [{ icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }]
+    WAWANCARA: [
+      { icon: '🎤', label: 'Mulai Wawancara', href: 'interview.html' },
+      { icon: '👥', label: 'Cari Siswa', href: 'admin.html' }
+    ],
+    BENDAHARA: [
+      { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' },
+      { icon: '🎓', label: 'Daftar Ulang', href: 'daftar-ulang.html' }
+    ],
+    SELEKSI: [
+      { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }
+    ]
   };
   var qa = quickByRole[role] || quickByRole.ADMIN;
   var qaHtml = '';
