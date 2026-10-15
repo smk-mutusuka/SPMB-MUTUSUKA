@@ -10,10 +10,8 @@
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: #f5f7fa; color: #1f2937; min-height: 100vh; }
   .app { display: flex; min-height: 100vh; }
-
   .sidebar { width: 260px; background: #1a5490; color: #fff;
-    display: flex; flex-direction: column; flex-shrink: 0;
-    transition: transform 0.3s ease; }
+    display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease; }
   .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; align-items: center; gap: 12px; }
   .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
@@ -30,7 +28,6 @@
   .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
   .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.75rem; color: rgba(255,255,255,0.6); }
-
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
     padding: 12px 24px; display: flex; align-items: center;
@@ -49,41 +46,22 @@
     padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
     font-weight: 500; cursor: pointer; }
   .btn-logout:hover { background: #fecaca; }
-
   .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
-
   .tabs { display: flex; gap: 4px; margin-bottom: 20px;
     overflow-x: auto; border-bottom: 2px solid #e5e7eb; }
   .tab { padding: 10px 18px; background: none; border: none;
     font-size: 0.9rem; font-family: inherit; cursor: pointer;
-    color: #6b7280; border-bottom: 3px solid transparent; margin-bottom: -2px;
-    white-space: nowrap; }
+    color: #6b7280; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; }
   .tab:hover { color: #1a5490; }
   .tab.active { color: #1a5490; font-weight: 600; border-bottom-color: #1a5490; }
-
   .panel { background: #fff; padding: 20px; border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
-
-  .summary {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 14px; margin-bottom: 20px;
-  }
+  .summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px; margin-bottom: 20px; }
   .sum-card { background: #fff; padding: 16px 18px; border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    border-left: 4px solid #1a5490; }
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left: 4px solid #1a5490; }
   .sum-label { font-size: 0.78rem; color: #6b7280; margin-bottom: 4px; }
   .sum-value { font-size: 1.5rem; font-weight: 700; color: #1a5490; }
-  .sum-card.sc-draft { border-left-color: #6b7280; }
-  .sum-card.sc-draft .sum-value { color: #374151; }
-  .sum-card.sc-terkirim { border-left-color: #1e40af; }
-  .sum-card.sc-terkirim .sum-value { color: #1e40af; }
-  .sum-card.sc-verif { border-left-color: #059669; }
-  .sum-card.sc-verif .sum-value { color: #059669; }
-  .sum-card.sc-perbaikan { border-left-color: #d97706; }
-  .sum-card.sc-perbaikan .sum-value { color: #d97706; }
-  .sum-card.sc-batal { border-left-color: #dc2626; }
-  .sum-card.sc-batal .sum-value { color: #dc2626; }
-
   .bar-item { margin-bottom: 12px; }
   .bar-item .bar-label { display: flex; justify-content: space-between;
     font-size: 0.82rem; margin-bottom: 4px; }
@@ -93,11 +71,8 @@
     border-radius: 6px; overflow: hidden; }
   .bar-item .bar-fill { height: 100%; background: linear-gradient(90deg, #1a5490, #2d6fb8);
     border-radius: 6px; transition: width 0.4s; min-width: 2px; }
-
-  .section-title { font-size: 0.95rem; font-weight: 600;
-    color: #1f2937; margin: 18px 0 10px;
-    padding-bottom: 6px; border-bottom: 2px solid #e5e7eb; }
-
+  .section-title { font-size: 0.95rem; font-weight: 600; color: #1f2937;
+    margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #e5e7eb; }
   .filters { display: grid; grid-template-columns: 1fr 1fr auto;
     gap: 10px; align-items: end; margin-bottom: 14px; }
   .filters .field { display: flex; flex-direction: column; gap: 4px; }
@@ -106,9 +81,7 @@
     padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px;
     font-size: 0.9rem; font-family: inherit; background: #fff; }
   .filters input:focus, .filters select:focus {
-    outline: none; border-color: #1a5490;
-    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
-
+    outline: none; border-color: #1a5490; box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
   .btn { padding: 9px 16px; border: none; border-radius: 6px;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: inherit; transition: background 0.15s; }
@@ -116,14 +89,10 @@
   .btn-primary:hover { background: #143f6e; }
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
-  .btn-success { background: #d1fae5; color: #065f46; }
-  .btn-success:hover { background: #a7f3d0; }
   .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
-
   .preview-info { background: #eff6ff; border: 1px solid #bfdbfe;
     padding: 10px 14px; border-radius: 6px; font-size: 0.85rem;
     color: #1e40af; margin-bottom: 12px; }
-
   .table-wrap { overflow-x: auto; max-height: 400px; overflow-y: auto;
     border: 1px solid #e5e7eb; border-radius: 8px; }
   table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
@@ -132,74 +101,48 @@
     font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3px;
     position: sticky; top: 0; z-index: 1; }
   tbody tr:hover { background: #f9fafb; }
-
   .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
-
   .overlay { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.4); z-index: 99; }
   .overlay.show { display: block; }
-
   .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px; }
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .role-ADMIN { background: #dbeafe; color: #1e40af; }
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
-
-  /* ============================================================
-   * PRINT — DAFTAR HADIR A4 LANDSCAPE
-   * ============================================================ */
   #print-area { display: none; }
   @media print {
     @page { size: A4 landscape; margin: 10mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
-    #print-area {
-      display: block !important;
-      position: absolute; left: 0; top: 0; width: 100%;
-      font-family: 'Times New Roman', Times, serif; color: #000;
-    }
+    #print-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%;
+      font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
-    .print-doc { padding: 0; }
-    .print-doc .kop {
-      display: flex; align-items: center; gap: 5mm; margin-bottom: 2mm;
-    }
+    .print-doc .kop { display: flex; align-items: center; gap: 5mm; margin-bottom: 2mm; }
     .print-doc .kop-logo { width: 20mm; height: 20mm; object-fit: contain; flex-shrink: 0; }
     .print-doc .kop-teks { flex: 1; text-align: center; }
     .print-doc .kop-teks h2 { font-size: 14pt; font-weight: 700; margin: 0; line-height: 1.2; }
     .print-doc .kop-teks .kop-sub { font-size: 9pt; margin-top: 0.5mm; line-height: 1.3; }
-    .print-doc .kop-line { border: none; border-top: 2px solid #000;
-      border-bottom: 1px solid #000; height: 1.5mm; margin: 1mm 0 4mm 0; }
-    .print-doc h3 { text-align: center; font-size: 13pt;
-      text-decoration: underline; margin: 2mm 0 4mm 0; letter-spacing: 0.5px; }
+    .print-doc .kop-line { border: none; border-top: 2px solid #000; border-bottom: 1px solid #000;
+      height: 1.5mm; margin: 1mm 0 4mm 0; }
+    .print-doc h3 { text-align: center; font-size: 13pt; text-decoration: underline;
+      margin: 2mm 0 4mm 0; letter-spacing: 0.5px; }
     .print-doc .meta { text-align: center; font-size: 10pt; margin-bottom: 4mm; }
-
     .print-tbl { width: 100%; border-collapse: collapse; font-size: 9pt; }
-    .print-tbl th, .print-tbl td {
-      border: 1px solid #000; padding: 1.5mm 2mm; text-align: left;
-    }
+    .print-tbl th, .print-tbl td { border: 1px solid #000; padding: 1.5mm 2mm; text-align: left; }
     .print-tbl th { background: #e5e5e5; font-weight: 700; text-align: center; }
     .print-tbl td.no { text-align: center; width: 8mm; }
     .print-tbl td.jk { text-align: center; width: 10mm; }
-
-    .print-doc .ttd {
-      margin-top: 8mm; font-size: 10pt;
-      display: flex; justify-content: space-between;
-    }
+    .print-doc .ttd { margin-top: 8mm; font-size: 10pt; display: flex; justify-content: space-between; }
     .print-doc .ttd .ttd-kolom { text-align: center; }
     .print-doc .ttd .ttd-jabatan { margin-bottom: 20mm; }
     .print-doc .ttd .ttd-nama { font-weight: 700; text-decoration: underline; }
-
-    .print-doc .tanggal-print {
-      text-align: right; font-size: 10pt; margin-bottom: 3mm;
-    }
+    .print-doc .tanggal-print { text-align: right; font-size: 10pt; margin-bottom: 3mm; }
   }
-
   @media (max-width: 900px) {
-    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-      transform: translateX(-100%); }
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .btn-menu { display: block; }
     .user-meta { display: none; }
@@ -208,7 +151,6 @@
 </style>
 </head>
 <body>
-
 <div class="app no-print">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -218,9 +160,7 @@
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-footer">Versi 1.0.0</div>
   </aside>
-
   <div class="overlay" id="overlay"></div>
-
   <main class="main">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -236,7 +176,6 @@
         <button class="btn-logout" id="btn-logout">Keluar</button>
       </div>
     </header>
-
     <div class="content">
       <div class="tabs">
         <button class="tab active" data-tab="ringkasan">📊 Ringkasan</button>
@@ -247,88 +186,24 @@
     </div>
   </main>
 </div>
-
 <div id="print-area"></div>
-
 <script src="config.js"></script>
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
+<script src="nav.js"></script>
 <script>
 (function () {
   'use strict';
-
   if (!Auth.guard(['ADMIN', 'SELEKSI', 'BENDAHARA', 'WAWANCARA'])) return;
-
   var user = Auth.getUser();
   var role = user.role;
   var displayName = user.display_name || user.username;
-
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-role').innerHTML =
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
-
-  var menus = {
-    ADMIN: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pendaftaran', items: [
-        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-      ]},
-      { group: 'Proses', items: [
-        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
-        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
-        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html', active: true },
-        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
-      ]}
-    ],
-    WAWANCARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Wawancara', items: [
-        { icon: '🔍', label: 'Cari Siswa', href: 'interview.html' },
-        { icon: '📝', label: 'Riwayat Wawancara', href: 'interview.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html', active: true }
-      ]}
-    ],
-    BENDAHARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pembayaran', items: [
-        { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' },
-        { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html', active: true }
-      ]}
-    ],
-    SELEKSI: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Seleksi', items: [
-        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html', active: true }
-      ]}
-    ]
-  };
-  var nav = document.getElementById('nav');
-  var menu = menus[role] || menus.ADMIN;
-  var html = '';
-  menu.forEach(function (g) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
-    g.items.forEach(function (it) {
-      var cls = 'nav-item' + (it.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
-              '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
-    });
-  });
-  nav.innerHTML = html;
-
+  Nav.render('report');
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   document.getElementById('btn-menu').addEventListener('click', function () {
@@ -341,17 +216,12 @@
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
-
-  /* ============================================================
-   * KONSENTRASI
-   * ============================================================ */
   var konsentrasiList = [];
   Api.settings.listKonsentrasi().then(function (res) {
     if (res && res.success && res.data && res.data.konsentrasi) {
       konsentrasiList = res.data.konsentrasi;
     }
   }).catch(function () {});
-
   function opsiKonsentrasi() {
     var h = '<option value="">Semua Konsentrasi</option>';
     konsentrasiList.forEach(function (k) {
@@ -360,10 +230,6 @@
     });
     return h;
   }
-
-  /* ============================================================
-   * TABS
-   * ============================================================ */
   var currentTab = 'ringkasan';
   document.querySelector('.tabs').addEventListener('click', function (e) {
     var t = e.target.closest('.tab');
@@ -373,7 +239,6 @@
     currentTab = t.getAttribute('data-tab');
     renderTab();
   });
-
   function renderTab() {
     var c = document.getElementById('tab-content');
     c.innerHTML = '<div class="panel"><div class="empty">Memuat...</div></div>';
@@ -381,10 +246,6 @@
     else if (currentTab === 'ekspor') renderEkspor();
     else if (currentTab === 'hadir') renderHadir();
   }
-
-  /* ============================================================
-   * TAB 1: RINGKASAN
-   * ============================================================ */
   function renderRingkasan() {
     Api.report.dashboard().then(function (res) {
       if (!res.success) {
@@ -394,29 +255,16 @@
       }
       var d = res.data;
       var c = document.getElementById('tab-content');
-
       var html = '<div class="summary">' +
         '<div class="sum-card"><div class="sum-label">Total Pendaftar</div>' +
           '<div class="sum-value">' + (d.total || 0) + '</div></div>';
-
-      var statusLabels = {
-        'DRAFT': 'Draft', 'TERKIRIM': 'Terkirim',
-        'PERLU_PERBAIKAN': 'Perlu Perbaikan',
-        'TERVERIFIKASI': 'Terverifikasi', 'DIBATALKAN': 'Dibatalkan'
-      };
-      var statusClasses = {
-        'DRAFT': 'sc-draft', 'TERKIRIM': 'sc-terkirim',
-        'PERLU_PERBAIKAN': 'sc-perbaikan',
-        'TERVERIFIKASI': 'sc-verif', 'DIBATALKAN': 'sc-batal'
-      };
+      var statusLabels = { 'DRAFT': 'Draft', 'TERKIRIM': 'Terkirim',
+        'PERLU_PERBAIKAN': 'Perlu Perbaikan', 'TERVERIFIKASI': 'Terverifikasi', 'DIBATALKAN': 'Dibatalkan' };
       Object.keys(statusLabels).forEach(function (k) {
-        html += '<div class="sum-card ' + (statusClasses[k] || '') + '">' +
-          '<div class="sum-label">' + statusLabels[k] + '</div>' +
+        html += '<div class="sum-card"><div class="sum-label">' + statusLabels[k] + '</div>' +
           '<div class="sum-value">' + (d.per_status[k] || 0) + '</div></div>';
       });
       html += '</div>';
-
-      // Per konsentrasi
       html += '<div class="panel"><div class="section-title">Pendaftar per Konsentrasi Keahlian (Pilihan 1)</div>';
       if (d.per_konsentrasi && d.per_konsentrasi.length) {
         var maxK = Math.max.apply(null, d.per_konsentrasi.map(function (x) { return x.jumlah; }));
@@ -425,76 +273,51 @@
           html += '<div class="bar-item">' +
             '<div class="bar-label"><span class="bar-name">' + Utils.escapeHtml(k.id + ' — ' + k.nama) + '</span>' +
             '<span class="bar-count">' + k.jumlah + '</span></div>' +
-            '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
-          '</div>';
+            '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div></div>';
         });
-      } else {
-        html += '<div class="empty" style="padding:20px;">Belum ada data.</div>';
-      }
+      } else { html += '<div class="empty" style="padding:20px;">Belum ada data.</div>'; }
       html += '</div>';
-
-      // Per jenis kelamin
-      html += '<div class="panel"><div class="section-title">Per Jenis Kelamin</div>' +
-        '<div class="summary">' +
+      html += '<div class="panel"><div class="section-title">Per Jenis Kelamin</div><div class="summary">' +
         '<div class="sum-card"><div class="sum-label">Laki-laki</div>' +
           '<div class="sum-value">' + (d.per_jenis_kelamin.L || 0) + '</div></div>' +
         '<div class="sum-card"><div class="sum-label">Perempuan</div>' +
-          '<div class="sum-value">' + (d.per_jenis_kelamin.P || 0) + '</div></div>' +
-        '</div></div>';
-
-      // Top sekolah
+          '<div class="sum-value">' + (d.per_jenis_kelamin.P || 0) + '</div></div></div></div>';
       html += '<div class="panel"><div class="section-title">Top 10 Sekolah Asal</div>';
       if (d.top_sekolah && d.top_sekolah.length) {
         html += '<div class="table-wrap"><table><thead><tr>' +
-          '<th>Sekolah</th><th style="text-align:right;">Jumlah</th>' +
-          '</tr></thead><tbody>';
+          '<th>Sekolah</th><th style="text-align:right;">Jumlah</th></tr></thead><tbody>';
         d.top_sekolah.forEach(function (s) {
           html += '<tr><td>' + Utils.escapeHtml(s.nama) + '</td>' +
             '<td style="text-align:right;font-weight:600;">' + s.jumlah + '</td></tr>';
         });
         html += '</tbody></table></div>';
-      } else {
-        html += '<div class="empty" style="padding:20px;">Belum ada data.</div>';
-      }
+      } else { html += '<div class="empty" style="padding:20px;">Belum ada data.</div>'; }
       html += '</div>';
-
       c.innerHTML = html;
     }).catch(function (err) {
       document.getElementById('tab-content').innerHTML =
         '<div class="panel"><div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div></div>';
     });
   }
-
-  /* ============================================================
-   * TAB 2: EKSPOR
-   * ============================================================ */
   function renderEkspor() {
     var c = document.getElementById('tab-content');
     c.innerHTML =
       '<div class="panel">' +
-        '<div class="preview-info">' +
-          '📥 Pilih filter, lalu klik <strong>Download CSV</strong>. File CSV bisa dibuka di Excel / Google Sheets.' +
-        '</div>' +
+        '<div class="preview-info">📥 Pilih filter, lalu klik <strong>Download CSV</strong>. File CSV bisa dibuka di Excel / Google Sheets.</div>' +
         '<div class="filters">' +
           '<div class="field"><label>Status</label>' +
-            '<select id="ex-status">' +
-              '<option value="">Semua Status</option>' +
+            '<select id="ex-status"><option value="">Semua Status</option>' +
               '<option value="DRAFT">DRAFT</option>' +
               '<option value="TERKIRIM">TERKIRIM</option>' +
               '<option value="PERLU_PERBAIKAN">PERLU PERBAIKAN</option>' +
               '<option value="TERVERIFIKASI">TERVERIFIKASI</option>' +
-              '<option value="DIBATALKAN">DIBATALKAN</option>' +
-            '</select></div>' +
+              '<option value="DIBATALKAN">DIBATALKAN</option></select></div>' +
           '<div class="field"><label>Konsentrasi</label>' +
             '<select id="ex-kons">' + opsiKonsentrasi() + '</select></div>' +
           '<div><button class="btn btn-primary" id="btn-download">⬇ Download CSV</button></div>' +
-        '</div>' +
-        '<div id="ex-info" style="font-size:0.85rem;color:#6b7280;"></div>' +
-      '</div>' +
+        '</div></div>' +
       '<div class="panel"><div class="section-title">Preview Data</div>' +
-        '<div id="ex-preview" class="empty">Klik Download CSV untuk melihat preview.</div>' +
-      '</div>';
-
+        '<div id="ex-preview" class="empty">Klik Download CSV untuk melihat preview.</div></div>';
     document.getElementById('btn-download').addEventListener('click', function () {
       var status = document.getElementById('ex-status').value;
       var kons = document.getElementById('ex-kons').value;
@@ -508,18 +331,12 @@
           document.getElementById('ex-preview').innerHTML = '<div class="empty">Tidak ada data.</div>';
           return;
         }
-        // Preview 20 baris pertama
         renderPreviewEkspor(rows);
-        // Download CSV
         downloadCSV(rows, 'pendaftar-spmb-' + formatTanggalFile() + '.csv');
         Utils.toast(rows.length + ' baris siap diunduh', 'success');
-      }).catch(function (err) {
-        Utils.hideLoading();
-        Utils.toast('Error: ' + err.message, 'error');
-      });
+      }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
   }
-
   function renderPreviewEkspor(rows) {
     var c = document.getElementById('ex-preview');
     var previewCols = ['nomor_pendaftaran','nama_lengkap','nisn','jenis_kelamin',
@@ -527,12 +344,9 @@
     var headerLabels = {
       nomor_pendaftaran: 'No. Daftar', nama_lengkap: 'Nama', nisn: 'NISN',
       jenis_kelamin: 'JK', konsentrasi_1: 'Konsentrasi 1',
-      nama_ayah: 'Ayah', nama_ibu: 'Ibu', nomor_hp: 'HP',
-      status_pendaftaran: 'Status'
+      nama_ayah: 'Ayah', nama_ibu: 'Ibu', nomor_hp: 'HP', status_pendaftaran: 'Status'
     };
-    var h = '<div class="preview-info">' +
-      'Menampilkan ' + Math.min(20, rows.length) + ' dari ' + rows.length + ' baris. ' +
-      'File CSV lengkap sudah terunduh.</div>';
+    var h = '<div class="preview-info">Menampilkan ' + Math.min(20, rows.length) + ' dari ' + rows.length + ' baris.</div>';
     h += '<div class="table-wrap"><table><thead><tr>';
     previewCols.forEach(function (col) { h += '<th>' + Utils.escapeHtml(headerLabels[col] || col) + '</th>'; });
     h += '</tr></thead><tbody>';
@@ -544,45 +358,32 @@
     h += '</tbody></table></div>';
     c.innerHTML = h;
   }
-
   function formatTanggalFile() {
     var d = new Date();
     return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '-' +
            String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0');
   }
-
   function downloadCSV(rows, filename) {
-    var cols = [
-      'nomor_pendaftaran','nama_lengkap','nisn','nik','jenis_kelamin',
-      'tempat_lahir','tanggal_lahir','agama',
-      'alamat','rt','rw','desa_kelurahan','kecamatan','kabupaten_kota','provinsi','kode_pos',
-      'nomor_hp','email',
-      'sekolah_asal','npsn_asal','tahun_lulus','nomor_ijazah',
-      'konsentrasi_1','konsentrasi_2',
-      'nama_ayah','nama_ibu','nomor_kk','nomor_hp_ortu',
-      'pekerjaan_ayah','pekerjaan_ibu','penghasilan_ayah','penghasilan_ibu','status_yatim',
-      'status_pendaftaran','tanggal_daftar','submitted_at'
-    ];
+    var cols = ['nomor_pendaftaran','nama_lengkap','nisn','nik','jenis_kelamin',
+      'tempat_lahir','tanggal_lahir','agama','alamat','rt','rw','desa_kelurahan',
+      'kecamatan','kabupaten_kota','provinsi','kode_pos','nomor_hp','email',
+      'sekolah_asal','npsn_asal','tahun_lulus','nomor_ijazah','konsentrasi_1','konsentrasi_2',
+      'nama_ayah','nama_ibu','nomor_kk','nomor_hp_ortu','pekerjaan_ayah','pekerjaan_ibu',
+      'penghasilan_ayah','penghasilan_ibu','status_yatim','status_pendaftaran','tanggal_daftar','submitted_at'];
     var headerLabels = {
-      nomor_pendaftaran: 'Nomor Pendaftaran', nama_lengkap: 'Nama Lengkap',
-      nisn: 'NISN', nik: 'NIK', jenis_kelamin: 'Jenis Kelamin',
-      tempat_lahir: 'Tempat Lahir', tanggal_lahir: 'Tanggal Lahir', agama: 'Agama',
-      alamat: 'Alamat', rt: 'RT', rw: 'RW',
-      desa_kelurahan: 'Desa/Kelurahan', kecamatan: 'Kecamatan',
-      kabupaten_kota: 'Kabupaten/Kota', provinsi: 'Provinsi', kode_pos: 'Kode Pos',
-      nomor_hp: 'No. HP', email: 'Email',
-      sekolah_asal: 'Sekolah Asal', npsn_asal: 'NPSN Asal',
-      tahun_lulus: 'Tahun Lulus', nomor_ijazah: 'No. Ijazah',
-      konsentrasi_1: 'Konsentrasi 1', konsentrasi_2: 'Konsentrasi 2',
-      nama_ayah: 'Nama Ayah', nama_ibu: 'Nama Ibu',
-      nomor_kk: 'Nomor KK', nomor_hp_ortu: 'No. HP Orang Tua',
-      pekerjaan_ayah: 'Pekerjaan Ayah', pekerjaan_ibu: 'Pekerjaan Ibu',
-      penghasilan_ayah: 'Penghasilan Ayah', penghasilan_ibu: 'Penghasilan Ibu',
-      status_yatim: 'Status Orang Tua',
-      status_pendaftaran: 'Status Pendaftaran',
-      tanggal_daftar: 'Tanggal Daftar', submitted_at: 'Waktu Submit'
+      nomor_pendaftaran: 'Nomor Pendaftaran', nama_lengkap: 'Nama Lengkap', nisn: 'NISN',
+      nik: 'NIK', jenis_kelamin: 'Jenis Kelamin', tempat_lahir: 'Tempat Lahir',
+      tanggal_lahir: 'Tanggal Lahir', agama: 'Agama', alamat: 'Alamat', rt: 'RT', rw: 'RW',
+      desa_kelurahan: 'Desa/Kelurahan', kecamatan: 'Kecamatan', kabupaten_kota: 'Kabupaten/Kota',
+      provinsi: 'Provinsi', kode_pos: 'Kode Pos', nomor_hp: 'No. HP', email: 'Email',
+      sekolah_asal: 'Sekolah Asal', npsn_asal: 'NPSN Asal', tahun_lulus: 'Tahun Lulus',
+      nomor_ijazah: 'No. Ijazah', konsentrasi_1: 'Konsentrasi 1', konsentrasi_2: 'Konsentrasi 2',
+      nama_ayah: 'Nama Ayah', nama_ibu: 'Nama Ibu', nomor_kk: 'Nomor KK',
+      nomor_hp_ortu: 'No. HP Orang Tua', pekerjaan_ayah: 'Pekerjaan Ayah',
+      pekerjaan_ibu: 'Pekerjaan Ibu', penghasilan_ayah: 'Penghasilan Ayah',
+      penghasilan_ibu: 'Penghasilan Ibu', status_yatim: 'Status Orang Tua',
+      status_pendaftaran: 'Status Pendaftaran', tanggal_daftar: 'Tanggal Daftar', submitted_at: 'Waktu Submit'
     };
-
     var lines = [];
     lines.push(cols.map(function (c) { return headerLabels[c] || c; }).join(','));
     rows.forEach(function (r) {
@@ -595,60 +396,39 @@
       }).join(',');
       lines.push(line);
     });
-    // BOM UTF-8 agar Excel baca dengan benar
     var csv = '\uFEFF' + lines.join('\r\n');
     var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
-
-  /* ============================================================
-   * TAB 3: DAFTAR HADIR
-   * ============================================================ */
   function renderHadir() {
     var c = document.getElementById('tab-content');
     c.innerHTML =
       '<div class="panel">' +
-        '<div class="preview-info">' +
-          '🖨️ Cetak daftar hadir peserta wawancara (hanya pendaftar berstatus <strong>TERVERIFIKASI</strong>).' +
-        '</div>' +
+        '<div class="preview-info">🖨️ Cetak daftar hadir peserta wawancara (hanya pendaftar berstatus <strong>TERVERIFIKASI</strong>).</div>' +
         '<div class="filters">' +
           '<div class="field"><label>Konsentrasi</label>' +
             '<select id="hd-kons">' + opsiKonsentrasi() + '</select></div>' +
           '<div></div>' +
           '<div><button class="btn btn-primary" id="btn-print">🖨️ Cetak Daftar Hadir</button></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="panel">' +
-        '<div class="section-title">Preview</div>' +
-        '<div id="hd-preview" class="empty">Pilih konsentrasi lalu klik Cetak untuk melihat preview.</div>' +
-      '</div>';
-
+        '</div></div>' +
+      '<div class="panel"><div class="section-title">Preview</div>' +
+        '<div id="hd-preview" class="empty">Pilih konsentrasi lalu klik Cetak untuk melihat preview.</div></div>';
     document.getElementById('btn-print').addEventListener('click', function () {
       var kons = document.getElementById('hd-kons').value;
       Utils.showLoading('Menyiapkan daftar hadir...');
       Api.report.daftarHadir({ konsentrasi: kons }).then(function (res) {
         Utils.hideLoading();
         if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
-        if (!res.data.rows.length) {
-          Utils.toast('Tidak ada pendaftar terverifikasi untuk filter ini', 'warning');
-          return;
-        }
+        if (!res.data.rows.length) { Utils.toast('Tidak ada pendaftar terverifikasi untuk filter ini', 'warning'); return; }
         renderPreviewHadir(res.data);
         setTimeout(function () { window.print(); }, 300);
-      }).catch(function (err) {
-        Utils.hideLoading();
-        Utils.toast('Error: ' + err.message, 'error');
-      });
+      }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
   }
-
   function renderPreviewHadir(data) {
     var rows = data.rows;
     var s = data.sekolah;
@@ -658,10 +438,7 @@
       var opt = selKons.options[selKons.selectedIndex];
       konsLabel = ' — ' + opt.textContent;
     }
-
-    // Preview di halaman
-    var prevHtml = '<div class="preview-info">' +
-      'Total: <strong>' + rows.length + '</strong> peserta' + Utils.escapeHtml(konsLabel) + '</div>' +
+    var prevHtml = '<div class="preview-info">Total: <strong>' + rows.length + '</strong> peserta' + Utils.escapeHtml(konsLabel) + '</div>' +
       '<div class="table-wrap"><table><thead><tr>' +
         '<th>No</th><th>No. Pendaftaran</th><th>Nama</th><th>NISN</th>' +
         '<th>JK</th><th>Sekolah Asal</th><th>Konsentrasi</th><th>No. HP</th>' +
@@ -675,13 +452,10 @@
         '<td>' + Utils.escapeHtml(r.jenis_kelamin) + '</td>' +
         '<td>' + Utils.escapeHtml(r.sekolah_asal) + '</td>' +
         '<td>' + Utils.escapeHtml(r.konsentrasi) + '</td>' +
-        '<td>' + Utils.escapeHtml(r.nomor_hp) + '</td>' +
-      '</tr>';
+        '<td>' + Utils.escapeHtml(r.nomor_hp) + '</td></tr>';
     });
     prevHtml += '</tbody></table></div>';
     document.getElementById('hd-preview').innerHTML = prevHtml;
-
-    // Print area
     var today = Utils.formatTanggal(new Date().toISOString());
     var printHtml =
       '<div class="print-doc">' +
@@ -691,26 +465,19 @@
             '<h2>' + Utils.escapeHtml(s.nama_sekolah || '') + '</h2>' +
             '<div class="kop-sub">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</div>' +
             '<div class="kop-sub">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
-              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</div>' +
-          '</div>' +
-        '</div>' +
+              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</div></div></div>' +
         '<hr class="kop-line">' +
         '<h3>DAFTAR HADIR PESERTA WAWANCARA</h3>' +
-        '<div class="meta">' +
-          'Tahun Pelajaran ' + Utils.escapeHtml(s.tahun_ajaran || '') +
-          Utils.escapeHtml(konsLabel) +
-        '</div>' +
+        '<div class="meta">Tahun Pelajaran ' + Utils.escapeHtml(s.tahun_ajaran || '') + Utils.escapeHtml(konsLabel) + '</div>' +
         '<div class="tanggal-print">Surakarta, ' + Utils.escapeHtml(today) + '</div>' +
-        '<table class="print-tbl">' +
-          '<thead><tr>' +
+        '<table class="print-tbl"><thead><tr>' +
             '<th style="width:8mm;">No</th>' +
             '<th style="width:28mm;">No. Pendaftaran</th>' +
             '<th>Nama Lengkap</th>' +
             '<th style="width:22mm;">NISN</th>' +
             '<th style="width:10mm;">JK</th>' +
             '<th>Sekolah Asal</th>' +
-            '<th style="width:32mm;">Tanda Tangan</th>' +
-          '</tr></thead><tbody>';
+            '<th style="width:32mm;">Tanda Tangan</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       printHtml += '<tr>' +
         '<td class="no">' + r.no + '</td>' +
@@ -719,35 +486,20 @@
         '<td>' + Utils.escapeHtml(r.nisn) + '</td>' +
         '<td class="jk">' + Utils.escapeHtml(r.jenis_kelamin) + '</td>' +
         '<td>' + Utils.escapeHtml(r.sekolah_asal) + '</td>' +
-        '<td></td>' +
-      '</tr>';
+        '<td></td></tr>';
     });
     printHtml += '</tbody></table>';
-
-    // Tanda tangan
-    printHtml +=
-      '<div class="ttd">' +
-        '<div class="ttd-kolom">' +
-          '<div>Mengetahui,</div>' +
+    printHtml += '<div class="ttd">' +
+        '<div class="ttd-kolom"><div>Mengetahui,</div>' +
           '<div class="ttd-jabatan">Kepala Sekolah,</div>' +
-          '<div class="ttd-nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div>' +
-        '</div>' +
-        '<div class="ttd-kolom">' +
-          '<div>Panitia SPMB,</div>' +
+          '<div class="ttd-nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div></div>' +
+        '<div class="ttd-kolom"><div>Panitia SPMB,</div>' +
           '<div class="ttd-jabatan">Ketua,</div>' +
-          '<div class="ttd-nama">' + Utils.escapeHtml(s.ketua_panitia || '_______________') + '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-
+          '<div class="ttd-nama">' + Utils.escapeHtml(s.ketua_panitia || '_______________') + '</div></div>' +
+      '</div></div>';
     document.getElementById('print-area').innerHTML = printHtml;
   }
-
-  /* ============================================================
-   * BOOT
-   * ============================================================ */
   renderTab();
-
 })();
 </script>
 </body>
