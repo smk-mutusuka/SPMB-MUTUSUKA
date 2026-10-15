@@ -10,10 +10,8 @@
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: #f5f7fa; color: #1f2937; min-height: 100vh; }
   .app { display: flex; min-height: 100vh; }
-
   .sidebar { width: 260px; background: #1a5490; color: #fff;
-    display: flex; flex-direction: column; flex-shrink: 0;
-    transition: transform 0.3s ease; }
+    display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease; }
   .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; align-items: center; gap: 12px; }
   .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
@@ -30,7 +28,6 @@
   .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
   .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.75rem; color: rgba(255,255,255,0.6); }
-
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
     padding: 12px 24px; display: flex; align-items: center;
@@ -49,12 +46,9 @@
     padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
     font-weight: 500; cursor: pointer; }
   .btn-logout:hover { background: #fecaca; }
-
   .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
-
   .panel { background: #fff; padding: 20px; border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
-
   .filters { display: grid; grid-template-columns: 2fr 1fr 1fr auto;
     gap: 10px; align-items: end; }
   .filters .field { display: flex; flex-direction: column; gap: 4px; }
@@ -65,7 +59,6 @@
   .filters input:focus, .filters select:focus {
     outline: none; border-color: #1a5490;
     box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
-
   .btn { padding: 9px 16px; border: none; border-radius: 6px;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: inherit; transition: background 0.15s; }
@@ -80,7 +73,6 @@
   .btn-warn:hover { background: #fde68a; }
   .btn-danger { background: #fee2e2; color: #991b1b; }
   .btn-danger:hover { background: #fecaca; }
-
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
@@ -89,7 +81,6 @@
   tbody tr:hover { background: #f9fafb; }
   td.actions { white-space: nowrap; }
   td.actions .btn { margin-right: 4px; }
-
   .badge { display: inline-block; padding: 3px 9px; border-radius: 12px;
     font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
     letter-spacing: 0.3px; }
@@ -98,44 +89,27 @@
   .st-PERLU_PERBAIKAN { background: #fef3c7; color: #92400e; }
   .st-TERVERIFIKASI { background: #d1fae5; color: #065f46; }
   .st-DIBATALKAN { background: #fee2e2; color: #991b1b; }
-
   .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
-
-  .pagination {
-    display: flex; align-items: center; justify-content: center;
-    gap: 8px; margin-top: 16px; font-size: 0.85rem;
-  }
-  .pagination button {
-    padding: 6px 12px; border: 1px solid #d1d5db; background: #fff;
-    border-radius: 6px; cursor: pointer; font-family: inherit;
-  }
+  .pagination { display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-top: 16px; font-size: 0.85rem; }
+  .pagination button { padding: 6px 12px; border: 1px solid #d1d5db;
+    background: #fff; border-radius: 6px; cursor: pointer; font-family: inherit; }
   .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
   .pagination button:not(:disabled):hover { background: #f3f4f6; }
-
-  .detail-head {
-    display: flex; justify-content: space-between;
-    align-items: flex-start; gap: 16px; margin-bottom: 18px; flex-wrap: wrap;
-  }
+  .detail-head { display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
   .detail-head h2 { font-size: 1.2rem; color: #1a5490; margin-bottom: 4px; }
   .detail-head .sub { color: #6b7280; font-size: 0.85rem; }
-  .detail-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 14px 20px; margin-bottom: 8px;
-  }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px 20px; margin-bottom: 8px; }
   .field-pair { display: flex; flex-direction: column; gap: 2px; }
   .field-pair .lbl { font-size: 0.72rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.3px; }
   .field-pair .val { font-size: 0.92rem; color: #1f2937; word-break: break-word; }
-
-  .section-sub {
-    font-size: 0.95rem; font-weight: 600; color: #1f2937;
-    margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #e5e7eb;
-  }
-
+  .section-sub { font-size: 0.95rem; font-weight: 600; color: #1f2937;
+    margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #e5e7eb; }
   .doc-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .doc-item {
-    padding: 14px; border: 1px solid #e5e7eb; border-radius: 8px;
-    background: #f9fafb; font-size: 0.85rem;
-  }
+  .doc-item { padding: 14px; border: 1px solid #e5e7eb; border-radius: 8px;
+    background: #f9fafb; font-size: 0.85rem; }
   .doc-item .doc-type { font-weight: 700; color: #1a5490; margin-bottom: 6px;
     font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
   .doc-item .doc-meta { color: #6b7280; font-size: 0.78rem; margin-bottom: 4px; }
@@ -146,11 +120,9 @@
   .doc-item a:hover { text-decoration: underline; }
   .doc-item .doc-ok { color: #059669; font-weight: 600; }
   .doc-item .doc-wait { color: #d97706; font-weight: 600; }
-
   .overlay { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.4); z-index: 99; }
   .overlay.show { display: block; }
-
   .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
     font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
     letter-spacing: 0.3px; }
@@ -158,15 +130,11 @@
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
-
-  .retry-box {
-    text-align: center; padding: 40px 20px;
-  }
+  .retry-box { text-align: center; padding: 40px 20px; }
   .retry-box .ico { font-size: 3rem; margin-bottom: 12px; }
   .retry-box h2 { color: #dc2626; margin-bottom: 8px; font-size: 1.1rem; }
   .retry-box p { color: #6b7280; margin-bottom: 16px; font-size: 0.9rem; }
   .retry-box .btn { margin: 0 4px; }
-
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
@@ -183,7 +151,6 @@
 </style>
 </head>
 <body>
-
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -193,9 +160,7 @@
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-footer">Versi 1.0.0</div>
   </aside>
-
   <div class="overlay" id="overlay"></div>
-
   <main class="main">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -211,82 +176,26 @@
         <button class="btn-logout" id="btn-logout">Keluar</button>
       </div>
     </header>
-
     <div class="content" id="content"></div>
   </main>
 </div>
-
 <script src="config.js"></script>
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
+<script src="nav.js"></script>
 <script>
 (function () {
   'use strict';
-
   if (!Auth.guard([])) return;
-
   var user = Auth.getUser();
   var role = user.role || '-';
   var displayName = user.display_name || user.username || 'Petugas';
-
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-role').innerHTML =
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
-
-  var menus = {
-    ADMIN: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pendaftaran', items: [
-        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html', active: true },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-      ]},
-      { group: 'Proses', items: [
-        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
-        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
-        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html' },
-        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
-      ]}
-    ],
-    WAWANCARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Wawancara', items: [
-        { icon: '🔍', label: 'Cari Siswa', href: 'interview.html', active: true },
-        { icon: '📝', label: 'Riwayat Wawancara', href: 'interview.html' }
-      ]}
-    ],
-    BENDAHARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pembayaran', items: [
-        { icon: '💵', label: 'Input Pembayaran', href: 'payment.html', active: true },
-        { icon: '🧾', label: 'Riwayat Transaksi', href: 'payment.html' }
-      ]}
-    ],
-    SELEKSI: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Seleksi', items: [
-        { icon: '📋', label: 'Tetapkan Hasil', href: 'selection.html', active: true },
-        { icon: '📄', label: 'Cetak Pengumuman', href: 'selection.html' }
-      ]}
-    ]
-  };
-  var nav = document.getElementById('nav');
-  var menu = menus[role] || menus.ADMIN;
-  var html = '';
-  menu.forEach(function (g) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
-    g.items.forEach(function (it) {
-      var cls = 'nav-item' + (it.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
-              '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
-    });
-  });
-  nav.innerHTML = html;
-
+  Nav.render('admin');
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   document.getElementById('btn-menu').addEventListener('click', function () {
@@ -299,13 +208,10 @@
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
-
   var state = { q: '', status: '', konsentrasi: '', page: 1, per_page: 25 };
   var mode = Utils.getQueryParam('mode') || 'list';
   var detailId = Utils.getQueryParam('id');
   var konsentrasiList = [];
-
-  // Preload konsentrasi (background, jangan blocking)
   Api.settings.listKonsentrasi().then(function (res) {
     if (res && res.success && res.data && res.data.konsentrasi) {
       konsentrasiList = res.data.konsentrasi;
@@ -313,7 +219,6 @@
       if (sel) fillKonsentrasiSelect(sel);
     }
   }).catch(function () {});
-
   function fillKonsentrasiSelect(sel) {
     var cur = sel.value;
     sel.innerHTML = '<option value="">Semua</option>';
@@ -325,49 +230,37 @@
     });
     sel.value = cur || state.konsentrasi;
   }
-
   function namaKonsentrasi(id) {
     for (var i = 0; i < konsentrasiList.length; i++) {
       if (konsentrasiList[i].konsentrasi_id === id) return konsentrasiList[i].nama_konsentrasi;
     }
     return id || '-';
   }
-
-  /* ============================================================
-   * RENDER: LIST
-   * ============================================================ */
   function renderList() {
     document.getElementById('page-title').textContent = 'Daftar Pendaftar';
     document.getElementById('content').innerHTML =
-      '<div class="panel">' +
-        '<div class="filters">' +
-          '<div class="field"><label>Cari (nama / NISN / no. pendaftaran)</label>' +
-            '<input type="text" id="filter-q" placeholder="Ketik untuk mencari..." value="' + Utils.escapeHtml(state.q) + '"></div>' +
-          '<div class="field"><label>Status</label>' +
-            '<select id="filter-status">' +
-              '<option value="">Semua</option>' +
-              '<option value="DRAFT">DRAFT</option>' +
-              '<option value="TERKIRIM">TERKIRIM</option>' +
-              '<option value="PERLU_PERBAIKAN">PERLU PERBAIKAN</option>' +
-              '<option value="TERVERIFIKASI">TERVERIFIKASI</option>' +
-              '<option value="DIBATALKAN">DIBATALKAN</option>' +
-            '</select></div>' +
-          '<div class="field"><label>Konsentrasi</label>' +
-            '<select id="filter-konsentrasi"><option value="">Semua</option></select></div>' +
-          '<div><button class="btn btn-primary" id="btn-terapkan">Terapkan</button></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="panel">' +
-        '<div class="table-wrap" id="table-wrap">' +
-          '<div class="empty">Memuat data...</div>' +
-        '</div>' +
-        '<div class="pagination" id="pagination"></div>' +
-      '</div>';
-
+      '<div class="panel"><div class="filters">' +
+        '<div class="field"><label>Cari (nama / NISN / no. pendaftaran)</label>' +
+          '<input type="text" id="filter-q" placeholder="Ketik untuk mencari..." value="' + Utils.escapeHtml(state.q) + '"></div>' +
+        '<div class="field"><label>Status</label>' +
+          '<select id="filter-status">' +
+            '<option value="">Semua</option>' +
+            '<option value="DRAFT">DRAFT</option>' +
+            '<option value="TERKIRIM">TERKIRIM</option>' +
+            '<option value="PERLU_PERBAIKAN">PERLU PERBAIKAN</option>' +
+            '<option value="TERVERIFIKASI">TERVERIFIKASI</option>' +
+            '<option value="DIBATALKAN">DIBATALKAN</option>' +
+          '</select></div>' +
+        '<div class="field"><label>Konsentrasi</label>' +
+          '<select id="filter-konsentrasi"><option value="">Semua</option></select></div>' +
+        '<div><button class="btn btn-primary" id="btn-terapkan">Terapkan</button></div>' +
+      '</div></div>' +
+      '<div class="panel"><div class="table-wrap" id="table-wrap">' +
+        '<div class="empty">Memuat data...</div></div>' +
+        '<div class="pagination" id="pagination"></div></div>';
     document.getElementById('filter-status').value = state.status;
     var sel = document.getElementById('filter-konsentrasi');
     if (konsentrasiList.length) fillKonsentrasiSelect(sel);
-
     document.getElementById('btn-terapkan').addEventListener('click', function () {
       state.q = document.getElementById('filter-q').value.trim();
       state.status = document.getElementById('filter-status').value;
@@ -378,35 +271,25 @@
     document.getElementById('filter-q').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') document.getElementById('btn-terapkan').click();
     });
-
     loadList();
   }
-
   function loadList() {
     Utils.showLoading('Memuat daftar pendaftar...');
-    console.log('[SPMB] loadList → memanggil registration.list', state);
-    var t0 = Date.now();
-    Api.registration.list(state)
-      .then(function (res) {
-        Utils.hideLoading();
-        console.log('[SPMB] registration.list selesai dalam ' + (Date.now() - t0) + ' ms', res);
-        if (!res.success) {
-          document.getElementById('table-wrap').innerHTML =
-            '<div class="empty">Gagal memuat: ' + Utils.escapeHtml(res.message || '') + '</div>';
-          return;
-        }
-        renderTable(res.data);
-      })
-      .catch(function (err) {
-        Utils.hideLoading();
-        console.error('[SPMB] registration.list GAGAL:', err);
+    Api.registration.list(state).then(function (res) {
+      Utils.hideLoading();
+      if (!res.success) {
         document.getElementById('table-wrap').innerHTML =
-          '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '<br>' +
-          '<button class="btn btn-primary btn-sm" onclick="location.reload()" ' +
-          'style="margin-top:12px;">Ulangi</button></div>';
-      });
+          '<div class="empty">Gagal memuat: ' + Utils.escapeHtml(res.message || '') + '</div>';
+        return;
+      }
+      renderTable(res.data);
+    }).catch(function (err) {
+      Utils.hideLoading();
+      document.getElementById('table-wrap').innerHTML =
+        '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '<br>' +
+        '<button class="btn btn-primary btn-sm" onclick="location.reload()" style="margin-top:12px;">Ulangi</button></div>';
+    });
   }
-
   function renderTable(data) {
     var wrap = document.getElementById('table-wrap');
     if (!data.items || !data.items.length) {
@@ -414,7 +297,6 @@
       document.getElementById('pagination').innerHTML = '';
       return;
     }
-
     var rows = '';
     data.items.forEach(function (it) {
       var st = String(it.status_pendaftaran || 'DRAFT').toUpperCase();
@@ -427,27 +309,22 @@
         '<td>' + Utils.formatTanggal(it.tanggal_daftar || it.submitted_at) + '</td>' +
         '<td class="actions">' +
           '<button class="btn btn-secondary btn-sm btn-detail" data-id="' + Utils.escapeHtml(it.registration_id) + '">Detail</button>' +
-        '</td>' +
-      '</tr>';
+        '</td></tr>';
     });
-
     wrap.innerHTML =
       '<table><thead><tr>' +
         '<th>No. Pendaftaran</th><th>Nama</th><th>NISN</th>' +
         '<th>Konsentrasi 1</th><th>Status</th><th>Tgl Daftar</th><th>Aksi</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table>';
-
     wrap.querySelectorAll('.btn-detail').forEach(function (b) {
       b.addEventListener('click', function () {
         window.location.href = 'admin.html?mode=detail&id=' + encodeURIComponent(b.getAttribute('data-id'));
       });
     });
-
     var p = document.getElementById('pagination');
     p.innerHTML =
       '<button id="pg-prev"' + (data.page <= 1 ? ' disabled' : '') + '>‹ Prev</button>' +
-      '<span>Halaman ' + data.page + ' dari ' + data.total_pages +
-        ' (' + data.total + ' data)</span>' +
+      '<span>Halaman ' + data.page + ' dari ' + data.total_pages + ' (' + data.total + ' data)</span>' +
       '<button id="pg-next"' + (data.page >= data.total_pages ? ' disabled' : '') + '>Next ›</button>';
     document.getElementById('pg-prev').addEventListener('click', function () {
       if (state.page > 1) { state.page--; loadList(); }
@@ -456,73 +333,47 @@
       if (state.page < data.total_pages) { state.page++; loadList(); }
     });
   }
-
-  /* ============================================================
-   * RENDER: DETAIL — dengan timeout & error handling
-   * ============================================================ */
   function renderDetail() {
     document.getElementById('page-title').textContent = 'Detail Pendaftar';
     document.getElementById('content').innerHTML =
       '<div class="panel" id="detail-panel"><div class="empty">Memuat detail...</div></div>';
-
     if (!detailId) {
       document.getElementById('detail-panel').innerHTML =
         '<div class="empty">Parameter id tidak ditemukan. <a href="admin.html">Kembali</a></div>';
       return;
     }
-
     Utils.showLoading('Memuat detail...');
-    console.log('[SPMB] renderDetail → memanggil registration.get', detailId);
-    var t0 = Date.now();
-
-    // Timeout manual 30s untuk mencegah hang selamanya
     var timeoutHandle = setTimeout(function () {
       Utils.hideLoading();
-      console.warn('[SPMB] registration.get TIMEOUT setelah 30s');
-      showRetry('Server tidak menjawab dalam 30 detik. Kemungkinan server sedang sibuk atau lambat.');
+      showRetry('Server tidak menjawab dalam 30 detik.');
     }, 30000);
-
-    Api.registration.get(detailId)
-      .then(function (res) {
-        clearTimeout(timeoutHandle);
-        Utils.hideLoading();
-        console.log('[SPMB] registration.get selesai dalam ' + (Date.now() - t0) + ' ms', res);
-
-        if (!res.success) {
-          if (res.code === 'NOT_FOUND') {
-            document.getElementById('detail-panel').innerHTML =
-              '<div class="empty">Data pendaftar tidak ditemukan.<br>' +
-              '<a href="admin.html" class="btn btn-secondary btn-sm" style="margin-top:12px;">← Kembali</a></div>';
-            return;
-          }
-          showRetry('Gagal memuat: ' + (res.message || 'Error'));
+    Api.registration.get(detailId).then(function (res) {
+      clearTimeout(timeoutHandle);
+      Utils.hideLoading();
+      if (!res.success) {
+        if (res.code === 'NOT_FOUND') {
+          document.getElementById('detail-panel').innerHTML =
+            '<div class="empty">Data pendaftar tidak ditemukan.<br>' +
+            '<a href="admin.html" class="btn btn-secondary btn-sm" style="margin-top:12px;">← Kembali</a></div>';
           return;
         }
-
-        try {
-          renderDetailContent(res.data);
-        } catch (e) {
-          console.error('[SPMB] renderDetailContent ERROR:', e);
-          showRetry('Terjadi kesalahan saat menampilkan data: ' + e.message);
-        }
-      })
-      .catch(function (err) {
-        clearTimeout(timeoutHandle);
-        Utils.hideLoading();
-        console.error('[SPMB] registration.get GAGAL:', err);
-        var msg = err.message || 'Error tidak diketahui';
-        if (msg.indexOf('timeout') >= 0 || msg.indexOf('AbortError') >= 0) {
-          msg = 'Server tidak menjawab. Coba lagi.';
-        }
-        showRetry(msg);
-      });
+        showRetry('Gagal memuat: ' + (res.message || 'Error'));
+        return;
+      }
+      try { renderDetailContent(res.data); }
+      catch (e) { showRetry('Terjadi kesalahan: ' + e.message); }
+    }).catch(function (err) {
+      clearTimeout(timeoutHandle);
+      Utils.hideLoading();
+      var msg = err.message || 'Error';
+      if (msg.indexOf('timeout') >= 0 || msg.indexOf('AbortError') >= 0) msg = 'Server tidak menjawab. Coba lagi.';
+      showRetry(msg);
+    });
   }
-
   function showRetry(message) {
     document.getElementById('detail-panel').innerHTML =
       '<div class="retry-box">' +
-        '<div class="ico">⚠️</div>' +
-        '<h2>Gagal Memuat Data</h2>' +
+        '<div class="ico">⚠️</div><h2>Gagal Memuat Data</h2>' +
         '<p>' + Utils.escapeHtml(message) + '</p>' +
         '<button class="btn btn-primary" id="btn-retry">🔄 Coba Lagi</button>' +
         '<a href="admin.html" class="btn btn-secondary">← Kembali ke Daftar</a>' +
@@ -530,132 +381,77 @@
     var rb = document.getElementById('btn-retry');
     if (rb) rb.addEventListener('click', renderDetail);
   }
-
   function fieldPair(lbl, val) {
     return '<div class="field-pair"><div class="lbl">' + Utils.escapeHtml(lbl) + '</div>' +
            '<div class="val">' + Utils.escapeHtml(val || '-') + '</div></div>';
   }
-
   function labelStatusOrtu(s) {
-    return {
-      'LENGKAP': 'Kedua orang tua lengkap',
-      'YATIM_AYAH': 'Yatim (ayah meninggal)',
-      'YATIM_IBU': 'Yatim (ibu meninggal)',
-      'YATIM_PIATU': 'Yatim piatu (keduanya meninggal)'
-    }[s] || s || '-';
+    return { 'LENGKAP':'Kedua orang tua lengkap','YATIM_AYAH':'Yatim (ayah meninggal)',
+      'YATIM_IBU':'Yatim (ibu meninggal)','YATIM_PIATU':'Yatim piatu' }[s] || s || '-';
   }
-
   function labelPekerjaan(p) {
-    return {
-      'TIDAK_BEKERJA': 'Tidak Bekerja',
-      'BURUH': 'Buruh',
-      'PEDAGANG': 'Pedagang',
-      'PETANI': 'Petani',
-      'PEGAWAI_SWASTA': 'Pegawai Swasta',
-      'ASN': 'ASN',
-      'TNI_POLRI': 'TNI/Polri',
-      'JASA_PROFESIONAL': 'Jasa Profesional'
-    }[p] || p || '-';
+    return { 'TIDAK_BEKERJA':'Tidak Bekerja','BURUH':'Buruh','PEDAGANG':'Pedagang',
+      'PETANI':'Petani','PEGAWAI_SWASTA':'Pegawai Swasta','ASN':'ASN',
+      'TNI_POLRI':'TNI/Polri','JASA_PROFESIONAL':'Jasa Profesional' }[p] || p || '-';
   }
-
   function labelPenghasilan(p) {
-    return {
-      '0-750000': 'Rp 0 - 750.000',
-      '750000-1500000': 'Rp 750.000 - 1.500.000',
-      '1500000-2500000': 'Rp 1.500.000 - 2.500.000',
-      '>2500000': '> Rp 2.500.000'
-    }[p] || p || '-';
+    return { '0-750000':'Rp 0 - 750.000','750000-1500000':'Rp 750.000 - 1.500.000',
+      '1500000-2500000':'Rp 1.500.000 - 2.500.000','>2500000':'> Rp 2.500.000' }[p] || p || '-';
   }
-
   function labelJenisDokumen(j) {
-    return {
-      'FOTO': '📷 Foto Siswa',
-      'KK': '👨‍👩‍👧 Kartu Keluarga',
-      'AKTA': '📜 Akta Kelahiran',
-      'IJAZAH': '🎓 Ijazah'
-    }[j] || j || '-';
+    return { 'FOTO':'📷 Foto Siswa','KK':'👨‍👩‍👧 Kartu Keluarga',
+      'AKTA':'📜 Akta Kelahiran','IJAZAH':'🎓 Ijazah' }[j] || j || '-';
   }
-
   function renderDetailContent(d) {
-    if (!d || !d.pendaftaran) {
-      throw new Error('Struktur data tidak lengkap (pendaftaran tidak ada)');
-    }
+    if (!d || !d.pendaftaran) throw new Error('Struktur data tidak lengkap');
     var p = d.pendaftaran;
     var st = String(p.status_pendaftaran || 'DRAFT').toUpperCase();
-
     var html =
-      '<div class="detail-head">' +
-        '<div>' +
+      '<div class="detail-head"><div>' +
           '<h2>' + Utils.escapeHtml(p.nama_lengkap || '-') + '</h2>' +
           '<div class="sub">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + ' • NISN ' + Utils.escapeHtml(p.nisn || '-') + '</div>' +
-        '</div>' +
-        '<div style="display:flex;gap:8px;align-items:center;">' +
+        '</div><div style="display:flex;gap:8px;align-items:center;">' +
           '<span class="badge st-' + st + '">' + st.replace('_',' ') + '</span>' +
           '<a href="admin.html" class="btn btn-secondary btn-sm">← Kembali</a>' +
-        '</div>' +
-      '</div>';
-
+        '</div></div>';
     html += '<div class="section-sub">Data Siswa</div><div class="detail-grid">' +
-      fieldPair('Nama Lengkap', p.nama_lengkap) +
-      fieldPair('NISN', p.nisn) +
-      fieldPair('NIK', p.nik) +
-      fieldPair('Tempat Lahir', p.tempat_lahir) +
+      fieldPair('Nama Lengkap', p.nama_lengkap) + fieldPair('NISN', p.nisn) +
+      fieldPair('NIK', p.nik) + fieldPair('Tempat Lahir', p.tempat_lahir) +
       fieldPair('Tanggal Lahir', p.tanggal_lahir ? Utils.formatTanggal(p.tanggal_lahir) : '-') +
       fieldPair('Jenis Kelamin', p.jenis_kelamin === 'L' ? 'Laki-laki' : (p.jenis_kelamin === 'P' ? 'Perempuan' : p.jenis_kelamin)) +
-      fieldPair('Agama', p.agama) +
-      fieldPair('Kewarganegaraan', p.kewarganegaraan) +
-      fieldPair('Email', p.email) +
-      fieldPair('No. HP Siswa', p.nomor_hp) +
-    '</div>';
-
+      fieldPair('Agama', p.agama) + fieldPair('Kewarganegaraan', p.kewarganegaraan) +
+      fieldPair('Email', p.email) + fieldPair('No. HP Siswa', p.nomor_hp) + '</div>';
     html += '<div class="section-sub">Alamat</div><div class="detail-grid">' +
-      fieldPair('Alamat', p.alamat) +
-      fieldPair('RT/RW', (p.rt || '-') + ' / ' + (p.rw || '-')) +
-      fieldPair('Desa/Kelurahan', p.desa_kelurahan) +
-      fieldPair('Kecamatan', p.kecamatan) +
-      fieldPair('Kabupaten/Kota', p.kabupaten_kota) +
-      fieldPair('Provinsi', p.provinsi) +
-      fieldPair('Kode Pos', p.kode_pos) +
-    '</div>';
-
+      fieldPair('Alamat', p.alamat) + fieldPair('RT/RW', (p.rt || '-') + ' / ' + (p.rw || '-')) +
+      fieldPair('Desa/Kelurahan', p.desa_kelurahan) + fieldPair('Kecamatan', p.kecamatan) +
+      fieldPair('Kabupaten/Kota', p.kabupaten_kota) + fieldPair('Provinsi', p.provinsi) +
+      fieldPair('Kode Pos', p.kode_pos) + '</div>';
     html += '<div class="section-sub">Sekolah Asal</div><div class="detail-grid">' +
-      fieldPair('Sekolah', p.sekolah_asal) +
-      fieldPair('NPSN', p.npsn_asal) +
-      fieldPair('Tahun Lulus', p.tahun_lulus) +
-      fieldPair('No. Ijazah', p.nomor_ijazah) +
-    '</div>';
-
+      fieldPair('Sekolah', p.sekolah_asal) + fieldPair('NPSN', p.npsn_asal) +
+      fieldPair('Tahun Lulus', p.tahun_lulus) + fieldPair('No. Ijazah', p.nomor_ijazah) + '</div>';
     html += '<div class="section-sub">Pilihan Konsentrasi</div><div class="detail-grid">' +
       fieldPair('Pilihan 1', namaKonsentrasi(p.konsentrasi_1)) +
-      fieldPair('Pilihan 2', namaKonsentrasi(p.konsentrasi_2)) +
-    '</div>';
-
+      fieldPair('Pilihan 2', namaKonsentrasi(p.konsentrasi_2)) + '</div>';
     html += '<div class="section-sub">Data Keluarga</div>';
     var k = d.keluarga;
     if (k && (k.nama_ayah || k.nama_ibu)) {
       html += '<div class="detail-grid">' +
-        fieldPair('Nama Ayah', k.nama_ayah) +
-        fieldPair('Nama Ibu', k.nama_ibu) +
-        fieldPair('Nomor KK', k.nomor_kk) +
-        fieldPair('No. HP Orang Tua', k.nomor_hp_ortu) +
+        fieldPair('Nama Ayah', k.nama_ayah) + fieldPair('Nama Ibu', k.nama_ibu) +
+        fieldPair('Nomor KK', k.nomor_kk) + fieldPair('No. HP Orang Tua', k.nomor_hp_ortu) +
         fieldPair('Pekerjaan Ayah', labelPekerjaan(k.pekerjaan_ayah)) +
         fieldPair('Pekerjaan Ibu', labelPekerjaan(k.pekerjaan_ibu)) +
         fieldPair('Penghasilan Ayah', labelPenghasilan(k.penghasilan_ayah)) +
         fieldPair('Penghasilan Ibu', labelPenghasilan(k.penghasilan_ibu)) +
         fieldPair('Status Orang Tua', labelStatusOrtu(k.status_yatim)) +
-        fieldPair('Alamat Orang Tua', k.alamat_ortu) +
-      '</div>';
+        fieldPair('Alamat Orang Tua', k.alamat_ortu) + '</div>';
     } else {
       html += '<div class="empty" style="padding:16px;">Belum ada data keluarga.</div>';
     }
-
     html += '<div class="section-sub">Dokumen</div>';
     if (d.dokumen && d.dokumen.length) {
       html += '<div class="doc-list">';
       d.dokumen.forEach(function (doc) {
-        var url = doc.drive_file_id
-          ? 'https://drive.google.com/file/d/' + doc.drive_file_id + '/view'
-          : '';
+        var url = doc.drive_file_id ? 'https://drive.google.com/file/d/' + doc.drive_file_id + '/view' : '';
         var statusClass = doc.status_verifikasi === 'VALID' ? 'doc-ok' : 'doc-wait';
         html += '<div class="doc-item">' +
           '<div class="doc-type">' + labelJenisDokumen(doc.jenis_dokumen) + '</div>' +
@@ -669,12 +465,11 @@
     } else {
       html += '<div class="empty" style="padding:16px;">Belum ada dokumen.</div>';
     }
-
     if (role === 'ADMIN') {
       html += '<div class="section-sub">Aksi Verifikasi</div>' +
         '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
           '<label style="font-size:0.85rem;color:#6b7280;">Catatan (opsional):</label>' +
-          '<input type="text" id="catatan" placeholder="Catatan perbaikan / keterangan" ' +
+          '<input type="text" id="catatan" placeholder="Catatan perbaikan" ' +
             'style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;" ' +
             'value="' + Utils.escapeHtml(p.catatan_perbaikan || '') + '">' +
           '<button class="btn btn-success btn-sm" id="btn-verif-valid">✓ Terverifikasi</button>' +
@@ -682,16 +477,13 @@
           '<button class="btn btn-danger btn-sm" id="btn-verif-batal">✕ Batalkan</button>' +
         '</div>';
     }
-
     document.getElementById('detail-panel').innerHTML = html;
-
     if (role === 'ADMIN') {
       bindVerif('TERVERIFIKASI', 'btn-verif-valid', 'Status diubah menjadi TERVERIFIKASI');
       bindVerif('PERLU_PERBAIKAN', 'btn-verif-perbaikan', 'Status diubah menjadi PERLU PERBAIKAN');
       bindVerif('DIBATALKAN', 'btn-verif-batal', 'Status diubah menjadi DIBATALKAN');
     }
   }
-
   function bindVerif(status, btnId, okMsg) {
     var btn = document.getElementById(btnId);
     if (!btn) return;
@@ -699,26 +491,17 @@
       if (!confirm('Ubah status pendaftar ini menjadi ' + status + '?')) return;
       var catatan = (document.getElementById('catatan') || {}).value || '';
       Utils.showLoading('Menyimpan...');
-      Api.registration.verify(detailId, status, catatan)
-        .then(function (res) {
-          Utils.hideLoading();
-          if (res.success) {
-            Utils.toast(okMsg, 'success');
-            renderDetail();
-          } else {
-            Utils.toast('Gagal: ' + res.message, 'error');
-          }
-        })
-        .catch(function (err) {
-          Utils.hideLoading();
-          Utils.toast('Error: ' + err.message, 'error');
-        });
+      Api.registration.verify(detailId, status, catatan).then(function (res) {
+        Utils.hideLoading();
+        if (res.success) { Utils.toast(okMsg, 'success'); renderDetail(); }
+        else Utils.toast('Gagal: ' + res.message, 'error');
+      }).catch(function (err) {
+        Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+      });
     });
   }
-
   if (mode === 'detail') renderDetail();
   else renderList();
-
 })();
 </script>
 </body>
