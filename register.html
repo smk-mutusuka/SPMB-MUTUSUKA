@@ -758,7 +758,13 @@
       meta.textContent = 'Hasil kompres: ' + info.width + '×' + info.height + ' px • ' +
                           Math.round(info.size / 1024) + ' KB • Level ' + info.level;
 
-      Api.registration.uploadDokumen(state.token, jenis, b64, nama, mime)
+        Api.upload('registration.uploadDokumen', {
+        token: state.token,
+        jenis_dokumen: jenis,
+        base64: b64,
+        nama_file: nama,
+        mime_type: mime
+      }, { timeout: 120000 })
         .then(function (res) {
           bar.style.width = '100%';
           if (res.success) {
