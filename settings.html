@@ -173,12 +173,13 @@
 
     <div class="content">
       <div class="tabs" id="tabs">
-        <button class="tab active" data-tab="pengaturan">Pengaturan Umum</button>
-        <button class="tab" data-tab="users">Pengguna</button>
-        <button class="tab" data-tab="konsentrasi">Konsentrasi</button>
-        <button class="tab" data-tab="pertanyaan">Pertanyaan Wawancara</button>
-        <button class="tab" data-tab="template">Template WA</button>
-      </div>
+     <button class="tab active" data-tab="pengaturan">Pengaturan Umum</button>
+     <button class="tab" data-tab="gelombang">Gelombang</button>
+     <button class="tab" data-tab="users">Pengguna</button>
+     <button class="tab" data-tab="konsentrasi">Konsentrasi</button>
+     <button class="tab" data-tab="pertanyaan">Pertanyaan Wawancara</button>
+     <button class="tab" data-tab="template">Template WA</button>
+   </div>
       <div id="tab-content"></div>
     </div>
   </main>
@@ -210,7 +211,7 @@
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
 
   // Sidebar
-  var menus = [
+    var menus = [
     { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
     { group: 'Pendaftaran', items: [
       { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
@@ -219,10 +220,12 @@
     { group: 'Proses', items: [
       { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
       { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
-      { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
+      { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' },
+      { icon: '🎓', label: 'Daftar Ulang', href: 'daftar-ulang.html' }
     ]},
     { group: 'Sistem', items: [
-      { icon: '📊', label: 'Laporan', href: '#' },
+      { icon: '📊', label: 'Laporan', href: 'report.html' },
+      { icon: '📲', label: 'Notifikasi WA', href: 'notif.html' },
       { icon: '⚙️', label: 'Pengaturan', href: 'settings.html', active: true }
     ]}
   ];
@@ -263,10 +266,11 @@
     renderTab();
   });
 
-  function renderTab() {
+    function renderTab() {
     var c = document.getElementById('tab-content');
     c.innerHTML = '<div class="panel"><div class="empty">Memuat...</div></div>';
     if (currentTab === 'pengaturan') renderPengaturan();
+    else if (currentTab === 'gelombang') renderGelombang();
     else if (currentTab === 'users') renderUsers();
     else if (currentTab === 'konsentrasi') renderKonsentrasi();
     else if (currentTab === 'pertanyaan') renderPertanyaan();
@@ -332,6 +336,175 @@
     });
   }
 
+   /* ============ GELOMBANG ============ */
+  function renderGelombang() {
+    // Muat 2 hal paralel: info aktif + daftar lengkap
+    Promise.all([
+      Api.gelombang.getActive().catch(function () { return null; }),
+      Api.gelombang.list()
+    ]).then(function (results) {
+      var activeRes = results[0];
+      var listRes = results[1];
+
+      if (!listRes.success) {
+        document.getElementById('tab-content').innerHTML =
+          '<div class="panel"><div class="empty">Gagal: ' + Utils.escapeHtml(listRes.message) + '</div></div>';
+        return;
+      }
+
+      var list = listRes.data.gelombang || [];
+      var activeNow = (activeRes && activeRes.success && activeRes.data) ? activeRes.data.aktif : null;
+
+      // Info box gelombang aktif
+      var infoHtml = '';
+      if (activeNow) {
+        infoHtml =
+          '<div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;' +
+          'padding:12px 16px;margin-bottom:14px;font-size:0.88rem;color:#065f46;">' +
+            '🟢 <strong>Gelombang AKTIF hari ini:</strong> ' +
+            Utils.escapeHtml(activeNow.nama) + ' (' + Utils.escapeHtml(activeNow.kode) + ')<br>' +
+            '<span style="font-size:0.82rem;">' +
+              Utils.formatTanggal(activeNow.tanggal_mulai) + ' — ' +
+              Utils.formatTanggal(activeNow.tanggal_selesai) +
+            '</span>' +
+          '</div>';
+      } else {
+        infoHtml =
+          '<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;' +
+          'padding:12px 16px;margin-bottom:14px;font-size:0.88rem;color:#92400e;">' +
+            '⚠️ <strong>Tidak ada gelombang yang aktif hari ini.</strong> ' +
+            'Pendaftaran akan diblokir sampai Anda mengaktifkan gelombang.' +
+          '</div>';
+      }
+
+      // Tabel
+      var html = '<div class="panel">' + infoHtml +
+        '<div class="panel-head"><h3>Gelombang Pendaftaran</h3></div>' +
+        '<div class="table-wrap"><table><thead><tr>' +
+          '<th>Kode</th><th>Nama</th><th>Mulai</th><th>Selesai</th>' +
+          '<th>Urutan</th><th>Status</th><th>Keterangan</th><th>Aksi</th>' +
+        '</tr></thead><tbody>';
+
+      if (!list.length) {
+        html += '<tr><td colspan="8"><div class="empty">Belum ada gelombang.</div></td></tr>';
+      }
+
+      list.forEach(function (g) {
+        var isCurrent = activeNow && activeNow.gelombang_id === g.gelombang_id;
+        var aktifBadge = g.aktif
+          ? '<span class="badge bg-aktif">Aktif</span>'
+          : '<span class="badge bg-nonaktif">Nonaktif</span>';
+        if (isCurrent) aktifBadge += ' <span class="badge" ' +
+          'style="background:#7c3aed;color:#fff;">HARI INI</span>';
+
+        html += '<tr>' +
+          '<td><strong>' + Utils.escapeHtml(g.kode || '-') + '</strong></td>' +
+          '<td>' + Utils.escapeHtml(g.nama || '-') + '</td>' +
+          '<td>' + (g.tanggal_mulai ? Utils.formatTanggal(g.tanggal_mulai) : '-') + '</td>' +
+          '<td>' + (g.tanggal_selesai ? Utils.formatTanggal(g.tanggal_selesai) : '-') + '</td>' +
+          '<td>' + (g.urutan || 0) + '</td>' +
+          '<td>' + aktifBadge + '</td>' +
+          '<td style="font-size:0.82rem;color:#6b7280;">' +
+            Utils.escapeHtml(g.keterangan || '-') + '</td>' +
+          '<td class="actions">' +
+            '<button class="btn btn-secondary btn-sm" data-edit-g="' +
+              Utils.escapeHtml(g.gelombang_id) + '">Edit</button>' +
+          '</td>' +
+        '</tr>';
+      });
+
+      html += '</tbody></table></div></div>';
+      document.getElementById('tab-content').innerHTML = html;
+
+      // Bind edit
+      document.querySelectorAll('[data-edit-g]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var id = b.getAttribute('data-edit-g');
+          var g = list.filter(function (x) { return x.gelombang_id === id; })[0];
+          if (g) showGelombangForm(g);
+        });
+      });
+    }).catch(function (err) {
+      document.getElementById('tab-content').innerHTML =
+        '<div class="panel"><div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div></div>';
+    });
+  }
+
+  function showGelombangForm(g) {
+    openModal(
+      '<h3>Edit Gelombang</h3>' +
+      '<div class="field"><label>Kode</label>' +
+        '<input id="g-kode" type="text" value="' + Utils.escapeHtml(g.kode || '') + '" ' +
+          'style="text-transform:uppercase;" placeholder="INDEN / G1 / G2 / REGULER"></div>' +
+      '<div class="field"><label>Nama</label>' +
+        '<input id="g-nama" type="text" value="' + Utils.escapeHtml(g.nama || '') + '"></div>' +
+      '<div class="field"><label>Tanggal Mulai</label>' +
+        '<input id="g-mulai" type="date" value="' +
+          (g.tanggal_mulai ? g.tanggal_mulai.substring(0, 10) : '') + '"></div>' +
+      '<div class="field"><label>Tanggal Selesai</label>' +
+        '<input id="g-selesai" type="date" value="' +
+          (g.tanggal_selesai ? g.tanggal_selesai.substring(0, 10) : '') + '"></div>' +
+      '<div class="field"><label>Urutan</label>' +
+        '<input id="g-urutan" type="number" value="' + (g.urutan || 0) + '"></div>' +
+      '<div class="field"><label>Aktif</label>' +
+        '<select id="g-aktif">' +
+          '<option value="true"' + (g.aktif ? ' selected' : '') + '>Ya</option>' +
+          '<option value="false"' + (!g.aktif ? ' selected' : '') + '>Tidak</option>' +
+        '</select></div>' +
+      '<div class="field"><label>Keterangan</label>' +
+        '<textarea id="g-keterangan" placeholder="Opsional...">' +
+          Utils.escapeHtml(g.keterangan || '') + '</textarea></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+        '<button class="btn btn-primary" id="m-save">Simpan</button>' +
+      '</div>'
+    );
+
+    document.getElementById('m-cancel').addEventListener('click', closeModal);
+    document.getElementById('m-save').addEventListener('click', function () {
+      var kode = document.getElementById('g-kode').value.trim().toUpperCase();
+      var nama = document.getElementById('g-nama').value.trim();
+      var mulai = document.getElementById('g-mulai').value;
+      var selesai = document.getElementById('g-selesai').value;
+      var urutan = parseInt(document.getElementById('g-urutan').value, 10) || 0;
+      var aktif = document.getElementById('g-aktif').value === 'true';
+      var keterangan = document.getElementById('g-keterangan').value.trim();
+
+      if (!kode || !nama) {
+        Utils.toast('Kode dan nama wajib diisi', 'error'); return;
+      }
+      if (mulai && selesai && new Date(selesai) < new Date(mulai)) {
+        Utils.toast('Tanggal selesai tidak boleh sebelum tanggal mulai', 'error'); return;
+      }
+
+      var payload = {
+        gelombang_id: g.gelombang_id,
+        kode: kode,
+        nama: nama,
+        tanggal_mulai: mulai || '',
+        tanggal_selesai: selesai || '',
+        urutan: urutan,
+        aktif: aktif,
+        keterangan: keterangan
+      };
+
+      Utils.showLoading('Menyimpan...');
+      Api.gelombang.save(payload).then(function (r) {
+        Utils.hideLoading();
+        if (r.success) {
+          Utils.toast('Gelombang disimpan', 'success');
+          closeModal();
+          renderGelombang();
+        } else {
+          Utils.toast('Gagal: ' + r.message, 'error');
+        }
+      }).catch(function (err) {
+        Utils.hideLoading();
+        Utils.toast('Error: ' + err.message, 'error');
+      });
+    });
+  }
+ 
   /* ============ USERS ============ */
   function renderUsers() {
     Api.admin.listUsers().then(function (res) {
