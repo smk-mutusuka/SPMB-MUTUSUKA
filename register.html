@@ -7,142 +7,82 @@
 <link rel="icon" href="logo.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #f5f7fa; color: #1f2937; min-height: 100vh; line-height: 1.5;
-  }
-
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa; color: #1f2937; min-height: 100vh; line-height: 1.5; }
   .wrap { max-width: 820px; margin: 0 auto; padding: 24px 16px 60px; }
-
-  .header {
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 20px; padding-bottom: 16px;
-    border-bottom: 2px solid #e5e7eb;
-  }
+  .header { display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb; }
   .header img { width: 56px; height: 56px; object-fit: contain; }
   .header .htitle { font-size: 1.1rem; font-weight: 700; color: #1a5490; line-height: 1.3; }
   .header .hsub { font-size: 0.82rem; color: #6b7280; }
-
-  .card {
-    background: #fff; border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    padding: 24px; margin-bottom: 20px;
-  }
-
-  .stepper {
-    display: flex; gap: 4px; margin-bottom: 24px;
-    overflow-x: auto; padding-bottom: 4px;
-  }
-  .step-item {
-    flex: 1; min-width: 100px; text-align: center;
-    padding: 10px 6px; font-size: 0.72rem;
-    color: #9ca3af; position: relative;
-    border-top: 3px solid #e5e7eb;
-  }
-  .step-item .num {
-    display: inline-block; width: 22px; height: 22px;
-    line-height: 22px; border-radius: 50%;
-    background: #e5e7eb; color: #6b7280;
-    font-weight: 600; font-size: 0.72rem; margin-bottom: 4px;
-  }
+  .card { background: #fff; border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 20px; }
+  .stepper { display: flex; gap: 4px; margin-bottom: 24px;
+    overflow-x: auto; padding-bottom: 4px; }
+  .step-item { flex: 1; min-width: 100px; text-align: center;
+    padding: 10px 6px; font-size: 0.72rem; color: #9ca3af;
+    position: relative; border-top: 3px solid #e5e7eb; }
+  .step-item .num { display: inline-block; width: 22px; height: 22px;
+    line-height: 22px; border-radius: 50%; background: #e5e7eb; color: #6b7280;
+    font-weight: 600; font-size: 0.72rem; margin-bottom: 4px; }
   .step-item.active { color: #1a5490; border-top-color: #1a5490; font-weight: 600; }
   .step-item.active .num { background: #1a5490; color: #fff; }
   .step-item.done { color: #059669; border-top-color: #059669; }
   .step-item.done .num { background: #059669; color: #fff; }
-
   h2.step-title { font-size: 1.15rem; color: #1a5490; margin-bottom: 4px; }
   p.step-desc { font-size: 0.85rem; color: #6b7280; margin-bottom: 20px; }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 14px 16px;
-  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px 16px; }
   .grid .full { grid-column: 1 / -1; }
-
-  label {
-    display: block; font-size: 0.78rem; font-weight: 500;
-    color: #374151; margin-bottom: 5px;
-  }
+  label { display: block; font-size: 0.78rem; font-weight: 500;
+    color: #374151; margin-bottom: 5px; }
   label .req { color: #dc2626; }
   input[type=text], input[type=email], input[type=date],
   input[type=number], input[type=tel], input[type=password],
   select, textarea {
-    width: 100%; padding: 9px 12px;
-    border: 1px solid #d1d5db; border-radius: 6px;
-    font-size: 0.9rem; font-family: inherit;
-    background: #fff; color: #1f2937;
-  }
+    width: 100%; padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 0.9rem; font-family: inherit; background: #fff; color: #1f2937; }
   input:focus, select:focus, textarea:focus {
     outline: none; border-color: #1a5490;
-    box-shadow: 0 0 0 3px rgba(26,84,144,0.1);
-  }
+    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
   textarea { min-height: 70px; resize: vertical; }
   .hint { font-size: 0.72rem; color: #9ca3af; margin-top: 4px; }
   .error-msg { font-size: 0.72rem; color: #dc2626; margin-top: 4px; display: none; }
-  .field.invalid input, .field.invalid select, .field.invalid textarea {
-    border-color: #dc2626;
-  }
+  .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: #dc2626; }
   .field.invalid .error-msg { display: block; }
-
-  /* Auto-uppercase */
   input.auto-upper, textarea.auto-upper { text-transform: uppercase; }
   input.auto-upper::placeholder, textarea.auto-upper::placeholder { text-transform: none; }
-
-  .actions {
-    display: flex; gap: 10px; justify-content: space-between;
-    margin-top: 24px; padding-top: 20px;
-    border-top: 1px solid #e5e7eb;
-  }
-  .btn {
-    padding: 11px 22px; border: none; border-radius: 8px;
+  .actions { display: flex; gap: 10px; justify-content: space-between;
+    margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+  .btn { padding: 11px 22px; border: none; border-radius: 8px;
     font-size: 0.92rem; font-weight: 500; cursor: pointer;
-    font-family: inherit; transition: background 0.15s;
-  }
+    font-family: inherit; transition: background 0.15s; }
   .btn-primary { background: #1a5490; color: #fff; }
   .btn-primary:hover { background: #143f6e; }
   .btn-primary:disabled { background: #93b3d4; cursor: not-allowed; }
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
-
-  .keluarga-block {
-    border: 1px solid #e5e7eb; border-radius: 10px;
-    padding: 16px; margin-bottom: 14px; background: #f9fafb;
-  }
-  .keluarga-block h4 {
-    font-size: 0.9rem; color: #1a5490; margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .keluarga-block h4 .tag {
-    font-size: 0.68rem; padding: 2px 8px;
-    background: #dbeafe; color: #1e40af; border-radius: 10px;
-  }
-
+  .keluarga-block { border: 1px solid #e5e7eb; border-radius: 10px;
+    padding: 16px; margin-bottom: 14px; background: #f9fafb; }
+  .keluarga-block h4 { font-size: 0.9rem; color: #1a5490; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px; }
+  .keluarga-block h4 .tag { font-size: 0.68rem; padding: 2px 8px;
+    background: #dbeafe; color: #1e40af; border-radius: 10px; }
   .konsentrasi-list { display: grid; gap: 10px; }
-  .konsentrasi-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px; border: 2px solid #e5e7eb;
-    border-radius: 10px; cursor: pointer; transition: all 0.15s;
-  }
+  .konsentrasi-item { display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 10px;
+    cursor: pointer; transition: all 0.15s; }
   .konsentrasi-item:hover { border-color: #93b3d4; background: #f0f7ff; }
-  .konsentrasi-item.selected {
-    border-color: #1a5490; background: #eff6ff;
-  }
+  .konsentrasi-item.selected { border-color: #1a5490; background: #eff6ff; }
   .konsentrasi-item input { width: auto; margin: 0; }
   .konsentrasi-item .k-info { flex: 1; }
   .konsentrasi-item .k-name { font-weight: 600; font-size: 0.92rem; color: #1f2937; }
   .konsentrasi-item .k-id { font-size: 0.75rem; color: #6b7280; }
-
-  .upload-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 14px;
-  }
-  .upload-box {
-    border: 2px dashed #d1d5db; border-radius: 10px;
-    padding: 18px; text-align: center;
-    cursor: pointer; transition: all 0.15s; background: #f9fafb;
-    position: relative;
-  }
+  .upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px; }
+  .upload-box { border: 2px dashed #d1d5db; border-radius: 10px;
+    padding: 18px; text-align: center; cursor: pointer; transition: all 0.15s;
+    background: #f9fafb; position: relative; }
   .upload-box:hover { border-color: #1a5490; background: #eff6ff; }
   .upload-box.has-file { border-color: #059669; background: #ecfdf5; border-style: solid; }
   .upload-box .ub-ico { font-size: 1.6rem; margin-bottom: 6px; }
@@ -152,81 +92,49 @@
   .upload-box .ub-status.ok { color: #059669; }
   .upload-box .ub-status.err { color: #dc2626; }
   .upload-box .ub-meta { font-size: 0.68rem; color: #9ca3af; margin-top: 3px; }
-  .upload-box .ub-progress {
-    margin-top: 8px; height: 4px; background: #e5e7eb;
-    border-radius: 2px; overflow: hidden; display: none;
-  }
+  .upload-box .ub-progress { margin-top: 8px; height: 4px; background: #e5e7eb;
+    border-radius: 2px; overflow: hidden; display: none; }
   .upload-box .ub-progress.show { display: block; }
-  .upload-box .ub-progress .bar {
-    height: 100%; background: #1a5490; width: 0%;
-    transition: width 0.2s;
-  }
+  .upload-box .ub-progress .bar { height: 100%; background: #1a5490; width: 0%; transition: width 0.2s; }
   .upload-box input[type=file] { display: none; }
-
-  .info-kualitas {
-    background: #f0fdf4; border: 1px solid #bbf7d0;
+  .info-kualitas { background: #f0fdf4; border: 1px solid #bbf7d0;
     border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
-    font-size: 0.78rem; color: #166534; line-height: 1.5;
-  }
-
+    font-size: 0.78rem; color: #166534; line-height: 1.5; }
   .success-box { text-align: center; padding: 20px 0; }
   .success-box .ico { font-size: 3.5rem; margin-bottom: 10px; }
   .success-box h2 { color: #059669; margin-bottom: 8px; }
-  .success-box .nomor {
-    display: inline-block; font-size: 1.4rem; font-weight: 700;
-    color: #1a5490; padding: 10px 22px;
-    background: #eff6ff; border-radius: 10px;
-    letter-spacing: 1px; margin: 12px 0;
-  }
+  .success-box .nomor { display: inline-block; font-size: 1.4rem; font-weight: 700;
+    color: #1a5490; padding: 10px 22px; background: #eff6ff; border-radius: 10px;
+    letter-spacing: 1px; margin: 12px 0; }
   .success-box .note { font-size: 0.85rem; color: #6b7280; margin-top: 12px; }
-  .success-box .btn-wa {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: #25D366; color: #fff;
-    padding: 12px 22px; border-radius: 8px;
-    text-decoration: none; font-weight: 600;
-    margin-top: 16px;
-  }
-
-  #global-loading {
-    display: none; position: fixed; inset: 0;
+  .success-box .btn-wa { display: inline-flex; align-items: center; gap: 8px;
+    background: #25D366; color: #fff; padding: 12px 22px; border-radius: 8px;
+    text-decoration: none; font-weight: 600; margin-top: 16px; }
+  #global-loading { display: none; position: fixed; inset: 0;
     background: rgba(255,255,255,0.8); z-index: 999;
-    align-items: center; justify-content: center;
-  }
+    align-items: center; justify-content: center; }
   #global-loading.show { display: flex; }
-  .spinner {
-    width: 42px; height: 42px; border: 4px solid #e5e7eb;
+  .spinner { width: 42px; height: 42px; border: 4px solid #e5e7eb;
     border-top-color: #1a5490; border-radius: 50%;
-    animation: spin 0.8s linear infinite; margin: 0 auto 12px;
-  }
+    animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .token-bar {
-    background: #eff6ff; border: 1px solid #bfdbfe;
-    border-radius: 8px; padding: 10px 14px;
-    font-size: 0.8rem; color: #1e40af;
-    margin-bottom: 12px;
-  }
-  .token-bar .tk {
-    font-family: 'Consolas', monospace;
+  .token-bar { background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; color: #1e40af;
+    margin-bottom: 12px; }
+  .token-bar .tk { font-family: 'Consolas', monospace;
     background: #fff; padding: 3px 8px; border-radius: 4px;
-    font-size: 0.75rem; word-break: break-all;
-    display: block; margin: 6px 0;
-  }
+    font-size: 0.75rem; word-break: break-all; display: block; margin: 6px 0; }
   .token-bar .tb-note { font-size: 0.75rem; color: #1e40af; }
-
-  .nomor-bar {
-    background: #ecfdf5; border: 1px solid #a7f3d0;
-    border-radius: 8px; padding: 12px 16px;
-    margin-bottom: 12px;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    flex-wrap: wrap;
-  }
+  .nomor-bar { background: #ecfdf5; border: 1px solid #a7f3d0;
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; }
   .nomor-bar .label { font-size: 0.8rem; color: #065f46; }
-  .nomor-bar .nomor {
-    font-size: 1.15rem; font-weight: 700; color: #065f46;
-    letter-spacing: 1px; font-family: 'Consolas', monospace;
-  }
-
+  .nomor-bar .nomor { font-size: 1.15rem; font-weight: 700; color: #065f46;
+    letter-spacing: 1px; font-family: 'Consolas', monospace; }
+  .gelombang-bar { background: #fef3c7; border: 1px solid #fde68a;
+    border-radius: 8px; padding: 12px 16px; font-size: 0.85rem;
+    color: #92400e; margin-bottom: 12px; }
   @media (max-width: 600px) {
     .card { padding: 18px; }
     .actions { flex-direction: column-reverse; }
@@ -244,61 +152,32 @@
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script>
-/* ==== OVERRIDE TAHAN BANTING ==== */
-(function () {
-  if (typeof Utils === 'undefined') { window.Utils = {}; }
-  Utils.showLoading = function (text) {
-    var el = document.getElementById('global-loading');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'global-loading';
-      document.body.appendChild(el);
-    }
-    el.innerHTML = '<div style="text-align:center;">' +
-      '<div class="spinner"></div>' +
-      '<div class="loading-text" style="margin-top:8px;color:#1a5490;font-weight:500;"></div>' +
-      '</div>';
-    el.style.display = 'flex';
-    el.style.position = 'fixed';
-    el.style.inset = '0';
-    el.style.background = 'rgba(255,255,255,0.85)';
-    el.style.zIndex = '9999';
-    el.style.alignItems = 'center';
-    el.style.justifyContent = 'center';
-    var txt = el.querySelector('.loading-text');
-    if (txt) txt.textContent = text || 'Memuat...';
-  };
-  Utils.hideLoading = function () {
-    var el = document.getElementById('global-loading');
-    if (el) el.style.display = 'none';
-  };
-})();
-
 (function () {
   'use strict';
+  if (typeof Utils === 'undefined') { window.Utils = {}; }
+  if (!Utils.showLoading) Utils.showLoading = function (t) {
+    var el = document.getElementById('global-loading');
+    if (!el) { el = document.createElement('div'); el.id = 'global-loading'; document.body.appendChild(el); }
+    el.innerHTML = '<div style="text-align:center;"><div class="spinner"></div><div class="loading-text"></div></div>';
+    el.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:9999;align-items:center;justify-content:center;';
+    var x = el.querySelector('.loading-text'); if (x) x.textContent = t || 'Memuat...';
+  };
+  if (!Utils.hideLoading) Utils.hideLoading = function () {
+    var el = document.getElementById('global-loading'); if (el) el.style.display = 'none';
+  };
 
   var TOKEN_KEY = 'spmb_reg_token';
 
-  /* ============================================================
-   * OPSI DROPDOWN
-   * ============================================================ */
   var OPSI_PEKERJAAN = [
-    ['', '-- Pilih Pekerjaan --'],
-    ['TIDAK_BEKERJA', 'Tidak Bekerja'],
-    ['BURUH', 'Buruh'],
-    ['PEDAGANG', 'Pedagang'],
-    ['PETANI', 'Petani'],
-    ['PEGAWAI_SWASTA', 'Pegawai Swasta'],
-    ['ASN', 'ASN'],
-    ['TNI_POLRI', 'TNI/Polri'],
-    ['JASA_PROFESIONAL', 'Jasa Profesional']
+    ['', '-- Pilih Pekerjaan --'], ['TIDAK_BEKERJA', 'Tidak Bekerja'],
+    ['BURUH', 'Buruh'], ['PEDAGANG', 'Pedagang'], ['PETANI', 'Petani'],
+    ['PEGAWAI_SWASTA', 'Pegawai Swasta'], ['ASN', 'ASN'],
+    ['TNI_POLRI', 'TNI/Polri'], ['JASA_PROFESIONAL', 'Jasa Profesional']
   ];
   var OPSI_PENGHASILAN = [
-    ['', '-- Pilih Penghasilan --'],
-    ['0-750000', '0 - 750.000'],
+    ['', '-- Pilih Penghasilan --'], ['0-750000', '0 - 750.000'],
     ['750000-1500000', '750.000 - 1.500.000'],
-    ['1500000-2500000', '1.500.000 - 2.500.000'],
-    ['>2500000', '> 2.500.000']
+    ['1500000-2500000', '1.500.000 - 2.500.000'], ['>2500000', '> 2.500.000']
   ];
   var OPSI_STATUS_ORTU = [
     ['LENGKAP', 'Kedua orang tua lengkap'],
@@ -308,26 +187,15 @@
   ];
 
   var state = {
-    step: 1,
-    totalSteps: 6,
-    token: null,
-    registration_id: null,
-    nomor_pendaftaran: '',
-    konsentrasi: [],
-    data: {},
-    keluarga: {},
-    dokumen: {},
-    submitted: null,
-    tahun_ajaran: ''
+    step: 1, token: null, registration_id: null,
+    nomor_pendaftaran: '', konsentrasi: [], data: {},
+    keluarga: {}, dokumen: {}, submitted: null,
+    tahun_ajaran: '', gelombang: null
   };
 
-  /* ============================================================
-   * BOOT
-   * ============================================================ */
   function boot() {
     var urlToken = Utils.getQueryParam('token');
     var savedToken = sessionStorage.getItem(TOKEN_KEY);
-
     if (urlToken) resumeSession(urlToken);
     else if (savedToken) resumeSession(savedToken);
     else startSession();
@@ -335,88 +203,76 @@
 
   function startSession() {
     Utils.showLoading('Menyiapkan formulir...');
-    Api.registration.start()
-      .then(function (res) {
-        Utils.hideLoading();
-        if (!res.success) {
-          renderError(res.message || 'Gagal memulai pendaftaran');
-          return;
+    // Cek gelombang aktif dulu
+    Api.gelombang.getActive()
+      .then(function (gRes) {
+        if (gRes && gRes.success && gRes.data) {
+          state.gelombang = gRes.data.aktif;
+          if (!state.gelombang) {
+            Utils.hideLoading();
+            renderError('Pendaftaran sedang ditutup. Belum ada gelombang aktif saat ini.');
+            return null;
+          }
         }
+        return Api.registration.start();
+      })
+      .then(function (res) {
+        if (!res) return;
+        Utils.hideLoading();
+        if (!res.success) { renderError(res.message || 'Gagal'); return; }
         state.token = res.data.token;
         state.registration_id = res.data.registration_id;
         state.nomor_pendaftaran = res.data.nomor_pendaftaran || '';
         state.tahun_ajaran = res.data.tahun_ajaran;
         sessionStorage.setItem(TOKEN_KEY, state.token);
-        loadKonsentrasi().then(function () { renderApp(); });
+        loadKonsentrasi().then(renderApp);
       })
-      .catch(function (err) {
-        Utils.hideLoading();
-        renderError(err.message);
-      });
+      .catch(function (err) { Utils.hideLoading(); renderError(err.message); });
   }
 
   function resumeSession(token) {
-    Utils.showLoading('Memuat data pendaftaran...');
-    Api.registration.resume(token)
-      .then(function (res) {
-        Utils.hideLoading();
-        if (!res.success) {
-          if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
-            var lanjutBaru = confirm(
-              'Sesi pendaftaran Anda sudah berakhir (lebih dari 4 jam tidak ada aktivitas).\n\n' +
-              'Data yang belum terkirim akan hilang. Mulai pendaftaran baru?'
-            );
-            if (!lanjutBaru) {
-              window.location.href = 'index.html';
-              return;
-            }
-            sessionStorage.removeItem(TOKEN_KEY);
-            startSession();
-            return;
+    Utils.showLoading('Memuat data...');
+    Api.registration.resume(token).then(function (res) {
+      Utils.hideLoading();
+      if (!res.success) {
+        if (res.code === 'SESSION_EXPIRED' || res.code === 'UNAUTHORIZED') {
+          if (!confirm('Sesi berakhir. Mulai pendaftaran baru?')) {
+            window.location.href = 'index.html'; return;
           }
-          renderError(res.message || 'Gagal memuat');
-          return;
+          sessionStorage.removeItem(TOKEN_KEY); startSession(); return;
         }
-        state.token = token;
-        state.registration_id = res.data.registration_id;
-        state.data = res.data.data || {};
-        state.nomor_pendaftaran = state.data.nomor_pendaftaran || '';
-        state.tahun_ajaran = state.data.tahun_ajaran || '';
-        state.keluarga = res.data.keluarga || {};
-
-        (res.data.dokumen || []).forEach(function (d) {
-          state.dokumen[String(d.jenis_dokumen).toUpperCase()] = true;
-        });
-
-        if (state.data.status_pendaftaran === 'TERKIRIM' ||
-            state.data.status_pendaftaran === 'TERVERIFIKASI') {
-          state.submitted = {
-            nomor_pendaftaran: state.data.nomor_pendaftaran,
-            nama_lengkap: state.data.nama_lengkap,
-            nomor_wa_panitia: ''
-          };
-          renderSuccess();
-          return;
-        }
-        loadKonsentrasi().then(function () { renderApp(); });
-      })
-      .catch(function (err) {
-        Utils.hideLoading();
-        renderError(err.message);
+        renderError(res.message || 'Gagal memuat'); return;
+      }
+      state.token = token;
+      state.registration_id = res.data.registration_id;
+      state.data = res.data.data || {};
+      state.nomor_pendaftaran = state.data.nomor_pendaftaran || '';
+      state.tahun_ajaran = state.data.tahun_ajaran || '';
+      state.keluarga = res.data.keluarga || {};
+      (res.data.dokumen || []).forEach(function (d) {
+        state.dokumen[String(d.jenis_dokumen).toUpperCase()] = true;
       });
+      if (state.data.status_pendaftaran === 'TERKIRIM' || state.data.status_pendaftaran === 'TERVERIFIKASI') {
+        state.submitted = { nomor_pendaftaran: state.data.nomor_pendaftaran,
+          nama_lengkap: state.data.nama_lengkap, nomor_wa_panitia: '' };
+        renderSuccess(); return;
+      }
+      loadKonsentrasi().then(renderApp);
+    }).catch(function (err) { Utils.hideLoading(); renderError(err.message); });
   }
 
   function loadKonsentrasi() {
     return Api.settings.listKonsentrasi().then(function (res) {
-      if (res.success && res.data && res.data.konsentrasi) {
-        state.konsentrasi = res.data.konsentrasi;
-      }
+      if (res.success && res.data && res.data.konsentrasi) state.konsentrasi = res.data.konsentrasi;
     });
   }
 
-  /* ============================================================
-   * RENDER: ERROR
-   * ============================================================ */
+  function namaKonsentrasi(id) {
+    for (var i = 0; i < state.konsentrasi.length; i++)
+      if (state.konsentrasi[i].konsentrasi_id === id) return state.konsentrasi[i].nama_konsentrasi;
+    return id || '-';
+  }
+
   function renderError(msg) {
     document.getElementById('app').innerHTML =
       '<div class="card" style="text-align:center;padding:40px 20px;">' +
@@ -427,37 +283,29 @@
       '</div>';
   }
 
-  /* ============================================================
-   * RENDER: APP
-   * ============================================================ */
   function renderApp() {
     var app = document.getElementById('app');
     app.innerHTML =
       '<div class="header">' +
         '<img src="logo.png" alt="Logo" onerror="this.style.display=\'none\'">' +
-        '<div>' +
-          '<div class="htitle">Pendaftaran Murid Baru</div>' +
-          '<div class="hsub">SMK Muhammadiyah 1 Surakarta • TP ' + Utils.escapeHtml(state.tahun_ajaran || '2027/2028') + '</div>' +
-        '</div>' +
+        '<div><div class="htitle">Pendaftaran Murid Baru</div>' +
+        '<div class="hsub">SMK Muhammadiyah 1 Surakarta • TP ' +
+        Utils.escapeHtml(state.tahun_ajaran || '2027/2028') + '</div></div>' +
       '</div>' +
-      (state.nomor_pendaftaran
-        ? '<div class="nomor-bar">' +
-            '<div><div class="label">Nomor Pendaftaran Anda:</div>' +
-            '<div class="nomor">' + Utils.escapeHtml(state.nomor_pendaftaran) + '</div></div>' +
-            '<div class="label" style="text-align:right;max-width:280px;">' +
-              'Nomor ini tetap sama sampai Anda submit. Catat & simpan.' +
-            '</div>' +
-          '</div>'
+      (state.gelombang
+        ? '<div class="gelombang-bar">📅 <strong>' + Utils.escapeHtml(state.gelombang.nama) + '</strong> — ' +
+          Utils.escapeHtml(state.gelombang.keterangan || '') + '</div>'
         : '') +
-      '<div class="token-bar">' +
-        '🔑 <strong>Simpan tautan ini</strong> untuk melanjutkan jika browser tertutup:' +
+      (state.nomor_pendaftaran
+        ? '<div class="nomor-bar"><div><div class="label">Nomor Pendaftaran Anda:</div>' +
+          '<div class="nomor">' + Utils.escapeHtml(state.nomor_pendaftaran) + '</div></div>' +
+          '<div class="label" style="text-align:right;max-width:280px;">' +
+          'Nomor ini tetap sama sampai Anda submit.</div></div>'
+        : '') +
+      '<div class="token-bar">🔑 <strong>Simpan tautan ini</strong> untuk melanjutkan jika browser tertutup:' +
         '<div class="tk">' + Utils.escapeHtml(location.origin + location.pathname + '?token=' + state.token) + '</div>' +
-        '<div class="tb-note">Sesi aktif 4 jam sejak aktivitas terakhir.</div>' +
-      '</div>' +
-      '<div class="card">' +
-        '<div class="stepper" id="stepper"></div>' +
-        '<div id="step-content"></div>' +
-      '</div>';
+        '<div class="tb-note">Sesi aktif 4 jam sejak aktivitas terakhir.</div></div>' +
+      '<div class="card"><div class="stepper" id="stepper"></div><div id="step-content"></div></div>';
     renderStepper();
     renderStep();
   }
@@ -470,9 +318,8 @@
       var cls = 'step-item';
       if (n < state.step) cls += ' done';
       else if (n === state.step) cls += ' active';
-      html += '<div class="' + cls + '">' +
-        '<div class="num">' + (n < state.step ? '✓' : n) + '</div>' +
-        '<div>' + Utils.escapeHtml(label) + '</div></div>';
+      html += '<div class="' + cls + '"><div class="num">' + (n < state.step ? '✓' : n) +
+        '</div><div>' + Utils.escapeHtml(label) + '</div></div>';
     });
     document.getElementById('stepper').innerHTML = html;
   }
@@ -489,13 +336,10 @@
     }
   }
 
-  /* ============================================================
-   * STEP 1: DATA SISWA
-   * ============================================================ */
   function stepSiswa() {
     var d = state.data;
     return '<h2 class="step-title">Data Siswa</h2>' +
-      '<p class="step-desc">Isi data sesuai dokumen resmi (KK / Akta / Ijazah).</p>' +
+      '<p class="step-desc">Isi data sesuai dokumen resmi.</p>' +
       '<div class="grid">' +
         field('nama_lengkap', 'Nama Lengkap', 'text', d.nama_lengkap, true, 'full') +
         field('nisn', 'NISN', 'text', d.nisn, true) +
@@ -505,28 +349,23 @@
         select('jenis_kelamin', 'Jenis Kelamin', [['','-- Pilih --'],['L','Laki-laki'],['P','Perempuan']], d.jenis_kelamin, true) +
         select('agama', 'Agama', [['','-- Pilih --'],['Islam','Islam'],['Kristen','Kristen'],['Katolik','Katolik'],['Hindu','Hindu'],['Buddha','Buddha'],['Konghucu','Konghucu']], d.agama, true) +
         field('kewarganegaraan', 'Kewarganegaraan', 'text', d.kewarganegaraan || 'Indonesia', true) +
-      '</div>' +
-      navButtons(1);
+      '</div>' + navButtons(1);
   }
-
   function bindSiswa() {
     bindInputs();
     document.getElementById('btn-next').addEventListener('click', function () {
       var data = collectFields(['nama_lengkap','nisn','nik','tempat_lahir','tanggal_lahir','jenis_kelamin','agama','kewarganegaraan']);
-      if (!validateRequired({ nama_lengkap: 'Nama lengkap', nisn: 'NISN', tempat_lahir: 'Tempat lahir', tanggal_lahir: 'Tanggal lahir', jenis_kelamin: 'Jenis kelamin', agama: 'Agama' }, data)) return;
+      if (!validateRequired({ nama_lengkap:'Nama', nisn:'NISN', tempat_lahir:'Tempat lahir', tanggal_lahir:'Tanggal lahir', jenis_kelamin:'JK', agama:'Agama' }, data)) return;
       goNext('siswa', data);
     });
   }
 
-  /* ============================================================
-   * STEP 2: ALAMAT
-   * ============================================================ */
   function stepAlamat() {
     var d = state.data;
     return '<h2 class="step-title">Alamat & Kontak</h2>' +
-      '<p class="step-desc">Alamat tempat tinggal sesuai KK.</p>' +
+      '<p class="step-desc">Alamat sesuai KK.</p>' +
       '<div class="grid">' +
-        field('alamat', 'Alamat (Jalan/Dusun)', 'text', d.alamat, true, 'full') +
+        field('alamat', 'Alamat', 'text', d.alamat, true, 'full') +
         field('rt', 'RT', 'text', d.rt) +
         field('rw', 'RW', 'text', d.rw) +
         field('desa_kelurahan', 'Desa/Kelurahan', 'text', d.desa_kelurahan, true) +
@@ -536,76 +375,62 @@
         field('kode_pos', 'Kode Pos', 'text', d.kode_pos) +
         field('nomor_hp', 'No. HP Siswa', 'tel', d.nomor_hp, true, '', 'Contoh: 081234567890') +
         field('email', 'Email', 'email', d.email) +
-      '</div>' +
-      navButtons(2);
+      '</div>' + navButtons(2);
   }
-
   function bindAlamat() {
     bindInputs();
     document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
     document.getElementById('btn-next').addEventListener('click', function () {
       var data = collectFields(['alamat','rt','rw','desa_kelurahan','kecamatan','kabupaten_kota','provinsi','kode_pos','nomor_hp','email']);
-      if (!validateRequired({ alamat: 'Alamat', desa_kelurahan: 'Desa/Kelurahan', kecamatan: 'Kecamatan', kabupaten_kota: 'Kabupaten/Kota', provinsi: 'Provinsi', nomor_hp: 'No. HP Siswa' }, data)) return;
-      if (data.nomor_hp && !Utils.isValidWa(data.nomor_hp)) {
-        Utils.toast('Nomor HP tidak valid', 'error'); return;
-      }
+      if (!validateRequired({ alamat:'Alamat', desa_kelurahan:'Desa', kecamatan:'Kecamatan', kabupaten_kota:'Kabupaten', provinsi:'Provinsi', nomor_hp:'HP' }, data)) return;
+      if (data.nomor_hp && !Utils.isValidWa(data.nomor_hp)) { Utils.toast('No HP tidak valid', 'error'); return; }
       goNext('alamat', data);
     });
   }
 
-  /* ============================================================
-   * STEP 3: SEKOLAH ASAL
-   * ============================================================ */
   function stepSekolah() {
     var d = state.data;
     return '<h2 class="step-title">Sekolah Asal</h2>' +
-      '<p class="step-desc">Data sekolah sebelumnya (SMP/MTs/sederajat).</p>' +
       '<div class="grid">' +
         field('sekolah_asal', 'Nama Sekolah', 'text', d.sekolah_asal, true, 'full') +
-        field('npsn_asal', 'NPSN Sekolah', 'text', d.npsn_asal) +
+        field('npsn_asal', 'NPSN', 'text', d.npsn_asal) +
         field('tahun_lulus', 'Tahun Lulus', 'text', d.tahun_lulus, true) +
-        field('nomor_ijazah', 'Nomor Ijazah', 'text', d.nomor_ijazah) +
-      '</div>' +
-      navButtons(3);
+        field('nomor_ijazah', 'No. Ijazah', 'text', d.nomor_ijazah) +
+      '</div>' + navButtons(3);
   }
-
   function bindSekolah() {
     bindInputs();
     document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
     document.getElementById('btn-next').addEventListener('click', function () {
       var data = collectFields(['sekolah_asal','npsn_asal','tahun_lulus','nomor_ijazah']);
-      if (!validateRequired({ sekolah_asal: 'Nama sekolah', tahun_lulus: 'Tahun lulus' }, data)) return;
+      if (!validateRequired({ sekolah_asal:'Sekolah', tahun_lulus:'Tahun' }, data)) return;
       goNext('sekolah', data);
     });
   }
 
-  /* ============================================================
-   * STEP 4: KONSENTRASI
-   * ============================================================ */
   function stepKonsentrasi() {
     var d = state.data;
-    var listHtml1 = '', listHtml2 = '';
+    var l1 = '', l2 = '';
     state.konsentrasi.forEach(function (k) {
-      var id = k.konsentrasi_id;
-      var name = k.nama_konsentrasi;
-      listHtml1 += '<label class="konsentrasi-item' + (d.konsentrasi_1 === id ? ' selected' : '') + '">' +
-        '<input type="radio" name="konsentrasi_1" value="' + Utils.escapeHtml(id) + '"' + (d.konsentrasi_1 === id ? ' checked' : '') + '>' +
+      var id = k.konsentrasi_id, name = k.nama_konsentrasi;
+      l1 += '<label class="konsentrasi-item' + (d.konsentrasi_1 === id ? ' selected' : '') + '">' +
+        '<input type="radio" name="konsentrasi_1" value="' + Utils.escapeHtml(id) + '"' +
+        (d.konsentrasi_1 === id ? ' checked' : '') + '>' +
         '<div class="k-info"><div class="k-name">' + Utils.escapeHtml(name) + '</div>' +
         '<div class="k-id">' + Utils.escapeHtml(id) + '</div></div></label>';
-      listHtml2 += '<label class="konsentrasi-item' + (d.konsentrasi_2 === id ? ' selected' : '') + '">' +
-        '<input type="radio" name="konsentrasi_2" value="' + Utils.escapeHtml(id) + '"' + (d.konsentrasi_2 === id ? ' checked' : '') + '>' +
+      l2 += '<label class="konsentrasi-item' + (d.konsentrasi_2 === id ? ' selected' : '') + '">' +
+        '<input type="radio" name="konsentrasi_2" value="' + Utils.escapeHtml(id) + '"' +
+        (d.konsentrasi_2 === id ? ' checked' : '') + '>' +
         '<div class="k-info"><div class="k-name">' + Utils.escapeHtml(name) + '</div>' +
         '<div class="k-id">' + Utils.escapeHtml(id) + '</div></div></label>';
     });
     return '<h2 class="step-title">Pilihan Konsentrasi</h2>' +
-      '<p class="step-desc">Pilih dua konsentrasi keahlian dengan urutan prioritas.</p>' +
+      '<p class="step-desc">Pilih dua konsentrasi dengan urutan prioritas.</p>' +
       '<h4 style="font-size:0.85rem;color:#1a5490;margin:12px 0 8px;">Pilihan 1 (Wajib)</h4>' +
-      '<div class="konsentrasi-list" id="list-k1">' + listHtml1 + '</div>' +
+      '<div class="konsentrasi-list" id="list-k1">' + l1 + '</div>' +
       '<h4 style="font-size:0.85rem;color:#1a5490;margin:16px 0 8px;">Pilihan 2 (Opsional)</h4>' +
-      '<div class="konsentrasi-list" id="list-k2">' + listHtml2 + '</div>' +
-      navButtons(4);
+      '<div class="konsentrasi-list" id="list-k2">' + l2 + '</div>' + navButtons(4);
   }
-
   function bindKonsentrasi() {
     document.querySelectorAll('#list-k1 .konsentrasi-item').forEach(function (el) {
       el.addEventListener('click', function () {
@@ -623,92 +448,66 @@
     document.getElementById('btn-next').addEventListener('click', function () {
       var k1El = document.querySelector('input[name=konsentrasi_1]:checked');
       var k2El = document.querySelector('input[name=konsentrasi_2]:checked');
-      var k1 = k1El ? k1El.value : '';
-      var k2 = k2El ? k2El.value : '';
+      var k1 = k1El ? k1El.value : '', k2 = k2El ? k2El.value : '';
       if (!k1) { Utils.toast('Pilih konsentrasi 1', 'error'); return; }
-      if (k2 && k2 === k1) { Utils.toast('Konsentrasi 2 tidak boleh sama dengan 1', 'error'); return; }
+      if (k2 && k2 === k1) { Utils.toast('Konsentrasi 2 tidak boleh sama', 'error'); return; }
       goNext('konsentrasi', { konsentrasi_1: k1, konsentrasi_2: k2 });
     });
   }
 
-  /* ============================================================
-   * STEP 5: KELUARGA
-   * ============================================================ */
   function stepKeluarga() {
     var k = state.keluarga || {};
     return '<h2 class="step-title">Data Keluarga</h2>' +
       '<p class="step-desc">Isi data orang tua / wali.</p>' +
-      '<div class="keluarga-block">' +
-        '<h4>Data Orang Tua <span class="tag">Wajib</span></h4>' +
-        '<div class="grid">' +
-          field('nama_ayah', 'Nama Ayah', 'text', k.nama_ayah, true) +
-          field('nama_ibu', 'Nama Ibu', 'text', k.nama_ibu, true) +
-          field('nomor_kk', 'Nomor Kartu Keluarga', 'text', k.nomor_kk, true) +
-          field('nomor_hp_ortu', 'No. HP Orang Tua', 'tel', k.nomor_hp_ortu, true, '', 'Contoh: 081234567890') +
-          select('pekerjaan_ayah', 'Pekerjaan Ayah', OPSI_PEKERJAAN, k.pekerjaan_ayah, true) +
-          select('pekerjaan_ibu', 'Pekerjaan Ibu', OPSI_PEKERJAAN, k.pekerjaan_ibu, true) +
-          select('penghasilan_ayah', 'Penghasilan Ayah', OPSI_PENGHASILAN, k.penghasilan_ayah, true) +
-          select('penghasilan_ibu', 'Penghasilan Ibu', OPSI_PENGHASILAN, k.penghasilan_ibu, true) +
-          select('status_yatim', 'Status Orang Tua', OPSI_STATUS_ORTU, k.status_yatim || 'LENGKAP', true, 'full') +
-          field('alamat_ortu', 'Alamat Orang Tua (isi jika beda dengan siswa)', 'text', k.alamat_ortu, false, 'full') +
-        '</div>' +
-      '</div>' +
-      navButtons(5);
+      '<div class="keluarga-block"><h4>Data Orang Tua <span class="tag">Wajib</span></h4>' +
+      '<div class="grid">' +
+        field('nama_ayah', 'Nama Ayah', 'text', k.nama_ayah, true) +
+        field('nama_ibu', 'Nama Ibu', 'text', k.nama_ibu, true) +
+        field('nomor_kk', 'Nomor Kartu Keluarga', 'text', k.nomor_kk, true) +
+        field('nomor_hp_ortu', 'No. HP Orang Tua', 'tel', k.nomor_hp_ortu, true, '', 'Contoh: 081234567890') +
+        select('pekerjaan_ayah', 'Pekerjaan Ayah', OPSI_PEKERJAAN, k.pekerjaan_ayah, true) +
+        select('pekerjaan_ibu', 'Pekerjaan Ibu', OPSI_PEKERJAAN, k.pekerjaan_ibu, true) +
+        select('penghasilan_ayah', 'Penghasilan Ayah', OPSI_PENGHASILAN, k.penghasilan_ayah, true) +
+        select('penghasilan_ibu', 'Penghasilan Ibu', OPSI_PENGHASILAN, k.penghasilan_ibu, true) +
+        select('status_yatim', 'Status Orang Tua', OPSI_STATUS_ORTU, k.status_yatim || 'LENGKAP', true, 'full') +
+        field('alamat_ortu', 'Alamat Orang Tua (opsional)', 'text', k.alamat_ortu, false, 'full') +
+      '</div></div>' + navButtons(5);
   }
-
   function bindKeluarga() {
     bindInputs();
     document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
     document.getElementById('btn-next').addEventListener('click', function () {
       var k = {
-        nama_ayah: val('nama_ayah'),
-        nama_ibu: val('nama_ibu'),
-        nomor_kk: val('nomor_kk'),
-        nomor_hp_ortu: val('nomor_hp_ortu'),
-        pekerjaan_ayah: val('pekerjaan_ayah'),
-        pekerjaan_ibu: val('pekerjaan_ibu'),
-        penghasilan_ayah: val('penghasilan_ayah'),
-        penghasilan_ibu: val('penghasilan_ibu'),
-        status_yatim: val('status_yatim') || 'LENGKAP',
-        alamat_ortu: val('alamat_ortu')
+        nama_ayah: val('nama_ayah'), nama_ibu: val('nama_ibu'),
+        nomor_kk: val('nomor_kk'), nomor_hp_ortu: val('nomor_hp_ortu'),
+        pekerjaan_ayah: val('pekerjaan_ayah'), pekerjaan_ibu: val('pekerjaan_ibu'),
+        penghasilan_ayah: val('penghasilan_ayah'), penghasilan_ibu: val('penghasilan_ibu'),
+        status_yatim: val('status_yatim') || 'LENGKAP', alamat_ortu: val('alamat_ortu')
       };
-      if (!k.nama_ayah) { Utils.toast('Nama ayah wajib diisi', 'error'); return; }
-      if (!k.nama_ibu) { Utils.toast('Nama ibu wajib diisi', 'error'); return; }
-      if (!k.nomor_kk) { Utils.toast('Nomor KK wajib diisi', 'error'); return; }
-      if (!k.nomor_hp_ortu) { Utils.toast('No. HP orang tua wajib diisi', 'error'); return; }
-      if (!k.pekerjaan_ayah) { Utils.toast('Pekerjaan ayah wajib dipilih', 'error'); return; }
-      if (!k.pekerjaan_ibu) { Utils.toast('Pekerjaan ibu wajib dipilih', 'error'); return; }
-      if (!k.penghasilan_ayah) { Utils.toast('Penghasilan ayah wajib dipilih', 'error'); return; }
-      if (!k.penghasilan_ibu) { Utils.toast('Penghasilan ibu wajib dipilih', 'error'); return; }
-      if (k.nomor_hp_ortu && !Utils.isValidWa(k.nomor_hp_ortu)) {
-        Utils.toast('No. HP orang tua tidak valid', 'error'); return;
+      if (!k.nama_ayah || !k.nama_ibu || !k.nomor_kk || !k.nomor_hp_ortu ||
+          !k.pekerjaan_ayah || !k.pekerjaan_ibu || !k.penghasilan_ayah || !k.penghasilan_ibu) {
+        Utils.toast('Lengkapi field wajib', 'error'); return;
       }
+      if (!Utils.isValidWa(k.nomor_hp_ortu)) { Utils.toast('No HP ortu tidak valid', 'error'); return; }
       state.keluarga = k;
       goNext('keluarga', { keluarga: k });
     });
   }
 
-  /* ============================================================
-   * STEP 6: DOKUMEN
-   * ============================================================ */
   function stepDokumen() {
     return '<h2 class="step-title">Unggah Dokumen</h2>' +
-      '<p class="step-desc">Format JPG/PNG. Foto dikompres otomatis — tetap tajam untuk cetak 3×4 cm.</p>' +
-      '<div class="info-kualitas">' +
-        '📷 <strong>Cara foto yang baik:</strong> ambil dari atas lurus (bukan miring), pastikan cahaya cukup, ' +
-        'dan dokumen tidak terpotong. Untuk pas foto, gunakan latar merah/biru.' +
-      '</div>' +
+      '<p class="step-desc">Format JPG/PNG. Foto dikompres otomatis.</p>' +
+      '<div class="info-kualitas">📷 Ambil foto dari atas lurus, cahaya cukup, dokumen tidak terpotong.</div>' +
       '<div class="upload-grid">' +
-        uploadBox('FOTO', 'Foto Siswa', 'Pas foto 3x4, latar merah/biru') +
-        uploadBox('KK', 'Kartu Keluarga', 'Scan/foto KK yang jelas') +
-        uploadBox('AKTA', 'Akta Kelahiran', 'Scan/foto akta yang jelas') +
+        uploadBox('FOTO', 'Foto Siswa', 'Pas foto 3x4') +
+        uploadBox('KK', 'Kartu Keluarga', 'Scan/foto KK') +
+        uploadBox('AKTA', 'Akta Kelahiran', 'Scan/foto akta') +
       '</div>' +
       '<div class="actions">' +
         '<button class="btn btn-secondary" id="btn-prev">‹ Sebelumnya</button>' +
         '<button class="btn btn-primary" id="btn-submit">Kirim Pendaftaran ✓</button>' +
       '</div>';
   }
-
   function uploadBox(jenis, label, hint) {
     var ok = state.dokumen[jenis];
     return '<div class="upload-box' + (ok ? ' has-file' : '') + '" data-jenis="' + jenis + '">' +
@@ -721,19 +520,14 @@
       '<input type="file" accept="image/jpeg,image/png,application/pdf" capture="environment">' +
     '</div>';
   }
-
   function bindDokumen() {
     document.getElementById('btn-prev').addEventListener('click', function () { state.step--; renderApp(); });
     document.querySelectorAll('.upload-box').forEach(function (box) {
       var jenis = box.getAttribute('data-jenis');
       var input = box.querySelector('input[type=file]');
-      box.addEventListener('click', function (e) {
-        if (e.target === input) return;
-        input.click();
-      });
+      box.addEventListener('click', function (e) { if (e.target === input) return; input.click(); });
       input.addEventListener('change', function () {
-        var f = input.files[0];
-        if (!f) return;
+        var f = input.files[0]; if (!f) return;
         handleFile(box, jenis, f);
       });
     });
@@ -745,239 +539,148 @@
     var meta = box.querySelector('.ub-meta');
     var progress = box.querySelector('.ub-progress');
     var bar = box.querySelector('.bar');
-
     status.className = 'ub-status';
     status.textContent = 'Mengompres...';
-    meta.textContent = 'Ukuran asli: ' + Math.round(file.size / 1024) + ' KB';
-    progress.classList.add('show');
-    bar.style.width = '20%';
+    meta.textContent = 'Asli: ' + Math.round(file.size / 1024) + ' KB';
+    progress.classList.add('show'); bar.style.width = '20%';
 
     compressFile(file, function (b64, mime, nama, info) {
       bar.style.width = '55%';
       status.textContent = 'Mengunggah...';
-      meta.textContent = 'Hasil kompres: ' + info.width + '×' + info.height + ' px • ' +
-                          Math.round(info.size / 1024) + ' KB • Level ' + info.level;
-
-        Api.upload('registration.uploadDokumen', {
-        token: state.token,
-        jenis_dokumen: jenis,
-        base64: b64,
-        nama_file: nama,
-        mime_type: mime
-      }, { timeout: 120000 })
-        .then(function (res) {
-          bar.style.width = '100%';
-          if (res.success) {
-            state.dokumen[jenis] = true;
-            box.classList.add('has-file');
-            box.querySelector('.ub-ico').textContent = '✅';
-            status.className = 'ub-status ok';
-            status.textContent = 'Berhasil diunggah (' + Math.round(res.data.ukuran_byte / 1024) + ' KB)';
-            Utils.toast(jenis + ' berhasil diunggah', 'success');
-          } else {
-            status.className = 'ub-status err';
-            status.textContent = res.message || 'Gagal mengunggah';
-            Utils.toast('Gagal: ' + res.message, 'error');
-          }
-          setTimeout(function () { progress.classList.remove('show'); }, 800);
-        })
-        .catch(function (err) {
+      meta.textContent = 'Kompres: ' + info.width + '×' + info.height + ' px • ' +
+        Math.round(info.size / 1024) + ' KB • Level ' + info.level;
+      Api.registration.uploadDokumen(state.token, jenis, b64, nama, mime).then(function (res) {
+        bar.style.width = '100%';
+        if (res.success) {
+          state.dokumen[jenis] = true;
+          box.classList.add('has-file');
+          box.querySelector('.ub-ico').textContent = '✅';
+          status.className = 'ub-status ok';
+          status.textContent = 'Berhasil (' + Math.round(res.data.ukuran_byte / 1024) + ' KB)';
+          Utils.toast(jenis + ' berhasil', 'success');
+        } else {
           status.className = 'ub-status err';
-          status.textContent = 'Error: ' + err.message;
-          progress.classList.remove('show');
-        });
+          status.textContent = res.message || 'Gagal';
+          Utils.toast('Gagal: ' + res.message, 'error');
+        }
+        setTimeout(function () { progress.classList.remove('show'); }, 800);
+      }).catch(function (err) {
+        status.className = 'ub-status err';
+        status.textContent = 'Error: ' + err.message;
+        progress.classList.remove('show');
+      });
     });
   }
 
-  /**
-   * Kompresi berjenjang — mulai dari kualitas tinggi, turun hanya jika perlu.
-   * Target base64 < 60 KB agar lolos URL limit, tapi resolusi tetap tinggi
-   * untuk cetak 3×4 cm (300 dpi butuh ~354×472 px).
-   *
-   * Level 1: 1600 px q0.85 → cetak 3×4 di ~1350 dpi
-   * Level 2: 1200 px q0.80 → cetak 3×4 di ~1000 dpi
-   * Level 3: 1000 px q0.75 → cetak 3×4 di ~850 dpi
-   * Level 4:  800 px q0.70 → cetak 3×4 di ~680 dpi
-   * Level 5:  600 px q0.60 → cetak 3×4 di ~500 dpi (fallback)
-   *
-   * Semua level >> 300 dpi → kualitas cetak 3×4 tetap tajam.
-   */
   function compressFile(file, cb) {
-    // PDF: kirim apa adanya
     if (file.type === 'application/pdf') {
       var r = new FileReader();
-      r.onload = function () {
-        var b64 = r.result.split(',')[1];
-        cb(b64, file.type, file.name, { width: '-', height: '-', size: b64.length, level: 'PDF' });
-      };
-      r.onerror = function () { Utils.toast('Gagal membaca file', 'error'); };
-      r.readAsDataURL(file);
-      return;
+      r.onload = function () { cb(r.result.split(',')[1], file.type, file.name, { width:'-', height:'-', size:r.result.length, level:'PDF' }); };
+      r.readAsDataURL(file); return;
     }
-
     var img = new Image();
     var url = URL.createObjectURL(file);
     img.onload = function () {
       URL.revokeObjectURL(url);
-
       var levels = [
-        { maxPx: 1600, q: 0.85 },
-        { maxPx: 1200, q: 0.80 },
-        { maxPx: 1000, q: 0.75 },
-        { maxPx:  800, q: 0.70 },
-        { maxPx:  600, q: 0.60 }
+        { maxPx: 1600, q: 0.85 }, { maxPx: 1200, q: 0.80 },
+        { maxPx: 1000, q: 0.75 }, { maxPx: 800, q: 0.70 }, { maxPx: 600, q: 0.60 }
       ];
-      var TARGET_B64_BYTES = 60 * 1024;
-
+      var TARGET = 60 * 1024;
       var best = null;
       for (var i = 0; i < levels.length; i++) {
         var lv = levels[i];
         var w = img.width, h = img.height;
         var scale = Math.min(1, lv.maxPx / Math.max(w, h));
-        var nw = Math.max(1, Math.round(w * scale));
-        var nh = Math.max(1, Math.round(h * scale));
-
+        var nw = Math.max(1, Math.round(w * scale)), nh = Math.max(1, Math.round(h * scale));
         var canvas = document.createElement('canvas');
         canvas.width = nw; canvas.height = nh;
         var ctx = canvas.getContext('2d');
-        // Background putih (untuk PNG transparan)
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, nw, nh);
-        // Kualitas smoothing tinggi agar hasil downscale tajam
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, nw, nh);
+        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, nw, nh);
-
         var dataUrl = canvas.toDataURL('image/jpeg', lv.q);
         var b64 = dataUrl.split(',')[1];
-
-        best = {
-          b64: b64,
-          mime: 'image/jpeg',
-          width: nw,
-          height: nh,
-          size: b64.length,
-          level: (i + 1) + '/' + levels.length
-        };
-
-        if (b64.length <= TARGET_B64_BYTES) break;
+        best = { b64: b64, mime: 'image/jpeg', width: nw, height: nh, size: b64.length, level: (i+1)+'/'+levels.length };
+        if (b64.length <= TARGET) break;
       }
-
       var newName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
       cb(best.b64, best.mime, newName, best);
     };
-    img.onerror = function () {
-      URL.revokeObjectURL(url);
-      Utils.toast('Gagal memuat gambar', 'error');
-    };
+    img.onerror = function () { URL.revokeObjectURL(url); Utils.toast('Gagal memuat gambar', 'error'); };
     img.src = url;
   }
 
   function submitFinal() {
     if (!state.dokumen.FOTO || !state.dokumen.KK || !state.dokumen.AKTA) {
-      Utils.toast('Lengkapi semua dokumen (Foto, KK, Akta)', 'error');
-      return;
+      Utils.toast('Lengkapi semua dokumen', 'error'); return;
     }
-    if (!confirm('Kirim pendaftaran sekarang? Data tidak bisa diubah setelah dikirim.')) return;
-    Utils.showLoading('Mengirim pendaftaran...');
-    Api.registration.submit(state.token)
-      .then(function (res) {
-        Utils.hideLoading();
-        if (res.success) {
-          state.submitted = res.data;
-          sessionStorage.removeItem(TOKEN_KEY);
-          renderSuccess();
-        } else {
-          Utils.toast('Gagal: ' + res.message, 'error');
-        }
-      })
-      .catch(function (err) {
-        Utils.hideLoading();
-        Utils.toast('Error: ' + err.message, 'error');
-      });
+    if (!confirm('Kirim pendaftaran sekarang?')) return;
+    Utils.showLoading('Mengirim...');
+    Api.registration.submit(state.token).then(function (res) {
+      Utils.hideLoading();
+      if (res.success) {
+        state.submitted = res.data;
+        sessionStorage.removeItem(TOKEN_KEY);
+        renderSuccess();
+      } else Utils.toast('Gagal: ' + res.message, 'error');
+    }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
   }
 
-  /* ============================================================
-   * RENDER: SUKSES
-   * ============================================================ */
   function renderSuccess() {
     var d = state.submitted || {};
     var wa = d.nomor_wa_panitia ? Utils.normalizeWa(d.nomor_wa_panitia) : '';
-    var pesan = encodeURIComponent(
-      'Assalamualaikum, saya ' + (d.nama_lengkap || '') +
+    var pesan = encodeURIComponent('Assalamualaikum, saya ' + (d.nama_lengkap || '') +
       ' dengan nomor pendaftaran ' + (d.nomor_pendaftaran || '') +
-      ' telah mendaftar di ' + (d.sekolah || 'SMK Muhammadiyah 1 Surakarta') +
-      '. Mohon konfirmasi. Terima kasih.'
-    );
+      ' telah mendaftar di ' + (d.sekolah || 'SMK Muhammadiyah 1 Surakarta') + '. Mohon konfirmasi.');
     var waUrl = wa ? ('https://wa.me/' + wa + '?text=' + pesan) : '';
-
     document.getElementById('app').innerHTML =
       '<div class="card success-box">' +
-        '<div class="ico">🎉</div>' +
-        '<h2>Pendaftaran Berhasil!</h2>' +
+        '<div class="ico">🎉</div><h2>Pendaftaran Berhasil!</h2>' +
         '<p style="color:#6b7280;">Simpan nomor pendaftaran Anda:</p>' +
         '<div class="nomor">' + Utils.escapeHtml(d.nomor_pendaftaran || '-') + '</div>' +
-        '<p class="note">' +
-          'Terima kasih, <strong>' + Utils.escapeHtml(d.nama_lengkap || '') + '</strong>.<br>' +
-          'Pendaftaran Anda sedang menunggu verifikasi panitia.<br>' +
-          'Cek status kapan saja di <a href="status.html">halaman Cek Status</a>.' +
-        '</p>' +
+        '<p class="note">Terima kasih, <strong>' + Utils.escapeHtml(d.nama_lengkap || '') +
+        '</strong>.<br>Cek status di <a href="status.html">halaman Cek Status</a>.</p>' +
         (waUrl ? '<a class="btn-wa" href="' + waUrl + '" target="_blank" rel="noopener">💬 Konfirmasi via WhatsApp</a>' : '') +
         '<div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">' +
-          '<a href="status.html" class="btn btn-primary">Cek Status Pendaftaran</a>' +
-          '<a href="index.html" class="btn btn-secondary">Kembali ke Beranda</a>' +
-        '</div>' +
-      '</div>';
+          '<a href="status.html" class="btn btn-primary">Cek Status</a>' +
+          '<a href="index.html" class="btn btn-secondary">Beranda</a>' +
+        '</div></div>';
   }
 
-  /* ============================================================
-   * HELPER FORM
-   * ============================================================ */
   function field(name, label, type, value, req, cls, hint) {
     return '<div class="field ' + (cls || '') + '" data-name="' + name + '">' +
       '<label>' + Utils.escapeHtml(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
       '<input type="' + type + '" data-field="' + name + '" value="' + Utils.escapeHtml(value || '') + '">' +
       (hint ? '<div class="hint">' + Utils.escapeHtml(hint) + '</div>' : '') +
-      '<div class="error-msg">Wajib diisi</div>' +
-    '</div>';
+      '<div class="error-msg">Wajib diisi</div></div>';
   }
-
   function select(name, label, opts, value, req, cls) {
     var h = '<div class="field ' + (cls || '') + '" data-name="' + name + '">' +
       '<label>' + Utils.escapeHtml(label) + (req ? ' <span class="req">*</span>' : '') + '</label>' +
       '<select data-field="' + name + '">';
     opts.forEach(function (o) {
-      h += '<option value="' + Utils.escapeHtml(o[0]) + '"' + (String(value || '') === String(o[0]) ? ' selected' : '') + '>' + Utils.escapeHtml(o[1]) + '</option>';
+      h += '<option value="' + Utils.escapeHtml(o[0]) + '"' + (String(value||'') === String(o[0]) ? ' selected' : '') + '>' + Utils.escapeHtml(o[1]) + '</option>';
     });
     h += '</select><div class="error-msg">Wajib diisi</div></div>';
     return h;
   }
-
   function navButtons(step) {
     var prev = step > 1 ? '<button class="btn btn-secondary" id="btn-prev">‹ Sebelumnya</button>' : '<span></span>';
-    return '<div class="actions">' + prev +
-      '<button class="btn btn-primary" id="btn-next">Lanjut ›</button></div>';
+    return '<div class="actions">' + prev + '<button class="btn btn-primary" id="btn-next">Lanjut ›</button></div>';
   }
-
   function bindInputs() {
     document.querySelectorAll('input[data-field], select[data-field], textarea[data-field]').forEach(function (el) {
       var f = el.closest('.field');
-
-      // Auto-uppercase untuk input teks & textarea (bukan email, tel, date, number)
-      if (el.tagName === 'TEXTAREA') {
-        el.classList.add('auto-upper');
-      } else if (el.tagName === 'INPUT') {
+      if (el.tagName === 'TEXTAREA') el.classList.add('auto-upper');
+      else if (el.tagName === 'INPUT') {
         var t = (el.type || 'text').toLowerCase();
         if (t === 'text' || t === 'search') el.classList.add('auto-upper');
       }
-
       var applyUpper = function () {
         var isText = false;
         if (el.tagName === 'TEXTAREA') isText = true;
-        else if (el.tagName === 'INPUT') {
-          var t = (el.type || 'text').toLowerCase();
-          isText = (t === 'text' || t === 'search');
-        }
+        else if (el.tagName === 'INPUT') { var t=(el.type||'text').toLowerCase(); isText = (t==='text'||t==='search'); }
         if (!isText) return;
         if (el.value !== el.value.toUpperCase()) {
           var pos = el.selectionStart;
@@ -985,77 +688,45 @@
           try { el.setSelectionRange(pos, pos); } catch (e) {}
         }
       };
-
-      el.addEventListener('input', function () {
-        applyUpper();
-        if (f) f.classList.remove('invalid');
-      });
-      el.addEventListener('change', function () {
-        applyUpper();
-        if (f) f.classList.remove('invalid');
-      });
+      el.addEventListener('input', function () { applyUpper(); if (f) f.classList.remove('invalid'); });
+      el.addEventListener('change', function () { applyUpper(); if (f) f.classList.remove('invalid'); });
       el.addEventListener('blur', applyUpper);
     });
   }
-
   function val(name) {
     var el = document.querySelector('[data-field="' + name + '"]');
     return el ? el.value.trim() : '';
   }
-
   function collectFields(names) {
-    var o = {};
-    names.forEach(function (n) { o[n] = val(n); });
-    return o;
+    var o = {}; names.forEach(function (n) { o[n] = val(n); }); return o;
   }
-
   function validateRequired(map, data) {
     var ok = true;
     Object.keys(map).forEach(function (k) {
       var el = document.querySelector('[data-field="' + k + '"]');
-      if (!data[k]) {
-        if (el && el.closest('.field')) el.closest('.field').classList.add('invalid');
-        ok = false;
-      }
+      if (!data[k]) { if (el && el.closest('.field')) el.closest('.field').classList.add('invalid'); ok = false; }
     });
-    if (!ok) Utils.toast('Lengkapi field yang wajib diisi', 'error');
+    if (!ok) Utils.toast('Lengkapi field yang wajib', 'error');
     return ok;
   }
-
   function toDateInput(v) {
     if (!v) return '';
-    var d = new Date(v);
-    if (isNaN(d.getTime())) return '';
-    var m = String(d.getMonth() + 1).padStart(2, '0');
-    var day = String(d.getDate()).padStart(2, '0');
-    return d.getFullYear() + '-' + m + '-' + day;
+    var d = new Date(v); if (isNaN(d.getTime())) return '';
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
-
-  /* ============================================================
-   * NAVIGASI & SIMPAN
-   * ============================================================ */
   function goNext(step, data) {
     Utils.showLoading('Menyimpan...');
-    Api.registration.saveDraft(state.token, step, data)
-      .then(function (res) {
-        Utils.hideLoading();
-        if (!res.success) {
-          Utils.toast('Gagal menyimpan: ' + res.message, 'error');
-          return;
-        }
-        Object.keys(data).forEach(function (k) { state.data[k] = data[k]; });
-        state.step++;
-        renderApp();
-        window.scrollTo(0, 0);
-      })
-      .catch(function (err) {
-        Utils.hideLoading();
-        Utils.toast('Error: ' + err.message, 'error');
-      });
+    Api.registration.saveDraft(state.token, step, data).then(function (res) {
+      Utils.hideLoading();
+      if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
+      Object.keys(data).forEach(function (k) { state.data[k] = data[k]; });
+      state.step++;
+      renderApp();
+      window.scrollTo(0, 0);
+    }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
   }
 
   boot();
-
 })();
 </script>
 </body>
