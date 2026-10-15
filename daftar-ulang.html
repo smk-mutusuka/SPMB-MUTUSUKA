@@ -10,10 +10,8 @@
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: #f5f7fa; color: #1f2937; min-height: 100vh; }
   .app { display: flex; min-height: 100vh; }
-
   .sidebar { width: 260px; background: #1a5490; color: #fff;
-    display: flex; flex-direction: column; flex-shrink: 0;
-    transition: transform 0.3s ease; }
+    display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease; }
   .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; align-items: center; gap: 12px; }
   .sidebar-header img { width: 56px; height: 56px; object-fit: contain; }
@@ -30,7 +28,6 @@
   .nav-item .ico { font-size: 1.1rem; width: 20px; text-align: center; }
   .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.75rem; color: rgba(255,255,255,0.6); }
-
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   .topbar { background: #fff; border-bottom: 1px solid #e5e7eb;
     padding: 12px 24px; display: flex; align-items: center;
@@ -49,9 +46,7 @@
     padding: 7px 14px; border-radius: 6px; font-size: 0.85rem;
     font-weight: 500; cursor: pointer; }
   .btn-logout:hover { background: #fecaca; }
-
   .content { flex: 1; padding: 24px; max-width: 1200px; width: 100%; margin: 0 auto; }
-
   .summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 14px; margin-bottom: 20px; }
   .sum-card { background: #fff; padding: 16px 18px; border-radius: 10px;
@@ -66,13 +61,11 @@
   .sum-card.sc-terlambat .sum-value { color: #dc2626; }
   .sum-card.sc-habis { border-left-color: #7c3aed; }
   .sum-card.sc-habis .sum-value { color: #7c3aed; }
-
   .panel { background: #fff; padding: 20px; border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 20px; }
   .panel-head { display: flex; justify-content: space-between;
     align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
   .panel-head h3 { font-size: 1rem; color: #1a5490; }
-
   .filters { display: grid; grid-template-columns: 2fr 1fr auto;
     gap: 10px; align-items: end; margin-bottom: 14px; }
   .filters .field { display: flex; flex-direction: column; gap: 4px; }
@@ -81,9 +74,7 @@
     padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px;
     font-size: 0.9rem; font-family: inherit; background: #fff; }
   .filters input:focus, .filters select:focus {
-    outline: none; border-color: #1a5490;
-    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
-
+    outline: none; border-color: #1a5490; box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
   .btn { padding: 9px 16px; border: none; border-radius: 6px;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: inherit; transition: background 0.15s; }
@@ -91,12 +82,7 @@
   .btn-primary:hover { background: #143f6e; }
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
-  .btn-success { background: #d1fae5; color: #065f46; }
-  .btn-success:hover { background: #a7f3d0; }
-  .btn-danger { background: #fee2e2; color: #991b1b; }
-  .btn-danger:hover { background: #fecaca; }
   .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
-
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
@@ -105,21 +91,16 @@
   tbody tr:hover { background: #f9fafb; }
   td.actions { white-space: nowrap; }
   td.actions .btn { margin-right: 4px; }
-
   .badge { display: inline-block; padding: 3px 9px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px; }
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .bg-belum { background: #fef3c7; color: #92400e; }
   .bg-terdaftar { background: #d1fae5; color: #065f46; }
   .bg-terlambat { background: #fee2e2; color: #991b1b; }
   .bg-dibatalkan { background: #e5e7eb; color: #374151; }
-
   .deadline-cell { font-size: 0.85rem; }
   .deadline-cell.warn { color: #d97706; font-weight: 600; }
   .deadline-cell.late { color: #dc2626; font-weight: 600; }
-
   .empty { text-align: center; padding: 40px 20px; color: #6b7280; }
-
   .modal-bg { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 200;
     align-items: center; justify-content: center; padding: 20px; }
@@ -134,26 +115,20 @@
     width: 100%; padding: 9px 12px; border: 1px solid #d1d5db;
     border-radius: 6px; font-size: 0.9rem; font-family: inherit; }
   .modal input:focus, .modal select:focus, .modal textarea:focus {
-    outline: none; border-color: #1a5490;
-    box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
+    outline: none; border-color: #1a5490; box-shadow: 0 0 0 3px rgba(26,84,144,0.1); }
   .modal textarea { min-height: 80px; resize: vertical; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-
   .overlay { display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.4); z-index: 99; }
   .overlay.show { display: block; }
-
   .badge-role { display: inline-block; padding: 3px 10px; border-radius: 12px;
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.3px; }
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
   .role-ADMIN { background: #dbeafe; color: #1e40af; }
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
-
   @media (max-width: 900px) {
-    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-      transform: translateX(-100%); }
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .btn-menu { display: block; }
     .user-meta { display: none; }
@@ -162,7 +137,6 @@
 </style>
 </head>
 <body>
-
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -172,9 +146,7 @@
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-footer">Versi 1.0.0</div>
   </aside>
-
   <div class="overlay" id="overlay"></div>
-
   <main class="main">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -190,30 +162,24 @@
         <button class="btn-logout" id="btn-logout">Keluar</button>
       </div>
     </header>
-
     <div class="content">
       <div class="summary" id="summary"></div>
-
       <div class="panel">
         <div class="panel-head">
           <h3>Daftar Calon Siswa DITERIMA</h3>
           <button class="btn btn-secondary btn-sm" id="btn-refresh">🔄 Refresh</button>
         </div>
         <div class="filters">
-          <div class="field">
-            <label>Cari (nama / no. pendaftaran)</label>
-            <input type="text" id="f-q" placeholder="Ketik untuk mencari...">
-          </div>
-          <div class="field">
-            <label>Status</label>
+          <div class="field"><label>Cari (nama / no. pendaftaran)</label>
+            <input type="text" id="f-q" placeholder="Ketik untuk mencari..."></div>
+          <div class="field"><label>Status</label>
             <select id="f-status">
               <option value="">Semua</option>
               <option value="BELUM">Belum Daftar Ulang</option>
               <option value="TERDAFTAR">Sudah Daftar Ulang</option>
               <option value="TERLAMBAT">Terlambat</option>
               <option value="DIBATALKAN">Dibatalkan</option>
-            </select>
-          </div>
+            </select></div>
           <div><button class="btn btn-primary" id="btn-filter">Terapkan</button></div>
         </div>
         <div class="table-wrap" id="tbl"><div class="empty">Memuat...</div></div>
@@ -221,68 +187,24 @@
     </div>
   </main>
 </div>
-
 <div class="modal-bg" id="modal-bg"><div class="modal" id="modal"></div></div>
-
 <script src="config.js"></script>
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
+<script src="nav.js"></script>
 <script>
 (function () {
   'use strict';
-
   if (!Auth.guard(['ADMIN', 'BENDAHARA'])) return;
-
   var user = Auth.getUser();
   var role = user.role || '-';
   var displayName = user.display_name || user.username || 'Petugas';
-
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-role').innerHTML =
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
-
-  var menus = {
-    ADMIN: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pendaftaran', items: [
-        { icon: '👥', label: 'Daftar Pendaftar', href: 'admin.html' },
-        { icon: '✅', label: 'Verifikasi Data', href: 'admin.html' }
-      ]},
-      { group: 'Proses', items: [
-        { icon: '🎤', label: 'Wawancara', href: 'interview.html' },
-        { icon: '💰', label: 'Pembayaran', href: 'payment.html' },
-        { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' },
-        { icon: '🎓', label: 'Daftar Ulang', href: 'daftar-ulang.html', active: true }
-      ]},
-      { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: 'report.html' },
-        { icon: '📲', label: 'Notifikasi WA', href: 'notif.html' },
-        { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
-      ]}
-    ],
-    BENDAHARA: [
-      { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
-      { group: 'Pembayaran', items: [
-        { icon: '💵', label: 'Input Pembayaran', href: 'payment.html' },
-        { icon: '🎓', label: 'Daftar Ulang', href: 'daftar-ulang.html', active: true }
-      ]}
-    ]
-  };
-  var nav = document.getElementById('nav');
-  var menu = menus[role] || menus.ADMIN;
-  var html = '';
-  menu.forEach(function (g) {
-    html += '<div class="nav-group-title">' + Utils.escapeHtml(g.group) + '</div>';
-    g.items.forEach(function (it) {
-      var cls = 'nav-item' + (it.active ? ' active' : '');
-      html += '<a href="' + Utils.escapeHtml(it.href) + '" class="' + cls + '">' +
-        '<span class="ico">' + it.icon + '</span><span>' + Utils.escapeHtml(it.label) + '</span></a>';
-    });
-  });
-  nav.innerHTML = html;
-
+  Nav.render('daftar-ulang');
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   document.getElementById('btn-menu').addEventListener('click', function () {
@@ -295,25 +217,11 @@
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
-
   var modalBg = document.getElementById('modal-bg');
-  function openModal(html) {
-    document.getElementById('modal').innerHTML = html;
-    modalBg.classList.add('show');
-  }
-  function closeModal() {
-    modalBg.classList.remove('show');
-    document.getElementById('modal').innerHTML = '';
-  }
-  modalBg.addEventListener('click', function (e) {
-    if (e.target === modalBg) closeModal();
-  });
-
+  function openModal(html) { document.getElementById('modal').innerHTML = html; modalBg.classList.add('show'); }
+  function closeModal() { modalBg.classList.remove('show'); document.getElementById('modal').innerHTML = ''; }
+  modalBg.addEventListener('click', function (e) { if (e.target === modalBg) closeModal(); });
   var state = { q: '', status: '', items: [] };
-
-  /* ============================================================
-   * LOAD DATA
-   * ============================================================ */
   function loadStats() {
     Api.daftarUlang.stats().then(function (res) {
       if (!res.success) return;
@@ -332,18 +240,15 @@
       document.getElementById('summary').innerHTML = html;
     }).catch(function () {});
   }
-
   function loadList() {
     Utils.showLoading('Memuat daftar ulang...');
     Api.daftarUlang.list({ status: state.status }).then(function (res) {
       Utils.hideLoading();
       if (!res.success) {
-        document.getElementById('tbl').innerHTML =
-          '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
+        document.getElementById('tbl').innerHTML = '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div>';
         return;
       }
       var items = res.data.items || [];
-      // Filter by q client-side
       if (state.q) {
         var q = state.q.toLowerCase();
         items = items.filter(function (it) {
@@ -355,29 +260,22 @@
       renderTable(items);
     }).catch(function (err) {
       Utils.hideLoading();
-      document.getElementById('tbl').innerHTML =
-        '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+      document.getElementById('tbl').innerHTML = '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
     });
   }
-
   function renderTable(items) {
-    if (!items.length) {
-      document.getElementById('tbl').innerHTML = '<div class="empty">Tidak ada data.</div>';
-      return;
-    }
+    if (!items.length) { document.getElementById('tbl').innerHTML = '<div class="empty">Tidak ada data.</div>'; return; }
     var now = Date.now();
     var html = '<table><thead><tr>' +
       '<th>No. Pendaftaran</th><th>Nama</th><th>Konsentrasi</th>' +
       '<th>Tgl Diterima</th><th>Batas Daftar Ulang</th><th>Status</th><th>Aksi</th>' +
       '</tr></thead><tbody>';
-
     items.forEach(function (it) {
       var st = String(it.status || 'BELUM');
       var cls = st === 'TERDAFTAR' ? 'bg-terdaftar' :
                 st === 'TERLAMBAT' ? 'bg-terlambat' :
                 st === 'DIBATALKAN' ? 'bg-dibatalkan' : 'bg-belum';
       var displayStatus = st === 'BELUM' && it.is_late ? 'TERLAMBAT' : st;
-
       var batasMs = it.batas_daftar_ulang ? new Date(it.batas_daftar_ulang).getTime() : 0;
       var deadlineClass = '';
       var deadlineNote = '';
@@ -386,24 +284,20 @@
         if (daysLeft < 0) { deadlineClass = 'late'; deadlineNote = ' (Lewat)'; }
         else if (daysLeft <= 3) { deadlineClass = 'warn'; deadlineNote = ' (' + daysLeft + ' hari lagi)'; }
       }
-
       html += '<tr>' +
         '<td><strong>' + Utils.escapeHtml(it.nomor_pendaftaran || '-') + '</strong></td>' +
         '<td>' + Utils.escapeHtml(it.nama_lengkap || '-') + '</td>' +
         '<td>' + Utils.escapeHtml(it.konsentrasi_1 || '-') + '</td>' +
         '<td>' + (it.tanggal_diterima ? Utils.formatTanggal(it.tanggal_diterima) : '-') + '</td>' +
         '<td class="deadline-cell ' + deadlineClass + '">' +
-          (it.batas_daftar_ulang ? Utils.formatTanggal(it.batas_daftar_ulang) : '-') +
-          deadlineNote + '</td>' +
+          (it.batas_daftar_ulang ? Utils.formatTanggal(it.batas_daftar_ulang) : '-') + deadlineNote + '</td>' +
         '<td><span class="badge ' + cls + '">' + displayStatus + '</span></td>' +
         '<td class="actions">' +
           '<button class="btn btn-primary btn-sm btn-set" data-id="' + Utils.escapeHtml(it.daftar_ulang_id) + '">Set Status</button>' +
-        '</td>' +
-      '</tr>';
+        '</td></tr>';
     });
     html += '</tbody></table>';
     document.getElementById('tbl').innerHTML = html;
-
     document.querySelectorAll('.btn-set').forEach(function (b) {
       b.addEventListener('click', function () {
         var id = b.getAttribute('data-id');
@@ -412,7 +306,6 @@
       });
     });
   }
-
   document.getElementById('btn-filter').addEventListener('click', function () {
     state.q = document.getElementById('f-q').value.trim();
     state.status = document.getElementById('f-status').value;
@@ -421,22 +314,13 @@
   document.getElementById('f-q').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') document.getElementById('btn-filter').click();
   });
-  document.getElementById('btn-refresh').addEventListener('click', function () {
-    loadStats(); loadList();
-  });
-
-  /* ============================================================
-   * SET STATUS MODAL
-   * ============================================================ */
+  document.getElementById('btn-refresh').addEventListener('click', function () { loadStats(); loadList(); });
   function showSetForm(it) {
     openModal(
       '<h3>Update Status Daftar Ulang</h3>' +
-      '<div style="background:#eff6ff;padding:10px 14px;border-radius:6px;' +
-        'font-size:0.85rem;margin-bottom:14px;">' +
+      '<div style="background:#eff6ff;padding:10px 14px;border-radius:6px;font-size:0.85rem;margin-bottom:14px;">' +
         '<strong>' + Utils.escapeHtml(it.nama_lengkap) + '</strong><br>' +
-        Utils.escapeHtml(it.nomor_pendaftaran) + ' • ' +
-        Utils.escapeHtml(it.konsentrasi_1) +
-      '</div>' +
+        Utils.escapeHtml(it.nomor_pendaftaran) + ' • ' + Utils.escapeHtml(it.konsentrasi_1) + '</div>' +
       '<div class="field"><label>Status</label>' +
         '<select id="s-status">' +
           '<option value="BELUM"' + (it.status === 'BELUM' ? ' selected' : '') + '>Belum Daftar Ulang</option>' +
@@ -446,40 +330,27 @@
         '</select></div>' +
       '<div class="field"><label>Catatan (opsional)</label>' +
         '<textarea id="s-catatan" placeholder="Contoh: Daftar ulang tgl 20 Okt, bayar via transfer"></textarea></div>' +
-      '<div class="modal-actions">' +
-        '<button class="btn btn-secondary" id="m-cancel">Batal</button>' +
-        '<button class="btn btn-primary" id="m-save">Simpan</button>' +
-      '</div>'
+      '<div class="modal-actions"><button class="btn btn-secondary" id="m-cancel">Batal</button>' +
+        '<button class="btn btn-primary" id="m-save">Simpan</button></div>'
     );
     document.getElementById('m-cancel').addEventListener('click', closeModal);
     document.getElementById('m-save').addEventListener('click', function () {
       var status = document.getElementById('s-status').value;
       var catatan = document.getElementById('s-catatan').value.trim();
       Utils.showLoading('Menyimpan...');
-      Api.daftarUlang.updateStatus(it.daftar_ulang_id, status, catatan)
-        .then(function (res) {
-          Utils.hideLoading();
-          if (res.success) {
-            Utils.toast('Status diupdate', 'success');
-            closeModal();
-            loadStats();
-            loadList();
-          } else {
-            Utils.toast('Gagal: ' + res.message, 'error');
-          }
-        }).catch(function (err) {
-          Utils.hideLoading();
-          Utils.toast('Error: ' + err.message, 'error');
-        });
+      Api.daftarUlang.updateStatus(it.daftar_ulang_id, status, catatan).then(function (res) {
+        Utils.hideLoading();
+        if (res.success) {
+          Utils.toast('Status diupdate', 'success');
+          closeModal(); loadStats(); loadList();
+        } else Utils.toast('Gagal: ' + res.message, 'error');
+      }).catch(function (err) {
+        Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+      });
     });
   }
-
-  /* ============================================================
-   * BOOT
-   * ============================================================ */
   loadStats();
   loadList();
-
 })();
 </script>
 </body>
