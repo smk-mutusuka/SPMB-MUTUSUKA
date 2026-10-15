@@ -159,6 +159,14 @@
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
 
+  .retry-box {
+    text-align: center; padding: 40px 20px;
+  }
+  .retry-box .ico { font-size: 3rem; margin-bottom: 12px; }
+  .retry-box h2 { color: #dc2626; margin-bottom: 8px; font-size: 1.1rem; }
+  .retry-box p { color: #6b7280; margin-bottom: 16px; font-size: 0.9rem; }
+  .retry-box .btn { margin: 0 4px; }
+
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
@@ -227,9 +235,6 @@
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
 
-  /* ============================================================
-   * SIDEBAR
-   * ============================================================ */
   var menus = {
     ADMIN: [
       { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html' }]},
@@ -243,7 +248,7 @@
         { icon: '📋', label: 'Hasil Seleksi', href: 'selection.html' }
       ]},
       { group: 'Sistem', items: [
-        { icon: '📊', label: 'Laporan', href: '#' },
+        { icon: '📊', label: 'Laporan', href: 'report.html' },
         { icon: '⚙️', label: 'Pengaturan', href: 'settings.html' }
       ]}
     ],
@@ -295,14 +300,12 @@
     Auth.logout();
   });
 
-  /* ============================================================
-   * STATE
-   * ============================================================ */
   var state = { q: '', status: '', konsentrasi: '', page: 1, per_page: 25 };
   var mode = Utils.getQueryParam('mode') || 'list';
   var detailId = Utils.getQueryParam('id');
   var konsentrasiList = [];
 
+  // Preload konsentrasi (background, jangan blocking)
   Api.settings.listKonsentrasi().then(function (res) {
     if (res && res.success && res.data && res.data.konsentrasi) {
       konsentrasiList = res.data.konsentrasi;
@@ -331,7 +334,7 @@
   }
 
   /* ============================================================
-   * LIST
+   * RENDER: LIST
    * ============================================================ */
   function renderList() {
     document.getElementById('page-title').textContent = 'Daftar Pendaftar';
@@ -381,9 +384,12 @@
 
   function loadList() {
     Utils.showLoading('Memuat daftar pendaftar...');
+    console.log('[SPMB] loadList → memanggil registration.list', state);
+    var t0 = Date.now();
     Api.registration.list(state)
       .then(function (res) {
         Utils.hideLoading();
+        console.log('[SPMB] registration.list selesai dalam ' + (Date.now() - t0) + ' ms', res);
         if (!res.success) {
           document.getElementById('table-wrap').innerHTML =
             '<div class="empty">Gagal memuat: ' + Utils.escapeHtml(res.message || '') + '</div>';
@@ -393,8 +399,11 @@
       })
       .catch(function (err) {
         Utils.hideLoading();
+        console.error('[SPMB] registration.list GAGAL:', err);
         document.getElementById('table-wrap').innerHTML =
-          '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+          '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '<br>' +
+          '<button class="btn btn-primary btn-sm" onclick="location.reload()" ' +
+          'style="margin-top:12px;">Ulangi</button></div>';
       });
   }
 
@@ -449,7 +458,7 @@
   }
 
   /* ============================================================
-   * DETAIL
+   * RENDER: DETAIL — dengan timeout & error handling
    * ============================================================ */
   function renderDetail() {
     document.getElementById('page-title').textContent = 'Detail Pendaftar';
@@ -463,21 +472,63 @@
     }
 
     Utils.showLoading('Memuat detail...');
+    console.log('[SPMB] renderDetail → memanggil registration.get', detailId);
+    var t0 = Date.now();
+
+    // Timeout manual 30s untuk mencegah hang selamanya
+    var timeoutHandle = setTimeout(function () {
+      Utils.hideLoading();
+      console.warn('[SPMB] registration.get TIMEOUT setelah 30s');
+      showRetry('Server tidak menjawab dalam 30 detik. Kemungkinan server sedang sibuk atau lambat.');
+    }, 30000);
+
     Api.registration.get(detailId)
       .then(function (res) {
+        clearTimeout(timeoutHandle);
         Utils.hideLoading();
+        console.log('[SPMB] registration.get selesai dalam ' + (Date.now() - t0) + ' ms', res);
+
         if (!res.success) {
-          document.getElementById('detail-panel').innerHTML =
-            '<div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + ' <a href="admin.html">Kembali</a></div>';
+          if (res.code === 'NOT_FOUND') {
+            document.getElementById('detail-panel').innerHTML =
+              '<div class="empty">Data pendaftar tidak ditemukan.<br>' +
+              '<a href="admin.html" class="btn btn-secondary btn-sm" style="margin-top:12px;">← Kembali</a></div>';
+            return;
+          }
+          showRetry('Gagal memuat: ' + (res.message || 'Error'));
           return;
         }
-        renderDetailContent(res.data);
+
+        try {
+          renderDetailContent(res.data);
+        } catch (e) {
+          console.error('[SPMB] renderDetailContent ERROR:', e);
+          showRetry('Terjadi kesalahan saat menampilkan data: ' + e.message);
+        }
       })
       .catch(function (err) {
+        clearTimeout(timeoutHandle);
         Utils.hideLoading();
-        document.getElementById('detail-panel').innerHTML =
-          '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
+        console.error('[SPMB] registration.get GAGAL:', err);
+        var msg = err.message || 'Error tidak diketahui';
+        if (msg.indexOf('timeout') >= 0 || msg.indexOf('AbortError') >= 0) {
+          msg = 'Server tidak menjawab. Coba lagi.';
+        }
+        showRetry(msg);
       });
+  }
+
+  function showRetry(message) {
+    document.getElementById('detail-panel').innerHTML =
+      '<div class="retry-box">' +
+        '<div class="ico">⚠️</div>' +
+        '<h2>Gagal Memuat Data</h2>' +
+        '<p>' + Utils.escapeHtml(message) + '</p>' +
+        '<button class="btn btn-primary" id="btn-retry">🔄 Coba Lagi</button>' +
+        '<a href="admin.html" class="btn btn-secondary">← Kembali ke Daftar</a>' +
+      '</div>';
+    var rb = document.getElementById('btn-retry');
+    if (rb) rb.addEventListener('click', renderDetail);
   }
 
   function fieldPair(lbl, val) {
@@ -526,6 +577,9 @@
   }
 
   function renderDetailContent(d) {
+    if (!d || !d.pendaftaran) {
+      throw new Error('Struktur data tidak lengkap (pendaftaran tidak ada)');
+    }
     var p = d.pendaftaran;
     var st = String(p.status_pendaftaran || 'DRAFT').toUpperCase();
 
@@ -541,7 +595,6 @@
         '</div>' +
       '</div>';
 
-    /* --- Data Siswa --- */
     html += '<div class="section-sub">Data Siswa</div><div class="detail-grid">' +
       fieldPair('Nama Lengkap', p.nama_lengkap) +
       fieldPair('NISN', p.nisn) +
@@ -555,7 +608,6 @@
       fieldPair('No. HP Siswa', p.nomor_hp) +
     '</div>';
 
-    /* --- Alamat --- */
     html += '<div class="section-sub">Alamat</div><div class="detail-grid">' +
       fieldPair('Alamat', p.alamat) +
       fieldPair('RT/RW', (p.rt || '-') + ' / ' + (p.rw || '-')) +
@@ -566,7 +618,6 @@
       fieldPair('Kode Pos', p.kode_pos) +
     '</div>';
 
-    /* --- Sekolah Asal --- */
     html += '<div class="section-sub">Sekolah Asal</div><div class="detail-grid">' +
       fieldPair('Sekolah', p.sekolah_asal) +
       fieldPair('NPSN', p.npsn_asal) +
@@ -574,13 +625,11 @@
       fieldPair('No. Ijazah', p.nomor_ijazah) +
     '</div>';
 
-    /* --- Konsentrasi --- */
     html += '<div class="section-sub">Pilihan Konsentrasi</div><div class="detail-grid">' +
       fieldPair('Pilihan 1', namaKonsentrasi(p.konsentrasi_1)) +
       fieldPair('Pilihan 2', namaKonsentrasi(p.konsentrasi_2)) +
     '</div>';
 
-    /* --- Keluarga (objek tunggal) --- */
     html += '<div class="section-sub">Data Keluarga</div>';
     var k = d.keluarga;
     if (k && (k.nama_ayah || k.nama_ibu)) {
@@ -600,7 +649,6 @@
       html += '<div class="empty" style="padding:16px;">Belum ada data keluarga.</div>';
     }
 
-    /* --- Dokumen --- */
     html += '<div class="section-sub">Dokumen</div>';
     if (d.dokumen && d.dokumen.length) {
       html += '<div class="doc-list">';
@@ -622,7 +670,6 @@
       html += '<div class="empty" style="padding:16px;">Belum ada dokumen.</div>';
     }
 
-    /* --- Verifikasi (ADMIN only) --- */
     if (role === 'ADMIN') {
       html += '<div class="section-sub">Aksi Verifikasi</div>' +
         '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
@@ -669,9 +716,6 @@
     });
   }
 
-  /* ============================================================
-   * BOOT
-   * ============================================================ */
   if (mode === 'detail') renderDetail();
   else renderList();
 
