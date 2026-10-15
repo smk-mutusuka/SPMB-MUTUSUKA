@@ -1,96 +1,282 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Petugas — SPMB SMK Muhammadiyah 1 Surakarta</title>
-  <link rel="stylesheet" href="style.css?v=2.0.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Petugas — SPMB SMK Muhammadiyah 1 Surakarta</title>
+<link rel="icon" href="logo.png">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
+  }
+  .login-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    padding: 40px 32px;
+    max-width: 420px;
+    width: 100%;
+  }
+  .login-logo { text-align: center; margin-bottom: 16px; }
+  .login-logo img { max-width: 90px; height: auto; }
+  .login-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a5490;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .login-subtitle {
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #fff;
+    color: #1f2937;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-group input:focus {
+    outline: none;
+    border-color: #1a5490;
+    box-shadow: 0 0 0 3px rgba(26,84,144,0.1);
+  }
+  .form-group input:disabled {
+    background: #f3f4f6;
+    color: #9ca3af;
+  }
+  .btn-login {
+    width: 100%;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #1a5490;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 8px;
+  }
+  .btn-login:hover:not(:disabled) { background: #143f6e; }
+  .btn-login:disabled {
+    background: #93b3d4;
+    cursor: not-allowed;
+  }
+  .login-footer {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 0.82rem;
+  }
+  .login-footer a {
+    color: #6b7280;
+    text-decoration: none;
+  }
+  .login-footer a:hover {
+    color: #1a5490;
+    text-decoration: underline;
+  }
+
+  .alert {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .alert.show { display: block; }
+  .alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+  .alert-info {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+  }
+
+  /* Loading inline pada tombol */
+  .btn-login .spinner-mini {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin-mini 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin-mini { to { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
 
-<div class="login-wrapper">
-  <div class="login-card">
-    <div class="login-logo">
-      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+<div class="login-card">
+  <div class="login-logo">
+    <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+  </div>
+  <h1 class="login-title">Login Petugas</h1>
+  <p class="login-subtitle">SPMB SMK Muhammadiyah 1 Surakarta</p>
+
+  <div class="alert alert-error" id="alert-error"></div>
+  <div class="alert alert-info" id="alert-info"></div>
+
+  <form id="login-form" autocomplete="on">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" autocomplete="username"
+             placeholder="Masukkan username" required>
     </div>
-    <h1 class="login-title">Login Petugas</h1>
-    <p class="login-subtitle">SPMB SMK Muhammadiyah 1 Surakarta</p>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autocomplete="current-password"
+             placeholder="Masukkan password" required>
+    </div>
+    <button type="submit" class="btn-login" id="btn-login">Masuk</button>
+  </form>
 
-    <form id="login-form" autocomplete="on">
-      <div class="form-group">
-        <label class="form-label" for="username">Username</label>
-        <input type="text" id="username" name="username" class="form-input"
-               autocomplete="username" required autofocus>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="password">Password</label>
-        <input type="password" id="password" name="password" class="form-input"
-               autocomplete="current-password" required>
-      </div>
-
-      <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login">
-        Masuk
-      </button>
-    </form>
-
-    <p class="text-center mt-3">
-      <a href="index.html" class="text-muted" style="font-size:0.85rem;">← Kembali ke halaman utama</a>
-    </p>
+  <div class="login-footer">
+    <a href="index.html">← Kembali ke halaman utama</a>
   </div>
 </div>
 
-<!-- v=2.0.0 untuk paksa refresh cache -->
-<script src="config.js?v=2.0.0"></script>
-<script src="utils.js?v=2.0.0"></script>
-<script src="api.js?v=2.0.0"></script>
-<script src="auth.js?v=2.0.0"></script>
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
 <script>
-  (function () {
-    if (Auth.isLoggedIn()) {
-      window.location.href = 'dashboard.html';
+(function () {
+  'use strict';
+
+  var form = document.getElementById('login-form');
+  var btnLogin = document.getElementById('btn-login');
+  var usernameEl = document.getElementById('username');
+  var passwordEl = document.getElementById('password');
+  var alertError = document.getElementById('alert-error');
+  var alertInfo = document.getElementById('alert-info');
+
+  /* ============================================================
+   * Kalau sudah login → langsung dashboard
+   * ============================================================ */
+  if (Auth.isLoggedIn()) {
+    window.location.replace('dashboard.html');
+    return;
+  }
+
+  /* ============================================================
+   * Helpers
+   * ============================================================ */
+  function showAlert(el, msg) {
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function hideAlerts() {
+    alertError.classList.remove('show');
+    alertInfo.classList.remove('show');
+  }
+  function setLoading(on) {
+    if (on) {
+      btnLogin.disabled = true;
+      usernameEl.disabled = true;
+      passwordEl.disabled = true;
+      btnLogin.innerHTML = '<span class="spinner-mini"></span>Memproses...';
+    } else {
+      btnLogin.disabled = false;
+      usernameEl.disabled = false;
+      passwordEl.disabled = false;
+      btnLogin.textContent = 'Masuk';
+    }
+  }
+
+  /* ============================================================
+   * Submit
+   * ============================================================ */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    hideAlerts();
+
+    var username = usernameEl.value.trim();
+    var password = passwordEl.value;
+
+    if (!username || !password) {
+      showAlert(alertError, 'Username dan password wajib diisi.');
       return;
     }
 
-    const form = document.getElementById('login-form');
-    const btn = document.getElementById('btn-login');
+    setLoading(true);
+    showAlert(alertInfo, 'Memverifikasi...');
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
+    var t0 = Date.now();
+    console.log('[SPMB] login → mengirim request...');
 
-      if (!username || !password) {
-        Utils.toast('Username dan password wajib diisi', 'warning');
-        return;
-      }
+    Api.auth.login(username, password)
+      .then(function (res) {
+        var elapsed = Date.now() - t0;
+        console.log('[SPMB] login selesai dalam ' + elapsed + ' ms', res);
 
-      btn.disabled = true;
-      btn.textContent = 'Memproses...';
-      Utils.showLoading('Memverifikasi...');
+        if (!res || !res.success) {
+          setLoading(false);
+          hideAlerts();
+          var msg = (res && res.message) ? res.message : 'Login gagal. Coba lagi.';
+          showAlert(alertError, msg);
+          return;
+        }
 
-      Api.auth.login(username, password)
-        .then(function (res) {
-          if (res.success) {
-            Auth.saveSession(res.data);
-            Utils.toast('Login berhasil', 'success');
-            setTimeout(function () {
-              window.location.href = 'dashboard.html';
-            }, 600);
-          } else {
-            Utils.toast(res.message || 'Login gagal', 'error');
-          }
-        })
-        .catch(function (err) {
-          Utils.toast(err.message || 'Gagal terhubung ke server', 'error');
-        })
-        .finally(function () {
-          btn.disabled = false;
-          btn.textContent = 'Masuk';
-          Utils.hideLoading();
-        });
-    });
-  })();
+        // Simpan sesi
+        Auth.saveSession(res.data);
+        console.log('[SPMB] sesi disimpan, redirect ke dashboard...');
+        hideAlerts();
+
+        // Redirect langsung, tanpa delay
+        window.location.replace('dashboard.html');
+      })
+      .catch(function (err) {
+        var elapsed = Date.now() - t0;
+        console.error('[SPMB] login GAGAL setelah ' + elapsed + ' ms:', err);
+        setLoading(false);
+        hideAlerts();
+
+        var msg = err && err.message ? err.message : 'Terjadi kesalahan.';
+        if (msg.indexOf('timeout') >= 0 || msg.indexOf('Timeout') >= 0 || msg.indexOf('AbortError') >= 0) {
+          msg = 'Server tidak menjawab. Coba lagi beberapa saat.';
+        } else if (msg.indexOf('Failed to fetch') >= 0 || msg.indexOf('NetworkError') >= 0) {
+          msg = 'Koneksi ke server gagal. Periksa internet atau coba lagi.';
+        }
+        showAlert(alertError, msg);
+      });
+  });
+
+  /* ============================================================
+   * Auto focus ke username
+   * ============================================================ */
+  setTimeout(function () { usernameEl.focus(); }, 100);
+
+})();
 </script>
 </body>
 </html>
