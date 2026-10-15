@@ -1,13 +1,6 @@
 /**
  * ============================================================
  * api.js
- * ------------------------------------------------------------
- * Wrapper fetch() ke Apps Script Web App.
- *
- * PENTING:
- * - Apps Script redirect POST → CORS hilang → error.
- * - Solusi: kirim request via GET, payload di query string (base64).
- * - Upload file besar pakai POST (simple request).
  * ============================================================
  */
 
@@ -21,9 +14,6 @@ const Api = {
       .replace(/=+$/, '');
   },
 
-  /* ============================================================
-   * GET — request standar
-   * ============================================================ */
   call: function (action, payload, opts) {
     opts = opts || {};
     const useToken = opts.useToken !== false;
@@ -65,11 +55,6 @@ const Api = {
       });
   },
 
-  /* ============================================================
-   * POST — untuk upload file besar (base64 gambar)
-   * Menggunakan Content-Type text/plain agar tidak memicu preflight
-   * CORS (OPTIONS) yang tidak dihandle Apps Script.
-   * ============================================================ */
   upload: function (action, payload, opts) {
     opts = opts || {};
     const timeout = opts.timeout || 120000;
@@ -78,7 +63,6 @@ const Api = {
     }
 
     const body = { action: action, token: null, payload: payload || {} };
-
     const controller = new AbortController();
     const timer = setTimeout(function () { controller.abort(); }, timeout);
 
@@ -106,68 +90,39 @@ const Api = {
       });
   },
 
-  /* ============================================================
-   * AUTH
-   * ============================================================ */
   auth: {
     login: function (username, password) {
       return Api.call('auth.login', { username: username, password: password }, { useToken: false });
     },
-    logout: function () {
-      return Api.call('auth.logout', {});
-    },
-    whoami: function () {
-      return Api.call('auth.whoami', {});
-    }
+    logout: function () { return Api.call('auth.logout', {}); },
+    whoami: function () { return Api.call('auth.whoami', {}); }
   },
 
-  /* ============================================================
-   * SETTINGS
-   * ============================================================ */
   settings: {
-    getPublic: function () {
-      return Api.call('settings.getPublic', {}, { useToken: false });
-    },
-    get: function () {
-      return Api.call('settings.get', {});
-    },
-    update: function (settings) {
-      return Api.call('settings.update', { settings: settings });
-    },
-    listKonsentrasi: function () {
-      return Api.call('settings.listKonsentrasi', {}, { useToken: false });
-    }
+    getPublic: function () { return Api.call('settings.getPublic', {}, { useToken: false }); },
+    get: function () { return Api.call('settings.get', {}); },
+    update: function (settings) { return Api.call('settings.update', { settings: settings }); },
+    listKonsentrasi: function () { return Api.call('settings.listKonsentrasi', {}, { useToken: false }); }
   },
 
-  /* ============================================================
-   * ADMIN
-   * ============================================================ */
   admin: {
     listUsers: function () { return Api.call('admin.listUsers', {}); },
     createUser: function (d) { return Api.call('admin.createUser', d); },
     updateUser: function (d) { return Api.call('admin.updateUser', d); },
     resetUserPassword: function (d) { return Api.call('admin.resetUserPassword', d); },
     deleteUser: function (userId) { return Api.call('admin.deleteUser', { user_id: userId }); },
-
     listKonsentrasi: function () { return Api.call('admin.listKonsentrasi', {}); },
     saveKonsentrasi: function (d) { return Api.call('admin.saveKonsentrasi', d); },
     deleteKonsentrasi: function (id) { return Api.call('admin.deleteKonsentrasi', { konsentrasi_id: id }); },
-
     listPertanyaan: function () { return Api.call('admin.listPertanyaan', {}); },
     savePertanyaan: function (d) { return Api.call('admin.savePertanyaan', d); },
     deletePertanyaan: function (id) { return Api.call('admin.deletePertanyaan', { question_id: id }); },
-
     listTemplate: function () { return Api.call('admin.listTemplate', {}); },
     saveTemplate: function (d) { return Api.call('admin.saveTemplate', d); },
-
     getFullSettings: function () { return Api.call('admin.getFullSettings', {}); }
   },
 
-  /* ============================================================
-   * REGISTRATION
-   * ============================================================ */
   registration: {
-    /* --- Petugas --- */
     list: function (params) { return Api.call('registration.list', params || {}); },
     get: function (id) { return Api.call('registration.get', { registration_id: id }); },
     verify: function (id, status, catatan) {
@@ -176,8 +131,6 @@ const Api = {
       });
     },
     stats: function () { return Api.call('registration.stats', {}); },
-
-    /* --- Pendaftar --- */
     start: function () { return Api.call('registration.start', {}, { useToken: false }); },
     resume: function (t) { return Api.call('registration.resume', { token: t }, { useToken: false }); },
     saveDraft: function (t, step, data) {
@@ -185,26 +138,19 @@ const Api = {
     },
     uploadDokumen: function (t, jenis, b64, nama, mime) {
       return Api.upload('registration.uploadDokumen', {
-        token: t, jenis_dokumen: jenis, base64: b64,
-        nama_file: nama, mime_type: mime
+        token: t, jenis_dokumen: jenis, base64: b64, nama_file: nama, mime_type: mime
       }, { timeout: 120000 });
     },
     submit: function (t) { return Api.call('registration.submit', { token: t }, { useToken: false }); },
     status: function (t) { return Api.call('registration.status', { token: t }, { useToken: false }); }
   },
 
-  /* ============================================================
-   * INTERVIEW
-   * ============================================================ */
   interview: {
     listCandidates: function (params) { return Api.call('interview.listCandidates', params || {}); },
     get: function (id) { return Api.call('interview.get', { registration_id: id }); },
     save: function (d) { return Api.call('interview.save', d); }
   },
 
-  /* ============================================================
-   * PAYMENT
-   * ============================================================ */
   payment: {
     list: function (params) { return Api.call('payment.list', params || {}); },
     summary: function () { return Api.call('payment.summary', {}); },
@@ -215,9 +161,6 @@ const Api = {
     getForPrint: function (id) { return Api.call('payment.getForPrint', { transaction_id: id }); }
   },
 
-  /* ============================================================
-   * SELECTION
-   * ============================================================ */
   selection: {
     listCandidates: function (params) { return Api.call('selection.listCandidates', params || {}); },
     setDecision: function (id, decision, notes) {
@@ -231,18 +174,12 @@ const Api = {
     stats: function () { return Api.call('selection.stats', {}); }
   },
 
-  /* ============================================================
-   * LAPORAN
-   * ============================================================ */
   report: {
     dashboard: function () { return Api.call('report.dashboard', {}); },
     exportData: function (params) { return Api.call('report.exportData', params || {}); },
     daftarHadir: function (params) { return Api.call('report.daftarHadir', params || {}); }
   },
 
-  /* ============================================================
-   * NOTIFIKASI WA
-   * ============================================================ */
   notif: {
     preview: function (regId, templateCode, recipientType) {
       return Api.call('notif.preview', {
@@ -255,9 +192,6 @@ const Api = {
     listLog: function (params) { return Api.call('notif.listLog', params || {}); }
   },
 
-  /* ============================================================
-   * UTILITY
-   * ============================================================ */
   ping: function () {
     return Api.call('ping', {}, { useToken: false });
   }
