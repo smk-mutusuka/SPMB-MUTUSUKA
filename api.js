@@ -1,17 +1,8 @@
-/**
- * ============================================================
- * api.js
- * ============================================================
- */
-
 const Api = {
 
   _b64encode: function (str) {
     const utf8 = unescape(encodeURIComponent(str));
-    return btoa(utf8)
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+    return btoa(utf8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   },
 
   call: function (action, payload, opts) {
@@ -58,9 +49,7 @@ const Api = {
   upload: function (action, payload, opts) {
     opts = opts || {};
     const timeout = opts.timeout || 120000;
-    if (!APP_CONFIG.APPS_SCRIPT_URL) {
-      return Promise.reject(new Error('APPS_SCRIPT_URL belum diisi'));
-    }
+    if (!APP_CONFIG.APPS_SCRIPT_URL) return Promise.reject(new Error('APPS_SCRIPT_URL belum diisi'));
 
     const body = { action: action, token: null, payload: payload || {} };
     const controller = new AbortController();
@@ -73,10 +62,7 @@ const Api = {
       signal: controller.signal,
       redirect: 'follow'
     })
-      .then(function (res) {
-        clearTimeout(timer);
-        return res.text();
-      })
+      .then(function (res) { clearTimeout(timer); return res.text(); })
       .then(function (text) {
         let json;
         try { json = JSON.parse(text); }
@@ -126,9 +112,7 @@ const Api = {
     list: function (params) { return Api.call('registration.list', params || {}); },
     get: function (id) { return Api.call('registration.get', { registration_id: id }); },
     verify: function (id, status, catatan) {
-      return Api.call('registration.verify', {
-        registration_id: id, status: status, catatan: catatan || ''
-      });
+      return Api.call('registration.verify', { registration_id: id, status: status, catatan: catatan || '' });
     },
     stats: function () { return Api.call('registration.stats', {}); },
     start: function () { return Api.call('registration.start', {}, { useToken: false }); },
@@ -164,9 +148,7 @@ const Api = {
   selection: {
     listCandidates: function (params) { return Api.call('selection.listCandidates', params || {}); },
     setDecision: function (id, decision, notes) {
-      return Api.call('selection.setDecision', {
-        registration_id: id, decision: decision, decision_notes: notes || ''
-      });
+      return Api.call('selection.setDecision', { registration_id: id, decision: decision, decision_notes: notes || '' });
     },
     bulkSet: function (items) { return Api.call('selection.bulkSet', { items: items }); },
     publish: function (publish) { return Api.call('selection.publish', { publish: publish }); },
@@ -183,16 +165,12 @@ const Api = {
   notif: {
     preview: function (regId, templateCode, recipientType) {
       return Api.call('notif.preview', {
-        registration_id: regId,
-        template_code: templateCode,
-        recipient_type: recipientType || 'SISWA'
+        registration_id: regId, template_code: templateCode, recipient_type: recipientType || 'SISWA'
       });
     },
     log: function (d) { return Api.call('notif.log', d); },
     listLog: function (params) { return Api.call('notif.listLog', params || {}); }
   },
 
-  ping: function () {
-    return Api.call('ping', {}, { useToken: false });
-  }
+  ping: function () { return Api.call('ping', {}, { useToken: false }); }
 };
