@@ -7,10 +7,7 @@
  * PENTING:
  * - Apps Script redirect POST → CORS hilang → error.
  * - Solusi: kirim request via GET, payload di query string (base64).
- *
- * Dua jenis token:
- * - Token PETUGAS  → sessionStorage 'spmb_token' (auto via useToken).
- * - Token PENDAFTAR → dikirim manual via payload (useToken: false).
+ * - Upload file besar pakai POST (simple request).
  * ============================================================
  */
 
@@ -24,12 +21,9 @@ const Api = {
       .replace(/=+$/, '');
   },
 
-  /**
-   * Panggil API Apps Script via GET.
-   * @param {string} action
-   * @param {object} payload
-   * @param {object} opts - { useToken: bool (default true), timeout: ms }
-   */
+  /* ============================================================
+   * GET — request standar
+   * ============================================================ */
   call: function (action, payload, opts) {
     opts = opts || {};
     const useToken = opts.useToken !== false;
@@ -71,12 +65,11 @@ const Api = {
       });
   },
 
-    /**
-   * Upload data besar (base64 gambar) via POST.
-   * Kenapa POST? GET dengan ?data= terlalu panjang → ditolak Google.
-   * Kenapa Content-Type text/plain? Agar browser tidak kirim preflight
-   * OPTIONS (yang tidak di-handle Apps Script). "Simple request" CORS.
-   */
+  /* ============================================================
+   * POST — untuk upload file besar (base64 gambar)
+   * Menggunakan Content-Type text/plain agar tidak memicu preflight
+   * CORS (OPTIONS) yang tidak dihandle Apps Script.
+   * ============================================================ */
   upload: function (action, payload, opts) {
     opts = opts || {};
     const timeout = opts.timeout || 120000;
@@ -84,11 +77,7 @@ const Api = {
       return Promise.reject(new Error('APPS_SCRIPT_URL belum diisi'));
     }
 
-    const body = {
-      action: action,
-      token: null, // upload selalu tanpa token petugas
-      payload: payload || {}
-    };
+    const body = { action: action, token: null, payload: payload || {} };
 
     const controller = new AbortController();
     const timer = setTimeout(function () { controller.abort(); }, timeout);
@@ -118,9 +107,8 @@ const Api = {
   },
 
   /* ============================================================
-   * Shortcut per modul
+   * AUTH
    * ============================================================ */
-
   auth: {
     login: function (username, password) {
       return Api.call('auth.login', { username: username, password: password }, { useToken: false });
@@ -133,6 +121,9 @@ const Api = {
     }
   },
 
+  /* ============================================================
+   * SETTINGS
+   * ============================================================ */
   settings: {
     getPublic: function () {
       return Api.call('settings.getPublic', {}, { useToken: false });
@@ -148,61 +139,72 @@ const Api = {
     }
   },
 
-  /* ---- ADMIN ---- */
+  /* ============================================================
+   * ADMIN
+   * ============================================================ */
   admin: {
-    // Users
     listUsers: function () { return Api.call('admin.listUsers', {}); },
     createUser: function (d) { return Api.call('admin.createUser', d); },
     updateUser: function (d) { return Api.call('admin.updateUser', d); },
     resetUserPassword: function (d) { return Api.call('admin.resetUserPassword', d); },
     deleteUser: function (userId) { return Api.call('admin.deleteUser', { user_id: userId }); },
-    // Konsentrasi
+
     listKonsentrasi: function () { return Api.call('admin.listKonsentrasi', {}); },
     saveKonsentrasi: function (d) { return Api.call('admin.saveKonsentrasi', d); },
     deleteKonsentrasi: function (id) { return Api.call('admin.deleteKonsentrasi', { konsentrasi_id: id }); },
-    // Pertanyaan
+
     listPertanyaan: function () { return Api.call('admin.listPertanyaan', {}); },
     savePertanyaan: function (d) { return Api.call('admin.savePertanyaan', d); },
     deletePertanyaan: function (id) { return Api.call('admin.deletePertanyaan', { question_id: id }); },
-    // Template WA
+
     listTemplate: function () { return Api.call('admin.listTemplate', {}); },
     saveTemplate: function (d) { return Api.call('admin.saveTemplate', d); },
-    // Settings lengkap
+
     getFullSettings: function () { return Api.call('admin.getFullSettings', {}); }
   },
 
-  /* ---- REGISTRATION ---- */
+  /* ============================================================
+   * REGISTRATION
+   * ============================================================ */
   registration: {
-    // Petugas
+    /* --- Petugas --- */
     list: function (params) { return Api.call('registration.list', params || {}); },
     get: function (id) { return Api.call('registration.get', { registration_id: id }); },
     verify: function (id, status, catatan) {
-      return Api.call('registration.verify', { registration_id: id, status: status, catatan: catatan || '' });
+      return Api.call('registration.verify', {
+        registration_id: id, status: status, catatan: catatan || ''
+      });
     },
     stats: function () { return Api.call('registration.stats', {}); },
-    // Pendaftar
+
+    /* --- Pendaftar --- */
     start: function () { return Api.call('registration.start', {}, { useToken: false }); },
     resume: function (t) { return Api.call('registration.resume', { token: t }, { useToken: false }); },
     saveDraft: function (t, step, data) {
       return Api.call('registration.saveDraft', { token: t, step: step, data: data }, { useToken: false });
     },
     uploadDokumen: function (t, jenis, b64, nama, mime) {
-      return Api.call('registration.uploadDokumen', {
-        token: t, jenis_dokumen: jenis, base64: b64, nama_file: nama, mime_type: mime
-      }, { useToken: false, timeout: 60000 });
+      return Api.upload('registration.uploadDokumen', {
+        token: t, jenis_dokumen: jenis, base64: b64,
+        nama_file: nama, mime_type: mime
+      }, { timeout: 120000 });
     },
     submit: function (t) { return Api.call('registration.submit', { token: t }, { useToken: false }); },
     status: function (t) { return Api.call('registration.status', { token: t }, { useToken: false }); }
   },
 
-  /* ---- INTERVIEW ---- */
+  /* ============================================================
+   * INTERVIEW
+   * ============================================================ */
   interview: {
     listCandidates: function (params) { return Api.call('interview.listCandidates', params || {}); },
     get: function (id) { return Api.call('interview.get', { registration_id: id }); },
     save: function (d) { return Api.call('interview.save', d); }
   },
 
-  /* ---- PAYMENT ---- */
+  /* ============================================================
+   * PAYMENT
+   * ============================================================ */
   payment: {
     list: function (params) { return Api.call('payment.list', params || {}); },
     summary: function () { return Api.call('payment.summary', {}); },
@@ -213,7 +215,9 @@ const Api = {
     getForPrint: function (id) { return Api.call('payment.getForPrint', { transaction_id: id }); }
   },
 
-  /* ---- SELECTION ---- */
+  /* ============================================================
+   * SELECTION
+   * ============================================================ */
   selection: {
     listCandidates: function (params) { return Api.call('selection.listCandidates', params || {}); },
     setDecision: function (id, decision, notes) {
@@ -226,15 +230,19 @@ const Api = {
     getResult: function (id) { return Api.call('selection.getResult', { registration_id: id }); },
     stats: function () { return Api.call('selection.stats', {}); }
   },
-  
-  /* ---- LAPORAN ---- */
+
+  /* ============================================================
+   * LAPORAN
+   * ============================================================ */
   report: {
     dashboard: function () { return Api.call('report.dashboard', {}); },
     exportData: function (params) { return Api.call('report.exportData', params || {}); },
     daftarHadir: function (params) { return Api.call('report.daftarHadir', params || {}); }
   },
 
-  /* ---- NOTIFIKASI WA ---- */
+  /* ============================================================
+   * NOTIFIKASI WA
+   * ============================================================ */
   notif: {
     preview: function (regId, templateCode, recipientType) {
       return Api.call('notif.preview', {
@@ -247,19 +255,10 @@ const Api = {
     listLog: function (params) { return Api.call('notif.listLog', params || {}); }
   },
 
-    /* ---- NOTIFIKASI WA ---- */
-  notif: {
-    preview: function (regId, templateCode, recipientType) {
-      return Api.call('notif.preview', {
-        registration_id: regId,
-        template_code: templateCode,
-        recipient_type: recipientType || 'SISWA'
-      });
-    },
-    log: function (d) { return Api.call('notif.log', d); },
-    listLog: function (params) { return Api.call('notif.listLog', params || {}); }
-  },
-
+  /* ============================================================
+   * UTILITY
+   * ============================================================ */
   ping: function () {
     return Api.call('ping', {}, { useToken: false });
   }
+};
