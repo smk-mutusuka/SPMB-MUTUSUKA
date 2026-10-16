@@ -154,9 +154,9 @@
       margin-bottom: 4mm;
     }
 
-    .surat .judul { text-align: center; margin: 6mm 0 2mm; }
+    .surat { font-size: 12pt; line-height: 1.5; }
     .surat .judul h3 { font-size: 14pt; font-weight: 700;
-      text-decoration: underline; letter-spacing: 1px; margin: 0; }
+      text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
     .surat .judul .nomor { font-size: 12pt; margin-top: 2mm; }
     .surat .isi { margin: 5mm 0; text-align: justify; }
     .surat .ttd { margin-top: 10mm; text-align: right; }
@@ -417,22 +417,23 @@
    * - Konsentrasi tampil lengkap: "K03 — Teknik Pengelasan"
    * - Deadline daftar ulang dari gelombang (fallback "sesuai jadwal gelombang")
    * ============================================================ */
-    function printSurat(regId) {
+      function printSurat(regId) {
     Utils.showLoading('Menyiapkan surat...');
 
-    // Pastikan konsentrasiMap terisi dulu (kalau belum)
     var pEnsure = konsentrasiMap && Object.keys(konsentrasiMap).length
       ? Promise.resolve()
       : loadKonsentrasiMap();
 
-    // Ambil data surat + daftar ulang secara paralel
+    // Fetch paralel: surat, daftar ulang, list gelombang
     Promise.all([
       pEnsure.then(function () { return Api.selection.getResult(regId); }),
-      Api.daftarUlang.getByReg(regId).catch(function () { return { success: false, data: {} }; })
+      Api.daftarUlang.getByReg(regId).catch(function () { return { success: false }; }),
+      Api.gelombang.list().catch(function () { return { success: false }; })
     ]).then(function (results) {
       Utils.hideLoading();
       var res = results[0];
       var duRes = results[1];
+      var gelRes = results[2];
       if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
 
       var d = res.data;
@@ -441,29 +442,54 @@
       var isDiterima = decision === 'DITERIMA';
       var isCadangan = decision === 'CADANGAN';
 
-      // ==== KONSENTRASI LENGKAP ====
+      /* ============================================================
+       * 1. GELOMBANG — cari berdasarkan daftar_ulang.gelombang_id
+       * ============================================================ */
+      var daftarUlang = (duRes && duRes.success && duRes.data)
+        ? duRes.data.daftar_ulang : null;
+      var gelId = daftarUlang ? daftarUlang.gelombang_id : '';
+      var gelList = (gelRes && gelRes.success && gelRes.data)
+        ? (gelRes.data.gelombang || []) : [];
+      var gelObj = null;
+      for (var i = 0; i < gelList.length; i++) {
+        if (gelList[i].gelombang_id === gelId) { gelObj = gelList[i]; break; }
+      }
+      var gelNama = gelObj ? gelObj.nama : '';
+      var gelKode = gelObj ? String(gelObj.kode || '').toUpperCase() : '';
+      var isReguler = (gelKode === 'REGULER');
+
+      /* ============================================================
+       * 2. KONSENTRASI LENGKAP
+       * ============================================================ */
       var konsLabel = labelKonsentrasi(p.konsentrasi_1);
 
-      // ==== DEADLINE DAFTAR ULANG ====
-      // Sumber prioritas:
-      //   1) d.daftar_ulang.batas_daftar_ulang (kalau backend kirim langsung)
-      //   2) duRes.data.daftar_ulang.batas_daftar_ulang (dari endpoint terpisah)
-      //   3) h.batas_daftar_ulang
-      //   4) s.batas_daftar_ulang
+      /* ============================================================
+       * 3. BATAS DAFTAR ULANG
+       *    - Reguler  → tanggal_diterima + 14 hari
+       *    - Lainnya  → tanggal_selesai gelombang
+       * ============================================================ */
       var batasDU = '';
-      if (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) {
-        batasDU = d.daftar_ulang.batas_daftar_ulang;
-      } else if (duRes && duRes.success && duRes.data && duRes.data.daftar_ulang &&
-                 duRes.data.daftar_ulang.batas_daftar_ulang) {
-        batasDU = duRes.data.daftar_ulang.batas_daftar_ulang;
-      } else if (h && h.batas_daftar_ulang) {
-        batasDU = h.batas_daftar_ulang;
-      } else if (s && s.batas_daftar_ulang) {
-        batasDU = s.batas_daftar_ulang;
+      if (isDiterima) {
+        if (isReguler) {
+          var tglTerima = (daftarUlang && daftarUlang.tanggal_diterima)
+            ? new Date(daftarUlang.tanggal_diterima)
+            : (h.decision_date ? new Date(h.decision_date) : new Date());
+          batasDU = new Date(tglTerima.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString();
+        } else if (gelObj && gelObj.tanggal_selesai) {
+          batasDU = gelObj.tanggal_selesai;
+        }
+      }
+      // Fallback ke data backend kalau masih kosong
+      if (!batasDU) {
+        batasDU = (daftarUlang && daftarUlang.batas_daftar_ulang) ||
+                  (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) ||
+                  (h && h.batas_daftar_ulang) ||
+                  (s && s.batas_daftar_ulang) || '';
       }
 
-      // ... lanjut seperti semula (kalimatDU, kalimat, hasilTeks, next, kopFallback, dst)
-
+      /* ============================================================
+       * 4. KALIMAT
+       * ============================================================ */
       var kalimatDU = batasDU
         ? 'Peserta diharapkan melakukan daftar ulang paling lambat <strong>' +
           Utils.formatTanggal(batasDU) + '</strong>. Apabila tidak melakukan daftar ulang, ' +
@@ -475,16 +501,28 @@
         Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
         Utils.escapeHtml(s.tahun_ajaran || '') + ', dengan ini kami nyatakan bahwa:';
 
-      var hasilTeks = isDiterima ? '<strong>DITERIMA</strong>' :
-                      isCadangan ? '<strong>CADANGAN</strong>' :
-                      '<strong>TIDAK DITERIMA</strong>';
+      /* ============================================================
+       * 5. HASIL TEKS + PERIODE GELOMBANG
+       * ============================================================ */
+      var hasilTeks;
+      if (isDiterima) {
+        hasilTeks = '<strong>DITERIMA</strong>';
+        if (gelNama) hasilTeks += ' <em>(' + Utils.escapeHtml(gelNama) + ')</em>';
+      } else if (isCadangan) {
+        hasilTeks = '<strong>CADANGAN</strong>';
+        if (gelNama) hasilTeks += ' <em>(' + Utils.escapeHtml(gelNama) + ')</em>';
+      } else {
+        hasilTeks = '<strong>TIDAK DITERIMA</strong>';
+      }
 
       var next = isDiterima ? '<p>' + kalimatDU + '</p>'
                : isCadangan ? '<p>Peserta akan dihubungi kembali apabila terdapat kuota yang tersedia.</p>'
                : '<p>Kami mengucapkan terima kasih atas partisipasi peserta dalam seleksi ini.</p>';
 
-      // ===== KOP: gambar utama + fallback teks (inline) =====
-       var kopFallback =
+      /* ============================================================
+       * 6. KOP
+       * ============================================================ */
+      var kopFallback =
         '<div class="kop-fallback" style="display:flex;align-items:center;gap:5mm;' +
           'border-bottom:2px solid #000;padding-bottom:3mm;">' +
           '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" ' +
@@ -504,6 +542,9 @@
           'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
         '<div style="display:none;">' + kopFallback + '</div>';
 
+      /* ============================================================
+       * 7. RENDER
+       * ============================================================ */
       document.getElementById('print-area').innerHTML =
         '<div class="surat">' + kop +
           '<div class="judul">' +
