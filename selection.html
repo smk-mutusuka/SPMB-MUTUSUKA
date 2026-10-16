@@ -134,68 +134,36 @@
     #print-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%;
       font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
-
-    /* Body 12pt */
     .surat { font-size: 12pt; line-height: 1.5; }
-
-    /* KOP 20cm */
     .surat .kop-img {
       width: 20cm; max-width: none; height: auto; max-height: 45mm;
       object-fit: contain; display: block;
       margin-left: -1.3cm; margin-right: -1.3cm; margin-bottom: 4mm;
     }
-    .surat .kop-fallback {
-      margin-left: -1.3cm; margin-right: -1.3cm; margin-bottom: 4mm;
-    }
-
-    /* Judul + nomor: CENTER */
+    .surat .kop-fallback { margin-left: -1.3cm; margin-right: -1.3cm; margin-bottom: 4mm; }
     .surat .judul { text-align: center; margin: 6mm 0 2mm; }
     .surat .judul h3 {
       font-size: 14pt; font-weight: 700;
       text-decoration: underline; letter-spacing: 0.5px; margin: 0;
     }
-    .surat .judul .nomor {
-      font-size: 10.5pt; margin-top: 2mm; text-align: center;
-    }
-
+    .surat .judul .nomor { font-size: 10.5pt; margin-top: 2mm; text-align: center; }
     .surat .isi { margin: 5mm 0; text-align: justify; }
     .surat .isi p { margin-bottom: 4mm; }
-
-    /* ====== TANDA TANGAN 2 KOLOM ====== */
     .surat .ttd-2col {
-      margin-top: 12mm;
-      display: flex;
-      justify-content: space-between;
-      gap: 8mm;
-      page-break-inside: avoid;
+      margin-top: 12mm; display: flex; justify-content: space-between;
+      gap: 8mm; page-break-inside: avoid;
     }
-    .surat .ttd-kolom {
-      flex: 1;
-      text-align: center;
-      font-size: 12pt;
-    }
+    .surat .ttd-kolom { flex: 1; text-align: center; font-size: 12pt; }
     .surat .ttd-kolom .jabatan { margin-bottom: 1mm; }
     .surat .ttd-kolom .ttd-img {
-      display: block;
-      width: 3.5cm;
-      max-height: 22mm;
-      object-fit: contain;
-      margin: 0 auto;
+      display: block; width: 3.5cm; max-height: 22mm;
+      object-fit: contain; margin: 0 auto;
     }
-    .surat .ttd-kolom .ttd-placeholder {
-      height: 22mm;
-      display: block;
-    }
+    .surat .ttd-kolom .ttd-placeholder { height: 22mm; display: block; }
     .surat .ttd-kolom .nama {
-      font-weight: 700;
-      text-decoration: underline;
-      margin-top: 1mm;
+      font-weight: 700; text-decoration: underline; margin-top: 1mm;
     }
-    /* NIPM & NBM: 12pt */
-    .surat .ttd-kolom .nipm {
-      font-size: 12pt;
-      margin-top: 1mm;
-    }
+    .surat .ttd-kolom .nipm { font-size: 12pt; margin-top: 1mm; }
   }
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
@@ -445,12 +413,19 @@
 
   /* ============================================================
    * CETAK SURAT
-   * Logika batas daftar ulang:
-   *   1) Cek daftarUlang.gelombang_id → cari gelombang di list
-   *   2) Kalau kosong → cari gelombang dari tanggal_daftar kandidat
-   *      (gelombang non-REGULER yang tanggal_mulai <= tgl_daftar <= tanggal_selesai)
-   *   3) Kalau REGULER → tanggal_diterima + 14 hari
-   *   4) Kalau Inden/G1/G2 → tanggal_selesai gelombang
+   * Logika deteksi gelombang + batas daftar ulang:
+   *   1. Ambil 4 data paralel:
+   *      - getResult(regId)       → data surat + keputusan
+   *      - daftarUlang.getByReg() → data daftar ulang + gelombang_id
+   *      - gelombang.list()       → daftar gelombang (Inden, G1, G2, Reguler)
+   *      - registration.get(regId)→ detail lengkap (termasuk tanggal_daftar)
+   *   2. Cari gelombang:
+   *      a) by daftarUlang.gelombang_id (kalau ada)
+   *      b) by tanggal_daftar (dari registration.get)
+   *      c) kalau ketemu REGULER → tanggal_diterima + 14 hari
+   *      d) kalau ketemu Inden/G1/G2 → tanggal_selesai gelombang
+   *      e) kalau tidak ketemu → "sesuai jadwal gelombang"
+   *   3. JANGAN pakai daftarUlang.batas_daftar_ulang (Reguler-based)
    * ============================================================ */
   function printSurat(regId) {
     Utils.showLoading('Menyiapkan surat...');
@@ -462,12 +437,14 @@
     Promise.all([
       pEnsure.then(function () { return Api.selection.getResult(regId); }),
       Api.daftarUlang.getByReg(regId).catch(function () { return { success: false }; }),
-      Api.gelombang.list().catch(function () { return { success: false }; })
+      Api.gelombang.list().catch(function () { return { success: false }; }),
+      Api.registration.get(regId).catch(function () { return { success: false }; })
     ]).then(function (results) {
       Utils.hideLoading();
       var res = results[0];
       var duRes = results[1];
       var gelRes = results[2];
+      var regRes = results[3];
       if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
 
       var d = res.data;
@@ -476,8 +453,28 @@
       var isDiterima = decision === 'DITERIMA';
       var isCadangan = decision === 'CADANGAN';
 
+      /* --- DEBUG (bisa hapus kalau sudah yakin) --- */
+      console.log('===== DEBUG CETAK SURAT =====');
+      console.log('regId:', regId);
+      console.log('daftarUlang:', duRes);
+      console.log('gelList:', gelRes);
+      console.log('regDetail:', regRes);
+      /* -------------------------------------------- */
+
       /* ============================================================
-       * 1. CARI GELOMBANG
+       * 1. AMBIL TANGGAL DAFTAR (dari 3 sumber)
+       * ============================================================ */
+      var tanggalDaftar = '';
+      if (regRes && regRes.success && regRes.data && regRes.data.pendaftaran) {
+        tanggalDaftar = regRes.data.pendaftaran.tanggal_daftar || '';
+      }
+      if (!tanggalDaftar && p.tanggal_daftar) {
+        tanggalDaftar = p.tanggal_daftar;
+      }
+      console.log('tanggalDaftar:', tanggalDaftar);
+
+      /* ============================================================
+       * 2. CARI GELOMBANG
        * ============================================================ */
       var daftarUlang = (duRes && duRes.success && duRes.data)
         ? duRes.data.daftar_ulang : null;
@@ -485,7 +482,7 @@
         ? (gelRes.data.gelombang || []) : [];
       var gelObj = null;
 
-      // Prioritas 1: cari by gelombang_id dari daftar_ulang
+      // Prioritas 1: by gelombang_id
       if (daftarUlang && daftarUlang.gelombang_id) {
         for (var i = 0; i < gelList.length; i++) {
           if (gelList[i].gelombang_id === daftarUlang.gelombang_id) {
@@ -494,58 +491,67 @@
           }
         }
       }
+      console.log('gelObj after priority 1:', gelObj);
 
-      // Prioritas 2: cari by tanggal_daftar (kalau gelombang_id kosong)
-      if (!gelObj && p.tanggal_daftar && gelList.length) {
-        var tglDaftar = new Date(p.tanggal_daftar).getTime();
+      // Prioritas 2: by tanggal_daftar (cari yang cover, skip REGULER)
+      if (!gelObj && tanggalDaftar && gelList.length) {
+        var tglDaftar = new Date(tanggalDaftar).getTime();
+        console.log('tglDaftar ms:', tglDaftar, '(=', new Date(tanggalDaftar).toISOString(), ')');
         for (var j = 0; j < gelList.length; j++) {
           var g = gelList[j];
-          if (String(g.kode).toUpperCase() === 'REGULER') continue;
-          if (g.tanggal_mulai == null || g.tanggal_mulai === '') continue;
+          var kode = String(g.kode || '').toUpperCase();
+          if (kode === 'REGULER') continue;
+          if (!g.tanggal_mulai) continue;
           var mulai = new Date(g.tanggal_mulai).getTime();
-          var selesai = (g.tanggal_selesai && g.tanggal_selesai !== '')
-            ? new Date(g.tanggal_selesai).getTime()
-            : Infinity;
+          var selesai = g.tanggal_selesai ? new Date(g.tanggal_selesai).getTime() : Infinity;
+          console.log('  check', g.nama, ': ', new Date(mulai).toISOString(), '→',
+            selesai === Infinity ? '∞' : new Date(selesai).toISOString(),
+            '=> cover?', (tglDaftar >= mulai && tglDaftar <= selesai));
           if (tglDaftar >= mulai && tglDaftar <= selesai) {
             gelObj = g;
             break;
           }
         }
       }
+      console.log('gelObj after priority 2:', gelObj);
 
       var gelNama = gelObj ? gelObj.nama : '';
       var gelKode = gelObj ? String(gelObj.kode || '').toUpperCase() : '';
       var isReguler = (gelKode === 'REGULER');
 
       /* ============================================================
-       * 2. KONSENTRASI
+       * 3. KONSENTRASI
        * ============================================================ */
       var konsLabel = labelKonsentrasi(p.konsentrasi_1);
 
       /* ============================================================
-       * 3. BATAS DAFTAR ULANG
+       * 4. HITUNG BATAS DAFTAR ULANG
        * ============================================================ */
       var batasDU = '';
-      if (isDiterima) {
+      if (isDiterima && gelObj) {
         if (isReguler) {
           var tglTerima = (daftarUlang && daftarUlang.tanggal_diterima)
             ? new Date(daftarUlang.tanggal_diterima)
             : (h.decision_date ? new Date(h.decision_date) : new Date());
           batasDU = new Date(tglTerima.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString();
-        } else if (gelObj && gelObj.tanggal_selesai) {
+        } else if (gelObj.tanggal_selesai) {
           batasDU = gelObj.tanggal_selesai;
         }
       }
-      // Fallback
-      if (!batasDU) {
-        batasDU = (daftarUlang && daftarUlang.batas_daftar_ulang) ||
-                  (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) ||
-                  (h && h.batas_daftar_ulang) ||
-                  (s && s.batas_daftar_ulang) || '';
+
+      // Fallback: kalau backend kirim batas_daftar_ulang dan tidak ada gelombang ketemu
+      // (mis. data gelombang kosong di sheet)
+      if (!batasDU && daftarUlang && daftarUlang.batas_daftar_ulang && !gelObj) {
+        // Cuma pakai kalau gelObj benar-benar tidak ketemu
+        // tapi TETAP beri preferensi "sesuai jadwal gelombang" jika kita ragu
+        // Jadi lewati saja.
       }
 
+      console.log('batasDU final:', batasDU);
+      console.log('===== END DEBUG =====');
+
       /* ============================================================
-       * 4. KALIMAT
+       * 5. KALIMAT
        * ============================================================ */
       var kalimatDU = batasDU
         ? 'Peserta diharapkan melakukan <strong>DAFTAR ULANG</strong> paling lambat <strong>' +
@@ -574,7 +580,7 @@
                : '<p>Kami mengucapkan terima kasih atas partisipasi peserta dalam seleksi ini.</p>';
 
       /* ============================================================
-       * 5. KOP
+       * 6. KOP
        * ============================================================ */
       var kopFallback =
         '<div class="kop-fallback" style="display:flex;align-items:center;gap:5mm;' +
@@ -597,7 +603,7 @@
         '<div style="display:none;">' + kopFallback + '</div>';
 
       /* ============================================================
-       * 6. RENDER
+       * 7. RENDER
        * ============================================================ */
       document.getElementById('print-area').innerHTML =
         '<div class="surat">' + kop +
@@ -606,7 +612,7 @@
             '<div class="nomor">Nomor: ' + Utils.escapeHtml(h.letter_number || '-') + '</div></div>' +
           '<div class="isi">' +
             '<p>' + kalimat + '</p>' +
-             '<table style="margin:16px 0 16px 30px;font-size:12pt;">' +
+            '<table style="margin:16px 0 16px 30px;font-size:12pt;">' +
               '<tr><td style="padding:3px 10px;font-size:12pt;">Nama</td><td style="font-size:12pt;">: <strong>' + Utils.escapeHtml(p.nama_lengkap) + '</strong></td></tr>' +
               '<tr><td style="padding:3px 10px;font-size:12pt;">NISN</td><td style="font-size:12pt;">: ' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
               '<tr><td style="padding:3px 10px;font-size:12pt;">No. Pendaftaran</td><td style="font-size:12pt;">: ' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</td></tr>' +
