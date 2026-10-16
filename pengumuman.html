@@ -83,7 +83,7 @@
       font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
 
-    .doc { padding: 0; font-size: 11.5pt; line-height: 1.5; }
+    .doc { padding: 0; font-size: 12pt; line-height: 1.5; }
 
     /* ==========================================================
      * KOP DILEBARKAN 20 cm — hanya gambar KOP
@@ -106,7 +106,7 @@
     }
 
     .doc .judul { text-align: center; margin: 6mm 0 2mm; }
-    .doc .judul h3 { font-size: 13pt; font-weight: 700;
+    .doc .judul h3 { font-size: 14pt; font-weight: 700;
       text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
     .doc .judul .nomor { font-size: 10.5pt; margin-top: 2mm; }
     .doc .pembuka { margin: 5mm 0; text-align: justify; }
@@ -332,8 +332,16 @@
     var kons1 = labelKonsentrasi(d.konsentrasi_1);
 
     // Deadline daftar ulang
-    var batasDU = (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) ||
-                  (s && s.batas_daftar_ulang) || '';
+    // Prioritas: backend kirim → pakai. Fallback: hitung sendiri.
+      var batasDU = (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) || '';
+      if (!batasDU && d.gelombang_tanggal_selesai) {
+        batasDU = d.gelombang_tanggal_selesai;
+      }
+      if (!batasDU && d.gelombang_reguler && d.daftar_ulang && d.daftar_ulang.tanggal_diterima) {
+        var tgl = new Date(d.daftar_ulang.tanggal_diterima);
+        batasDU = new Date(tgl.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString();
+      }
+      if (!batasDU) batasDU = (s && s.batas_daftar_ulang) || '';
     var kalimatDU = batasDU
       ? 'Peserta yang dinyatakan DITERIMA wajib melakukan <strong>daftar ulang</strong> ' +
         'paling lambat <strong>' + Utils.formatTanggal(batasDU) + '</strong>. ' +
@@ -392,10 +400,11 @@
           '<tr><td class="k">Konsentrasi Keahlian</td><td class="c">:</td>' +
             '<td class="v">' + Utils.escapeHtml(kons1) + '</td></tr>' +
         '</table>' +
-        '<div class="keputusan-box">' +
+                '<div class="keputusan-box">' +
           '<div class="kecil">DINYATAKAN</div>' +
           '<div class="besar">DITERIMA</div>' +
-          '<div class="kecil">sebagai calon peserta didik baru</div></div>' +
+          (d.gelombang_nama ? '<div class="kecil">' + Utils.escapeHtml(d.gelombang_nama) + '</div>' : '') +
+          '<div class="kecil">sebagai calon murid baru</div></div>' +
         '<div class="penutup">' + kalimatDU + '</div>';
 
     if (batasDU) {
