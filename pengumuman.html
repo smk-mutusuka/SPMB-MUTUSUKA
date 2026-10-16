@@ -72,9 +72,9 @@
   .footer-note { text-align: center; margin-top: 20px; font-size: 0.78rem;
     color: #9ca3af; }
   #print-area { display: none; }
-  @media print {
-    /* Margin 5mm kiri-kanan agar KOP bisa 20 cm */
-    @page { size: A4 portrait; margin: 8mm 5mm; }
+    @media print {
+    /* Margin normal — teks tidak melebar */
+    @page { size: A4 portrait; margin: 15mm 18mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
@@ -82,10 +82,29 @@
       position: absolute; left: 0; top: 0; width: 100%;
       font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
+
     .doc { padding: 0; font-size: 11.5pt; line-height: 1.5; }
-    /* KOP lebar 20 cm */
-    .doc .kop-img { width: 20cm; height: auto; max-height: 45mm;
-      object-fit: contain; display: block; margin: 0 auto 3mm auto; }
+
+    /* ==========================================================
+     * KOP DILEBARKAN 20 cm — hanya gambar KOP
+     * ========================================================== */
+    .doc .kop-img {
+      width: 20cm;
+      max-width: none;
+      height: auto;
+      max-height: 45mm;
+      object-fit: contain;
+      display: block;
+      margin-left: -1.3cm;
+      margin-right: -1.3cm;
+      margin-bottom: 4mm;
+    }
+    .doc .kop-fallback {
+      margin-left: -1.3cm;
+      margin-right: -1.3cm;
+      margin-bottom: 4mm;
+    }
+
     .doc .judul { text-align: center; margin: 6mm 0 2mm; }
     .doc .judul h3 { font-size: 13pt; font-weight: 700;
       text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
@@ -326,9 +345,9 @@
         'dan kuota akan dialihkan kepada peserta cadangan.';
 
     // KOP: gambar utama + fallback teks
-    var kopFallback =
-      '<div style="display:flex;align-items:center;gap:5mm;' +
-        'border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
+        var kopFallback =
+      '<div class="kop-fallback" style="display:flex;align-items:center;gap:5mm;' +
+        'border-bottom:2px solid #000;padding-bottom:3mm;">' +
         '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" ' +
           'onerror="this.style.display=\'none\'">' +
         '<div style="flex:1;text-align:center;">' +
