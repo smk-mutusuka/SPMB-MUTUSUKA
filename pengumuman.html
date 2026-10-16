@@ -11,16 +11,13 @@
     background: linear-gradient(135deg, #1a5490 0%, #143f6e 100%);
     color: #1f2937; min-height: 100vh;
     display: flex; align-items: center; justify-content: center; padding: 20px; }
-
   .card { background: #fff; border-radius: 16px;
     max-width: 720px; width: 100%; padding: 32px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-
   .head { text-align: center; margin-bottom: 24px; }
   .head img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
   .head h1 { font-size: 1.2rem; color: #1a5490; margin-bottom: 4px; }
   .head p { font-size: 0.85rem; color: #6b7280; }
-
   .form-row { display: flex; gap: 10px; margin-bottom: 20px; }
   .form-row input { flex: 1; padding: 14px 18px; border: 2px solid #d1d5db;
     border-radius: 10px; font-size: 1rem; font-family: inherit;
@@ -32,16 +29,12 @@
     cursor: pointer; font-family: inherit; white-space: nowrap; }
   .form-row button:hover { background: #143f6e; }
   .form-row button:disabled { opacity: 0.5; cursor: not-allowed; }
-
   .back-link { text-align: center; margin-top: 16px; }
   .back-link a { color: #6b7280; text-decoration: none; font-size: 0.85rem; }
   .back-link a:hover { color: #1a5490; }
-
   .result { display: none; }
   .result.show { display: block; }
-
-  .result-head { text-align: center; padding: 20px; border-radius: 12px;
-    margin-bottom: 20px; }
+  .result-head { text-align: center; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
   .result-head.ACC { background: #ecfdf5; border: 2px solid #059669; }
   .result-head.CAD { background: #fef3c7; border: 2px solid #d97706; }
   .result-head.REJ { background: #fee2e2; border: 2px solid #dc2626; }
@@ -51,19 +44,16 @@
   .result-head.CAD .title { color: #92400e; }
   .result-head.REJ .title { color: #991b1b; }
   .result-head .sub { font-size: 0.88rem; margin-top: 6px; color: #6b7280; }
-
   .info-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
   .info-table td { padding: 9px 4px; border-bottom: 1px dashed #e5e7eb;
     font-size: 0.9rem; vertical-align: top; }
   .info-table td.k { color: #6b7280; width: 40%; }
   .info-table td.v { color: #1f2937; font-weight: 600; text-align: right; }
-
   .notice { padding: 14px 18px; border-radius: 10px; font-size: 0.85rem;
     line-height: 1.6; margin-bottom: 16px; }
   .notice.info { background: #eff6ff; border-left: 4px solid #1a5490; color: #1e40af; }
   .notice.warn { background: #fef3c7; border-left: 4px solid #d97706; color: #92400e; }
   .notice.err { background: #fee2e2; border-left: 4px solid #dc2626; color: #991b1b; }
-
   .actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .actions button, .actions a { flex: 1; min-width: 140px;
     padding: 12px 20px; border: none; border-radius: 10px;
@@ -74,20 +64,17 @@
   .btn-print:hover { background: #143f6e; }
   .btn-secondary { background: #e5e7eb; color: #1f2937; }
   .btn-secondary:hover { background: #d1d5db; }
-
   .loading { text-align: center; padding: 30px; color: #6b7280; }
   .loading .spinner { width: 40px; height: 40px; border: 4px solid #e5e7eb;
     border-top-color: #1a5490; border-radius: 50%; margin: 0 auto 12px;
     animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .footer-note { text-align: center; margin-top: 20px; font-size: 0.78rem;
     color: #9ca3af; }
-
   #print-area { display: none; }
-
   @media print {
-    @page { size: A4 portrait; margin: 15mm 18mm; }
+    /* Margin 5mm kiri-kanan agar KOP bisa 20 cm */
+    @page { size: A4 portrait; margin: 8mm 5mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
@@ -95,10 +82,10 @@
       position: absolute; left: 0; top: 0; width: 100%;
       font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
-
     .doc { padding: 0; font-size: 11.5pt; line-height: 1.5; }
-    .doc .kop-img { width: 100%; max-height: 30mm; object-fit: contain;
-      display: block; margin-bottom: 3mm; }
+    /* KOP lebar 20 cm */
+    .doc .kop-img { width: 20cm; height: auto; max-height: 45mm;
+      object-fit: contain; display: block; margin: 0 auto 3mm auto; }
     .doc .judul { text-align: center; margin: 6mm 0 2mm; }
     .doc .judul h3 { font-size: 13pt; font-weight: 700;
       text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
@@ -125,14 +112,12 @@
     .doc .ttd { margin-top: 10mm; text-align: right; font-size: 11.5pt; }
     .doc .ttd .kota { margin-bottom: 1mm; }
     .doc .ttd .jabatan { margin-bottom: 20mm; }
-    .doc .ttd .nama { font-weight: 700; text-decoration: underline;
-      display: inline-block; }
+    .doc .ttd .nama { font-weight: 700; text-decoration: underline; display: inline-block; }
     .doc .ttd .nipm { font-size: 10pt; margin-top: 1mm; }
     .doc .catatan-kaki { margin-top: 8mm; padding-top: 3mm;
       border-top: 1px solid #666; font-size: 8.5pt;
       font-style: italic; color: #444; text-align: center; }
   }
-
   @media (max-width: 600px) {
     .card { padding: 22px; }
     .form-row { flex-direction: column; }
@@ -151,25 +136,17 @@
     <h1>Pengumuman Hasil Seleksi</h1>
     <p>SPMB SMK Muhammadiyah 1 Surakarta — TP 2027/2028</p>
   </div>
-
   <div id="search-box">
     <div class="form-row">
-      <input type="text" id="inp-nomor" placeholder="PMB-2728-XXX"
-        autocomplete="off" maxlength="20">
+      <input type="text" id="inp-nomor" placeholder="PMB-2728-XXX" autocomplete="off" maxlength="20">
       <button id="btn-cari">🔍 Cek</button>
     </div>
-    <div class="back-link">
-      <a href="index.html">← Kembali ke halaman utama</a>
-    </div>
+    <div class="back-link"><a href="index.html">← Kembali ke halaman utama</a></div>
   </div>
-
   <div id="loading" class="loading" style="display:none;">
-    <div class="spinner"></div>
-    <div>Memuat data pengumuman...</div>
+    <div class="spinner"></div><div>Memuat data pengumuman...</div>
   </div>
-
   <div id="result" class="result"></div>
-
   <div class="footer-note" id="footer-note" style="display:none;">
     Powered by SPMB SMK Muhammadiyah 1 Surakarta
   </div>
@@ -183,9 +160,7 @@
 <script>
 (function () {
   'use strict';
-
   var state = { nomor: '', data: null, konsentrasiMap: {} };
-
   var inpNomor = document.getElementById('inp-nomor');
   var btnCari = document.getElementById('btn-cari');
   var loading = document.getElementById('loading');
@@ -196,47 +171,43 @@
   inpNomor.addEventListener('input', function () {
     this.value = this.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
   });
-
-  inpNomor.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') btnCari.click();
-  });
-
+  inpNomor.addEventListener('keydown', function (e) { if (e.key === 'Enter') btnCari.click(); });
   var qNomor = Utils.getQueryParam('nomor');
-  if (qNomor) {
-    inpNomor.value = qNomor.toUpperCase();
-    setTimeout(function () { btnCari.click(); }, 300);
+  if (qNomor) { inpNomor.value = qNomor.toUpperCase(); setTimeout(function () { btnCari.click(); }, 300); }
+
+  // Preload konsentrasi
+  function loadKonsentrasiMap() {
+    return Api.settings.listKonsentrasi().then(function (res) {
+      if (res && res.success && res.data && res.data.konsentrasi) {
+        res.data.konsentrasi.forEach(function (k) {
+          state.konsentrasiMap[k.konsentrasi_id] = k.nama_konsentrasi || '';
+        });
+      }
+    }).catch(function () {});
+  }
+  loadKonsentrasiMap();
+
+  function labelKonsentrasi(id) {
+    if (!id) return '-';
+    var key = String(id);
+    var nama = state.konsentrasiMap[key];
+    return nama ? (key + ' — ' + nama) : key;
   }
 
   btnCari.addEventListener('click', doSearch);
 
   function doSearch() {
     var nomor = inpNomor.value.trim().toUpperCase();
-    if (!nomor) {
-      Utils.toast('Masukkan nomor pendaftaran', 'error');
-      inpNomor.focus();
-      return;
-    }
+    if (!nomor) { Utils.toast('Masukkan nomor pendaftaran', 'error'); inpNomor.focus(); return; }
     state.nomor = nomor;
-
     searchBox.style.display = 'none';
     result.classList.remove('show');
     result.innerHTML = '';
     loading.style.display = 'block';
     footerNote.style.display = 'none';
 
-    var pKons = Api.settings.listKonsentrasi().then(function (res) {
-      if (res && res.success && res.data && res.data.konsentrasi) {
-        res.data.konsentrasi.forEach(function (k) {
-          state.konsentrasiMap[k.konsentrasi_id] = k.nama_konsentrasi;
-        });
-      }
-    }).catch(function () {});
-
-    var pData = Api.public.getPengumuman(nomor);
-
-    Promise.all([pKons, pData]).then(function (results) {
+    Api.public.getPengumuman(nomor).then(function (res) {
       loading.style.display = 'none';
-      var res = results[1];
       if (!res || !res.success) {
         showError(res && res.message ? res.message : 'Gagal memuat data',
           res && res.code ? res.code : '');
@@ -253,30 +224,24 @@
   function showError(message, code) {
     searchBox.style.display = 'block';
     footerNote.style.display = 'block';
-    var cls = 'err';
-    var icon = '❌';
+    var cls = 'err', icon = '❌';
     if (code === 'FORBIDDEN') { cls = 'warn'; icon = '⏳'; }
     else if (code === 'NOT_FOUND') { cls = 'warn'; icon = '🔍'; }
-
     result.innerHTML =
       '<div class="notice ' + cls + '">' +
         '<div style="font-size:2rem;text-align:center;margin-bottom:8px;">' + icon + '</div>' +
         '<div style="text-align:center;font-weight:600;">' + Utils.escapeHtml(message) + '</div>' +
       '</div>' +
-      '<div class="actions">' +
-        '<button class="btn-secondary" onclick="location.reload()">← Coba Nomor Lain</button>' +
-      '</div>';
+      '<div class="actions"><button class="btn-secondary" onclick="location.reload()">← Coba Nomor Lain</button></div>';
     result.classList.add('show');
   }
 
   function showResult(d) {
     footerNote.style.display = 'block';
     var kep = String(d.keputusan || '').toUpperCase();
-    var headCls = 'CAD';
-    var headIcon = '⏳';
+    var headCls = 'CAD', headIcon = '⏳';
     var headTitle = 'HASIL BELUM DIUMUMKAN';
     var headSub = 'Silakan cek kembali nanti.';
-
     if (kep === 'DITERIMA') {
       headCls = 'ACC'; headIcon = '🎉';
       headTitle = 'SELAMAT, ANDA DITERIMA!';
@@ -290,57 +255,36 @@
       headTitle = 'MAAF, BELUM DITERIMA';
       headSub = 'Terima kasih atas partisipasi Anda. Tetap semangat!';
     }
-
-    var kons1 = d.konsentrasi_1 || '-';
+    var kons1 = labelKonsentrasi(d.konsentrasi_1);
 
     var html = '';
     html += '<div class="result-head ' + headCls + '">' +
       '<div class="icon">' + headIcon + '</div>' +
       '<div class="title">' + Utils.escapeHtml(headTitle) + '</div>' +
-      '<div class="sub">' + Utils.escapeHtml(headSub) + '</div>' +
-      '</div>';
-
+      '<div class="sub">' + Utils.escapeHtml(headSub) + '</div></div>';
     html += '<table class="info-table">' +
-      '<tr><td class="k">Nomor Pendaftaran</td><td class="v">' +
-        Utils.escapeHtml(d.nomor_pendaftaran) + '</td></tr>' +
-      '<tr><td class="k">Nama Lengkap</td><td class="v">' +
-        Utils.escapeHtml(d.nama_lengkap) + '</td></tr>' +
-      '<tr><td class="k">NISN</td><td class="v">' +
-        Utils.escapeHtml(d.nisn || '-') + '</td></tr>' +
-      '<tr><td class="k">Sekolah Asal</td><td class="v">' +
-        Utils.escapeHtml(d.sekolah_asal || '-') + '</td></tr>' +
-      '<tr><td class="k">Konsentrasi Keahlian</td><td class="v">' +
-        Utils.escapeHtml(kons1) + '</td></tr>' +
+      '<tr><td class="k">Nomor Pendaftaran</td><td class="v">' + Utils.escapeHtml(d.nomor_pendaftaran) + '</td></tr>' +
+      '<tr><td class="k">Nama Lengkap</td><td class="v">' + Utils.escapeHtml(d.nama_lengkap) + '</td></tr>' +
+      '<tr><td class="k">NISN</td><td class="v">' + Utils.escapeHtml(d.nisn || '-') + '</td></tr>' +
+      '<tr><td class="k">Sekolah Asal</td><td class="v">' + Utils.escapeHtml(d.sekolah_asal || '-') + '</td></tr>' +
+      '<tr><td class="k">Konsentrasi Keahlian</td><td class="v">' + Utils.escapeHtml(kons1) + '</td></tr>' +
     '</table>';
-
     if (kep === 'DITERIMA' && d.daftar_ulang) {
       var batas = d.daftar_ulang.batas_daftar_ulang;
-      html += '<div class="notice info">' +
-        '📌 <strong>Wajib Daftar Ulang</strong><br>' +
+      html += '<div class="notice info">📌 <strong>Wajib Daftar Ulang</strong><br>' +
         'Batas daftar ulang: <strong>' + Utils.formatTanggal(batas) + '</strong><br>' +
-        'Datang ke sekolah dengan membawa: fotokopi KK, fotokopi Akta, foto 3×4 (2 lembar), ' +
-        'dan kuitansi pendaftaran.' +
-      '</div>';
+        'Datang ke sekolah dengan membawa: fotokopi KK, fotokopi Akta, foto 3×4 (2 lembar), dan kuitansi pendaftaran.</div>';
     }
     if (kep === 'CADANGAN') {
-      html += '<div class="notice warn">' +
-        '⏳ <strong>Status Cadangan</strong><br>' +
-        'Jika ada calon siswa DITERIMA yang tidak daftar ulang, Anda akan dihubungi ' +
-        'oleh panitia SPMB.' +
-      '</div>';
+      html += '<div class="notice warn">⏳ <strong>Status Cadangan</strong><br>' +
+        'Jika ada calon siswa DITERIMA yang tidak daftar ulang, Anda akan dihubungi oleh panitia SPMB.</div>';
     }
     if (d.decision_notes) {
-      html += '<div class="notice info">' +
-        '<strong>Catatan Panitia:</strong><br>' +
-        Utils.escapeHtml(d.decision_notes) + '</div>';
+      html += '<div class="notice info"><strong>Catatan Panitia:</strong><br>' + Utils.escapeHtml(d.decision_notes) + '</div>';
     }
-
     html += '<div class="actions">';
-    if (kep === 'DITERIMA') {
-      html += '<button class="btn-print" id="btn-print">🖨️ Cetak Pengumuman</button>';
-    }
-    html += '<button class="btn-secondary" id="btn-again">← Cek Nomor Lain</button>';
-    html += '</div>';
+    if (kep === 'DITERIMA') html += '<button class="btn-print" id="btn-print">🖨️ Cetak Pengumuman</button>';
+    html += '<button class="btn-secondary" id="btn-again">← Cek Nomor Lain</button></div>';
 
     result.innerHTML = html;
     result.classList.add('show');
@@ -366,9 +310,22 @@
   function renderPrintArea(d) {
     var s = d.sekolah || {};
     var tglKeputusan = d.decision_date ? new Date(d.decision_date) : new Date();
-    var kons1 = d.konsentrasi_1 || '-';
+    var kons1 = labelKonsentrasi(d.konsentrasi_1);
 
-    // ====== KOP: gambar utama + fallback teks (inline, tidak pakai window.__) ======
+    // Deadline daftar ulang
+    var batasDU = (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) ||
+                  (s && s.batas_daftar_ulang) || '';
+    var kalimatDU = batasDU
+      ? 'Peserta yang dinyatakan DITERIMA wajib melakukan <strong>daftar ulang</strong> ' +
+        'paling lambat <strong>' + Utils.formatTanggal(batasDU) + '</strong>. ' +
+        'Apabila sampai batas waktu tersebut peserta tidak melakukan daftar ulang, maka ' +
+        'dianggap <em>mengundurkan diri</em> dan kuota akan dialihkan kepada peserta cadangan.'
+      : 'Peserta yang dinyatakan DITERIMA wajib melakukan <strong>daftar ulang</strong> ' +
+        'sesuai jadwal gelombang yang berlaku. Apabila sampai batas waktu yang ditentukan ' +
+        'peserta tidak melakukan daftar ulang, maka dianggap <em>mengundurkan diri</em> ' +
+        'dan kuota akan dialihkan kepada peserta cadangan.';
+
+    // KOP: gambar utama + fallback teks
     var kopFallback =
       '<div style="display:flex;align-items:center;gap:5mm;' +
         'border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
@@ -377,10 +334,8 @@
         '<div style="flex:1;text-align:center;">' +
           '<h2 style="font-size:14pt;font-weight:700;margin:0;">' +
             Utils.escapeHtml(s.nama_sekolah || 'SMK MUHAMMADIYAH 1 SURAKARTA') + '</h2>' +
-          '<p style="font-size:9pt;margin:1mm 0 0;">' +
-            Utils.escapeHtml(s.alamat_sekolah || '') + '</p>' +
-          '<p style="font-size:9pt;margin:0;">Telp: ' +
-            Utils.escapeHtml(s.telepon_sekolah || '-') +
+          '<p style="font-size:9pt;margin:1mm 0 0;">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</p>' +
+          '<p style="font-size:9pt;margin:0;">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
             ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</p>' +
         '</div></div>';
 
@@ -395,8 +350,7 @@
           '<h3>PENGUMUMAN HASIL SELEKSI PENERIMAAN MURID BARU</h3>' +
           '<div class="nomor">' +
             (d.letter_number ? 'Nomor: ' + Utils.escapeHtml(d.letter_number) : '') +
-          '</div>' +
-        '</div>' +
+          '</div></div>' +
         '<div class="pembuka">' +
           'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
           Utils.escapeHtml(s.nama_sekolah || 'SMK Muhammadiyah 1 Surakarta') +
@@ -422,28 +376,20 @@
         '<div class="keputusan-box">' +
           '<div class="kecil">DINYATAKAN</div>' +
           '<div class="besar">DITERIMA</div>' +
-          '<div class="kecil">sebagai calon peserta didik baru</div>' +
-        '</div>' +
-        '<div class="penutup">' +
-          'Peserta yang dinyatakan DITERIMA wajib melakukan <strong>daftar ulang</strong> ' +
-          'sesuai jadwal yang telah ditentukan. Apabila sampai batas waktu yang ditentukan ' +
-          'peserta tidak melakukan daftar ulang, maka dianggap <em>mengundurkan diri</em> ' +
-          'dan kuota akan dialihkan kepada peserta cadangan.' +
-        '</div>';
+          '<div class="kecil">sebagai calon peserta didik baru</div></div>' +
+        '<div class="penutup">' + kalimatDU + '</div>';
 
-    if (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) {
+    if (batasDU) {
       html +=
         '<div class="info-du">' +
           '<div class="judul-du">📌 INFORMASI DAFTAR ULANG</div>' +
           '<ul>' +
-            '<li>Batas akhir daftar ulang: <strong>' +
-              Utils.formatTanggal(d.daftar_ulang.batas_daftar_ulang) + '</strong></li>' +
+            '<li>Batas akhir daftar ulang: <strong>' + Utils.formatTanggal(batasDU) + '</strong></li>' +
             '<li>Tempat: ' + Utils.escapeHtml(s.nama_sekolah || '') +
               (s.alamat_sekolah ? ' — ' + Utils.escapeHtml(s.alamat_sekolah) : '') + '</li>' +
             '<li>Membawa: fotokopi Kartu Keluarga, fotokopi Akta Kelahiran, ' +
               'foto 3×4 (2 lembar), dan kuitansi pendaftaran</li>' +
-          '</ul>' +
-        '</div>';
+          '</ul></div>';
     }
 
     html +=
@@ -457,12 +403,10 @@
         'Dokumen ini dicetak otomatis dari sistem SPMB ' +
         Utils.escapeHtml(s.nama_sekolah || '') + '. ' +
         'Sah tanpa tanda tangan basah selama data sesuai dengan database resmi sekolah.' +
-      '</div>' +
-      '</div>';
+      '</div></div>';
 
     document.getElementById('print-area').innerHTML = html;
   }
-
 })();
 </script>
 </body>
