@@ -126,35 +126,42 @@
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
   #print-area { display: none; }
-    @media print {
-    /* Margin normal — teks tidak melebar */
-    @page { size: A4 portrait; margin: 20mm 20mm; }
+  @media print {
+    @page { size: A4 portrait; margin: 15mm 18mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
     #print-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%;
       font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
-    .surat { font-size: 11.5pt; line-height: 1.5; }
+
+    /* Body 12pt */
+    .surat { font-size: 12pt; line-height: 1.5; }
+
+    /* KOP 20cm */
     .surat .kop-img {
-      width: 21cm;
-      max-width: none;
-      height: auto;
-      max-height: 45mm;
-      object-fit: contain;
-      display: block;
-      margin-left: -1.3cm;
-      margin-right: -1.3cm;
-      margin-bottom: 4mm;
+      width: 20cm; max-width: none; height: auto; max-height: 45mm;
+      object-fit: contain; display: block;
+      margin-left: -1.3cm; margin-right: -1.3cm; margin-bottom: 4mm;
     }
-    /* Fallback KOP (teks) juga dilebarkan sama */
     .surat .kop-fallback {
-      margin-left: -1.3cm;
-      margin-right: -1.3cm;
-      margin-bottom: 4mm;
+      margin-left: -1.3cm; margin-right: -1.3cm; margin-bottom: 4mm;
     }
 
-        /* ====== TANDA TANGAN 2 KOLOM ====== */
+    /* Judul + nomor: CENTER */
+    .surat .judul { text-align: center; margin: 6mm 0 2mm; }
+    .surat .judul h3 {
+      font-size: 14pt; font-weight: 700;
+      text-decoration: underline; letter-spacing: 0.5px; margin: 0;
+    }
+    .surat .judul .nomor {
+      font-size: 10.5pt; margin-top: 2mm; text-align: center;
+    }
+
+    .surat .isi { margin: 5mm 0; text-align: justify; }
+    .surat .isi p { margin-bottom: 4mm; }
+
+    /* ====== TANDA TANGAN 2 KOLOM ====== */
     .surat .ttd-2col {
       margin-top: 12mm;
       display: flex;
@@ -184,10 +191,12 @@
       text-decoration: underline;
       margin-top: 1mm;
     }
+    /* NIPM & NBM: 12pt */
     .surat .ttd-kolom .nipm {
-      font-size: 11pt;
+      font-size: 12pt;
       margin-top: 1mm;
     }
+  }
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
@@ -287,7 +296,7 @@
   var state = { q: '', decision: '' };
 
   /* ============================================================
-   * KONSENTRASI MAP — untuk tampilkan "K03 — Teknik Pengelasan"
+   * KONSENTRASI MAP
    * ============================================================ */
   var konsentrasiMap = {};
   function loadKonsentrasiMap() {
@@ -305,7 +314,6 @@
     var nama = konsentrasiMap[key];
     return nama ? (key + ' — ' + nama) : key;
   }
-  // Preload paralel
   loadKonsentrasiMap();
 
   function loadSummary() {
@@ -436,19 +444,21 @@
   }
 
   /* ============================================================
-   * CETAK SURAT — A4 PORTRAIT
-   * - KOP lebar 20 cm
-   * - Konsentrasi tampil lengkap: "K03 — Teknik Pengelasan"
-   * - Deadline daftar ulang dari gelombang (fallback "sesuai jadwal gelombang")
+   * CETAK SURAT
+   * Logika batas daftar ulang:
+   *   1) Cek daftarUlang.gelombang_id → cari gelombang di list
+   *   2) Kalau kosong → cari gelombang dari tanggal_daftar kandidat
+   *      (gelombang non-REGULER yang tanggal_mulai <= tgl_daftar <= tanggal_selesai)
+   *   3) Kalau REGULER → tanggal_diterima + 14 hari
+   *   4) Kalau Inden/G1/G2 → tanggal_selesai gelombang
    * ============================================================ */
-      function printSurat(regId) {
+  function printSurat(regId) {
     Utils.showLoading('Menyiapkan surat...');
 
     var pEnsure = konsentrasiMap && Object.keys(konsentrasiMap).length
       ? Promise.resolve()
       : loadKonsentrasiMap();
 
-    // Fetch paralel: surat, daftar ulang, list gelombang
     Promise.all([
       pEnsure.then(function () { return Api.selection.getResult(regId); }),
       Api.daftarUlang.getByReg(regId).catch(function () { return { success: false }; }),
@@ -467,30 +477,53 @@
       var isCadangan = decision === 'CADANGAN';
 
       /* ============================================================
-       * 1. GELOMBANG — cari berdasarkan daftar_ulang.gelombang_id
+       * 1. CARI GELOMBANG
        * ============================================================ */
       var daftarUlang = (duRes && duRes.success && duRes.data)
         ? duRes.data.daftar_ulang : null;
-      var gelId = daftarUlang ? daftarUlang.gelombang_id : '';
       var gelList = (gelRes && gelRes.success && gelRes.data)
         ? (gelRes.data.gelombang || []) : [];
       var gelObj = null;
-      for (var i = 0; i < gelList.length; i++) {
-        if (gelList[i].gelombang_id === gelId) { gelObj = gelList[i]; break; }
+
+      // Prioritas 1: cari by gelombang_id dari daftar_ulang
+      if (daftarUlang && daftarUlang.gelombang_id) {
+        for (var i = 0; i < gelList.length; i++) {
+          if (gelList[i].gelombang_id === daftarUlang.gelombang_id) {
+            gelObj = gelList[i];
+            break;
+          }
+        }
       }
+
+      // Prioritas 2: cari by tanggal_daftar (kalau gelombang_id kosong)
+      if (!gelObj && p.tanggal_daftar && gelList.length) {
+        var tglDaftar = new Date(p.tanggal_daftar).getTime();
+        for (var j = 0; j < gelList.length; j++) {
+          var g = gelList[j];
+          if (String(g.kode).toUpperCase() === 'REGULER') continue;
+          if (g.tanggal_mulai == null || g.tanggal_mulai === '') continue;
+          var mulai = new Date(g.tanggal_mulai).getTime();
+          var selesai = (g.tanggal_selesai && g.tanggal_selesai !== '')
+            ? new Date(g.tanggal_selesai).getTime()
+            : Infinity;
+          if (tglDaftar >= mulai && tglDaftar <= selesai) {
+            gelObj = g;
+            break;
+          }
+        }
+      }
+
       var gelNama = gelObj ? gelObj.nama : '';
       var gelKode = gelObj ? String(gelObj.kode || '').toUpperCase() : '';
       var isReguler = (gelKode === 'REGULER');
 
       /* ============================================================
-       * 2. KONSENTRASI LENGKAP
+       * 2. KONSENTRASI
        * ============================================================ */
       var konsLabel = labelKonsentrasi(p.konsentrasi_1);
 
       /* ============================================================
        * 3. BATAS DAFTAR ULANG
-       *    - Reguler  → tanggal_diterima + 14 hari
-       *    - Lainnya  → tanggal_selesai gelombang
        * ============================================================ */
       var batasDU = '';
       if (isDiterima) {
@@ -503,7 +536,7 @@
           batasDU = gelObj.tanggal_selesai;
         }
       }
-      // Fallback ke data backend kalau masih kosong
+      // Fallback
       if (!batasDU) {
         batasDU = (daftarUlang && daftarUlang.batas_daftar_ulang) ||
                   (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) ||
@@ -515,19 +548,16 @@
        * 4. KALIMAT
        * ============================================================ */
       var kalimatDU = batasDU
-        ? 'Peserta diharapkan melakukan daftar ulang paling lambat <strong>' +
+        ? 'Peserta diharapkan melakukan <strong>DAFTAR ULANG</strong> paling lambat <strong>' +
           Utils.formatTanggal(batasDU) + '</strong>. Apabila tidak melakukan daftar ulang, ' +
           'maka dianggap mengundurkan diri.'
-        : 'Peserta diharapkan melakukan daftar ulang sesuai jadwal gelombang yang berlaku. ' +
+        : 'Peserta diharapkan melakukan <strong>DAFTAR ULANG</strong> sesuai jadwal gelombang yang berlaku. ' +
           'Apabila tidak melakukan daftar ulang, maka dianggap mengundurkan diri.';
 
       var kalimat = 'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
         Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
         Utils.escapeHtml(s.tahun_ajaran || '') + ', dengan ini kami nyatakan bahwa:';
 
-      /* ============================================================
-       * 5. HASIL TEKS + PERIODE GELOMBANG
-       * ============================================================ */
       var hasilTeks;
       if (isDiterima) {
         hasilTeks = '<strong>DITERIMA</strong>';
@@ -544,7 +574,7 @@
                : '<p>Kami mengucapkan terima kasih atas partisipasi peserta dalam seleksi ini.</p>';
 
       /* ============================================================
-       * 6. KOP
+       * 5. KOP
        * ============================================================ */
       var kopFallback =
         '<div class="kop-fallback" style="display:flex;align-items:center;gap:5mm;' +
@@ -567,7 +597,7 @@
         '<div style="display:none;">' + kopFallback + '</div>';
 
       /* ============================================================
-       * 7. RENDER
+       * 6. RENDER
        * ============================================================ */
       document.getElementById('print-area').innerHTML =
         '<div class="surat">' + kop +
@@ -584,8 +614,7 @@
             '</table>' +
             '<p style="margin:14px 0;">dinyatakan: ' + hasilTeks + '</p>' + next +
             '<p style="margin-top:24px;">Demikian surat ini disampaikan untuk dipergunakan sebagaimana mestinya.</p></div>' +
-                    '<div class="ttd-2col">' +
-            // ===== KOLOM KIRI: Kepala Sekolah =====
+          '<div class="ttd-2col">' +
             '<div class="ttd-kolom">' +
               '<div>Mengetahui,</div>' +
               '<div class="jabatan">Kepala Sekolah,</div>' +
@@ -596,7 +625,6 @@
               '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || 'Joko Harinto, S.Pd, M.Pd.') + '</div>' +
               '<div class="nipm">NIPM. 512 099 314</div>' +
             '</div>' +
-            // ===== KOLOM KANAN: Ketua Panitia =====
             '<div class="ttd-kolom">' +
               '<div>Surakarta, ' + Utils.formatTanggal(h.decision_date) + '</div>' +
               '<div class="jabatan">Ketua Panitia,</div>' +
