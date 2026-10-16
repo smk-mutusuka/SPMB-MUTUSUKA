@@ -128,9 +128,16 @@
       border-bottom: 1px solid #000; padding-bottom: 1mm; margin-bottom: 2mm; }
     .doc .info-du ul { margin: 0; padding-left: 5mm; }
     .doc .info-du li { margin-bottom: 1mm; }
-    .doc .ttd { margin-top: 10mm; text-align: right; font-size: 11.5pt; }
+    .doc .ttd { margin-top: 10mm; text-align: right; font-size: 12pt; }
     .doc .ttd .kota { margin-bottom: 1mm; }
-    .doc .ttd .jabatan { margin-bottom: 20mm; }
+    .doc .ttd .jabatan { margin-bottom: 2mm; }
+    .doc .ttd .ttd-img {
+      display: inline-block;
+      width: 4.5cm;
+      max-height: 22mm;
+      object-fit: contain;
+      margin: 1mm 0;
+    }
     .doc .ttd .nama { font-weight: 700; text-decoration: underline; display: inline-block; }
     .doc .ttd .nipm { font-size: 10pt; margin-top: 1mm; }
     .doc .catatan-kaki { margin-top: 8mm; padding-top: 3mm;
@@ -421,9 +428,11 @@
     }
 
     html +=
-      '<div class="ttd">' +
+       '<div class="ttd">' +
         'Surakarta, ' + Utils.formatTanggal(tglKeputusan.toISOString()) + '<br>' +
         '<div class="jabatan">Kepala Sekolah,</div>' +
+        '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
+          'onerror="this.style.display=\'none\'">' +
         '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div>' +
         '<div class="nipm">NIPM. 512 099 314</div>' +
       '</div>' +
