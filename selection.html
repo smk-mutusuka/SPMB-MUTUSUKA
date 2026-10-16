@@ -417,7 +417,7 @@
    * - Konsentrasi tampil lengkap: "K03 — Teknik Pengelasan"
    * - Deadline daftar ulang dari gelombang (fallback "sesuai jadwal gelombang")
    * ============================================================ */
-  function printSurat(regId) {
+    function printSurat(regId) {
     Utils.showLoading('Menyiapkan surat...');
 
     // Pastikan konsentrasiMap terisi dulu (kalau belum)
@@ -425,11 +425,16 @@
       ? Promise.resolve()
       : loadKonsentrasiMap();
 
-    pEnsure.then(function () {
-      return Api.selection.getResult(regId);
-    }).then(function (res) {
+    // Ambil data surat + daftar ulang secara paralel
+    Promise.all([
+      pEnsure.then(function () { return Api.selection.getResult(regId); }),
+      Api.daftarUlang.getByReg(regId).catch(function () { return { success: false, data: {} }; })
+    ]).then(function (results) {
       Utils.hideLoading();
+      var res = results[0];
+      var duRes = results[1];
       if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
+
       var d = res.data;
       var p = d.pendaftar, h = d.hasil, s = d.sekolah;
       var decision = String(h.decision);
@@ -440,13 +445,24 @@
       var konsLabel = labelKonsentrasi(p.konsentrasi_1);
 
       // ==== DEADLINE DAFTAR ULANG ====
-      // Prioritas sumber:
-      //   1) h.batas_daftar_ulang  (dari HASIL_SELEKSI, kalau backend kirim)
-      //   2) d.daftar_ulang.batas_daftar_ulang (dari sheet DAFTAR_ULANG)
-      //   3) s.batas_daftar_ulang (dari getPublicSettings, fallback)
-      var batasDU = (h && h.batas_daftar_ulang) ||
-                    (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) ||
-                    (s && s.batas_daftar_ulang) || '';
+      // Sumber prioritas:
+      //   1) d.daftar_ulang.batas_daftar_ulang (kalau backend kirim langsung)
+      //   2) duRes.data.daftar_ulang.batas_daftar_ulang (dari endpoint terpisah)
+      //   3) h.batas_daftar_ulang
+      //   4) s.batas_daftar_ulang
+      var batasDU = '';
+      if (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) {
+        batasDU = d.daftar_ulang.batas_daftar_ulang;
+      } else if (duRes && duRes.success && duRes.data && duRes.data.daftar_ulang &&
+                 duRes.data.daftar_ulang.batas_daftar_ulang) {
+        batasDU = duRes.data.daftar_ulang.batas_daftar_ulang;
+      } else if (h && h.batas_daftar_ulang) {
+        batasDU = h.batas_daftar_ulang;
+      } else if (s && s.batas_daftar_ulang) {
+        batasDU = s.batas_daftar_ulang;
+      }
+
+      // ... lanjut seperti semula (kalimatDU, kalimat, hasilTeks, next, kopFallback, dst)
 
       var kalimatDU = batasDU
         ? 'Peserta diharapkan melakukan daftar ulang paling lambat <strong>' +
