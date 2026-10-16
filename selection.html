@@ -128,7 +128,7 @@
   #print-area { display: none; }
     @media print {
     /* Margin normal — teks tidak melebar */
-    @page { size: A4 portrait; margin: 15mm 18mm; }
+    @page { size: A4 portrait; margin: 20mm 20mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
@@ -137,7 +137,7 @@
     .no-print { display: none !important; }
     .surat { font-size: 11.5pt; line-height: 1.5; }
     .surat .kop-img {
-      width: 20cm;
+      width: 21cm;
       max-width: none;
       height: auto;
       max-height: 45mm;
@@ -155,14 +155,14 @@
     }
 
     .surat .judul { text-align: center; margin: 6mm 0 2mm; }
-    .surat .judul h3 { font-size: 13pt; font-weight: 700;
-      text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
-    .surat .judul .nomor { font-size: 10.5pt; margin-top: 2mm; }
+    .surat .judul h3 { font-size: 14pt; font-weight: 700;
+      text-decoration: underline; letter-spacing: 1px; margin: 0; }
+    .surat .judul .nomor { font-size: 12pt; margin-top: 2mm; }
     .surat .isi { margin: 5mm 0; text-align: justify; }
     .surat .ttd { margin-top: 10mm; text-align: right; }
     .surat .ttd .jabatan { margin-bottom: 20mm; }
     .surat .ttd .nama { font-weight: 700; text-decoration: underline; }
-    .surat .ttd .nipm { font-size: 10pt; margin-top: 1mm; }
+    .surat .ttd .nipm { font-size: 12pt; margin-top: 2mm; }
   }
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
