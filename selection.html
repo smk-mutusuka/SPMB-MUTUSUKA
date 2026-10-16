@@ -154,23 +154,40 @@
       margin-bottom: 4mm;
     }
 
-    .surat { font-size: 12pt; line-height: 1.5; }
-    .surat .judul h3 { font-size: 14pt; font-weight: 700;
-      text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
-    .surat .judul .nomor { font-size: 12pt; margin-top: 2mm; }
-    .surat .isi { margin: 5mm 0; text-align: justify; }
-    .surat .ttd { margin-top: 10mm; text-align: right; }
-    .surat .ttd .jabatan { margin-bottom: 2mm; }
-    .surat .ttd .ttd-img {
-      display: inline-block;
-      width: 4.5cm;
+        /* ====== TANDA TANGAN 2 KOLOM ====== */
+    .surat .ttd-2col {
+      margin-top: 12mm;
+      display: flex;
+      justify-content: space-between;
+      gap: 8mm;
+      page-break-inside: avoid;
+    }
+    .surat .ttd-kolom {
+      flex: 1;
+      text-align: center;
+      font-size: 12pt;
+    }
+    .surat .ttd-kolom .jabatan { margin-bottom: 1mm; }
+    .surat .ttd-kolom .ttd-img {
+      display: block;
+      width: 3.5cm;
       max-height: 22mm;
       object-fit: contain;
-      margin: 1mm 0;
+      margin: 0 auto;
     }
-    .surat .ttd .nama { font-weight: 700; text-decoration: underline; }
-    .surat .ttd .nipm { font-size: 10pt; margin-top: 1mm; }
-  }
+    .surat .ttd-kolom .ttd-placeholder {
+      height: 22mm;
+      display: block;
+    }
+    .surat .ttd-kolom .nama {
+      font-weight: 700;
+      text-decoration: underline;
+      margin-top: 1mm;
+    }
+    .surat .ttd-kolom .nipm {
+      font-size: 11pt;
+      margin-top: 1mm;
+    }
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
@@ -545,7 +562,7 @@
           '</div></div>';
 
       var kop =
-        '<img src="kop-spmb.png" class="kop-img" alt="KOP" ' +
+        '<img src="kop surat.png" class="kop-img" alt="KOP" ' +
           'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
         '<div style="display:none;">' + kopFallback + '</div>';
 
@@ -567,13 +584,29 @@
             '</table>' +
             '<p style="margin:14px 0;">dinyatakan: ' + hasilTeks + '</p>' + next +
             '<p style="margin-top:24px;">Demikian surat ini disampaikan untuk dipergunakan sebagaimana mestinya.</p></div>' +
-          '<div class="ttd">' +
-            'Surakarta, ' + Utils.formatTanggal(h.decision_date) + '<br>' +
-            '<div class="jabatan">Kepala Sekolah,</div>' +
-            '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
-              'onerror="this.style.display=\'none\'">' +
-            '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div>' +
-            '<div class="nipm">NIPM. 512 099 314</div>' +
+                    '<div class="ttd-2col">' +
+            // ===== KOLOM KIRI: Kepala Sekolah =====
+            '<div class="ttd-kolom">' +
+              '<div>Mengetahui,</div>' +
+              '<div class="jabatan">Kepala Sekolah,</div>' +
+              '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
+                'onerror="this.style.display=\'none\';' +
+                'this.nextElementSibling.style.display=\'block\';">' +
+              '<span class="ttd-placeholder" style="display:none;"></span>' +
+              '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || 'Joko Harinto, S.Pd, M.Pd.') + '</div>' +
+              '<div class="nipm">NIPM. 512 099 314</div>' +
+            '</div>' +
+            // ===== KOLOM KANAN: Ketua Panitia =====
+            '<div class="ttd-kolom">' +
+              '<div>Surakarta, ' + Utils.formatTanggal(h.decision_date) + '</div>' +
+              '<div class="jabatan">Ketua Panitia,</div>' +
+              '<img src="ttd-ketua.png" class="ttd-img" alt="TTD" ' +
+                'onerror="this.style.display=\'none\';' +
+                'this.nextElementSibling.style.display=\'block\';">' +
+              '<span class="ttd-placeholder" style="display:none;"></span>' +
+              '<div class="nama">' + Utils.escapeHtml(s.ketua_panitia || 'Lexna Keswanto, S.Pd.') + '</div>' +
+              '<div class="nipm">NBM. 151 1800</div>' +
+            '</div>' +
           '</div></div>';
       setTimeout(function () { window.print(); }, 300);
     }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
