@@ -127,7 +127,8 @@
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
   #print-area { display: none; }
   @media print {
-    @page { size: A4 portrait; margin: 15mm 18mm; }
+    /* Margin dikurangi supaya KOP bisa selebar 20 cm pada A4 (21 cm - 0.5cm kiri - 0.5cm kanan = 20 cm) */
+    @page { size: A4 portrait; margin: 8mm 5mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
@@ -135,8 +136,9 @@
       font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
     .surat { font-size: 11.5pt; line-height: 1.5; }
-    .surat .kop-img { width: 100%; max-height: 30mm; object-fit: contain;
-      display: block; margin-bottom: 3mm; }
+    /* KOP lebar 20 cm */
+    .surat .kop-img { width: 20cm; height: auto; max-height: 45mm;
+      object-fit: contain; display: block; margin: 0 auto 3mm auto; }
     .surat .judul { text-align: center; margin: 6mm 0 2mm; }
     .surat .judul h3 { font-size: 13pt; font-weight: 700;
       text-decoration: underline; letter-spacing: 0.5px; margin: 0; }
@@ -245,6 +247,28 @@
   modalBg.addEventListener('click', function (e) { if (e.target === modalBg) closeModal(); });
   var state = { q: '', decision: '' };
 
+  /* ============================================================
+   * KONSENTRASI MAP — untuk tampilkan "K03 — Teknik Pengelasan"
+   * ============================================================ */
+  var konsentrasiMap = {};
+  function loadKonsentrasiMap() {
+    return Api.settings.listKonsentrasi().then(function (res) {
+      if (res && res.success && res.data && res.data.konsentrasi) {
+        res.data.konsentrasi.forEach(function (k) {
+          konsentrasiMap[k.konsentrasi_id] = k.nama_konsentrasi || '';
+        });
+      }
+    }).catch(function () {});
+  }
+  function labelKonsentrasi(id) {
+    if (!id) return '-';
+    var key = String(id);
+    var nama = konsentrasiMap[key];
+    return nama ? (key + ' — ' + nama) : key;
+  }
+  // Preload paralel
+  loadKonsentrasiMap();
+
   function loadSummary() {
     Api.selection.stats().then(function (res) {
       if (!res.success) return;
@@ -304,7 +328,7 @@
           '<td><strong>' + Utils.escapeHtml(it.nomor_pendaftaran || '-') + '</strong></td>' +
           '<td>' + Utils.escapeHtml(it.nama_lengkap || '-') + '</td>' +
           '<td>' + Utils.escapeHtml(it.nisn || '-') + '</td>' +
-          '<td>' + Utils.escapeHtml(it.konsentrasi_1 || '-') + '</td>' +
+          '<td>' + Utils.escapeHtml(labelKonsentrasi(it.konsentrasi_1)) + '</td>' +
           '<td style="font-size:0.8rem;">' + Utils.escapeHtml(it.interview_result || '-') + '</td>' +
           '<td><span class="badge ' + cls + '">' + dec.replace('_',' ') + '</span></td>' +
           '<td style="font-size:0.75rem;">' + Utils.escapeHtml(it.letter_number || '-') + '</td>' +
@@ -343,7 +367,7 @@
       '<h3>Tetapkan Keputusan</h3>' +
       '<div style="background:#eff6ff;padding:10px 14px;border-radius:6px;font-size:0.85rem;margin-bottom:14px;">' +
         '<strong>' + Utils.escapeHtml(it.nama_lengkap) + '</strong><br>' +
-        Utils.escapeHtml(it.nomor_pendaftaran || '-') + ' • ' + Utils.escapeHtml(it.konsentrasi_1 || '-') + '</div>' +
+        Utils.escapeHtml(it.nomor_pendaftaran || '-') + ' • ' + Utils.escapeHtml(labelKonsentrasi(it.konsentrasi_1)) + '</div>' +
       '<div class="field"><label>Keputusan</label>' +
         '<select id="d-decision">' +
           '<option value="DITERIMA"' + (it.decision === 'DITERIMA' ? ' selected' : '') + '>DITERIMA</option>' +
@@ -373,11 +397,22 @@
   }
 
   /* ============================================================
-   * CETAK SURAT — A4 PORTRAIT dengan KOP fallback aman
+   * CETAK SURAT — A4 PORTRAIT
+   * - KOP lebar 20 cm
+   * - Konsentrasi tampil lengkap: "K03 — Teknik Pengelasan"
+   * - Deadline daftar ulang dari gelombang (fallback "sesuai jadwal gelombang")
    * ============================================================ */
   function printSurat(regId) {
     Utils.showLoading('Menyiapkan surat...');
-    Api.selection.getResult(regId).then(function (res) {
+
+    // Pastikan konsentrasiMap terisi dulu (kalau belum)
+    var pEnsure = konsentrasiMap && Object.keys(konsentrasiMap).length
+      ? Promise.resolve()
+      : loadKonsentrasiMap();
+
+    pEnsure.then(function () {
+      return Api.selection.getResult(regId);
+    }).then(function (res) {
       Utils.hideLoading();
       if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
       var d = res.data;
@@ -385,6 +420,25 @@
       var decision = String(h.decision);
       var isDiterima = decision === 'DITERIMA';
       var isCadangan = decision === 'CADANGAN';
+
+      // ==== KONSENTRASI LENGKAP ====
+      var konsLabel = labelKonsentrasi(p.konsentrasi_1);
+
+      // ==== DEADLINE DAFTAR ULANG ====
+      // Prioritas sumber:
+      //   1) h.batas_daftar_ulang  (dari HASIL_SELEKSI, kalau backend kirim)
+      //   2) d.daftar_ulang.batas_daftar_ulang (dari sheet DAFTAR_ULANG)
+      //   3) s.batas_daftar_ulang (dari getPublicSettings, fallback)
+      var batasDU = (h && h.batas_daftar_ulang) ||
+                    (d.daftar_ulang && d.daftar_ulang.batas_daftar_ulang) ||
+                    (s && s.batas_daftar_ulang) || '';
+
+      var kalimatDU = batasDU
+        ? 'Peserta diharapkan melakukan daftar ulang paling lambat <strong>' +
+          Utils.formatTanggal(batasDU) + '</strong>. Apabila tidak melakukan daftar ulang, ' +
+          'maka dianggap mengundurkan diri.'
+        : 'Peserta diharapkan melakukan daftar ulang sesuai jadwal gelombang yang berlaku. ' +
+          'Apabila tidak melakukan daftar ulang, maka dianggap mengundurkan diri.';
 
       var kalimat = 'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
         Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
@@ -394,15 +448,11 @@
                       isCadangan ? '<strong>CADANGAN</strong>' :
                       '<strong>TIDAK DITERIMA</strong>';
 
-      var next = isDiterima
-        ? '<p>Peserta diharapkan melakukan daftar ulang paling lambat ' +
-          Utils.escapeHtml(s.batas_daftar_ulang || 'yang akan diinformasikan lebih lanjut') +
-          '. Apabila tidak melakukan daftar ulang, maka dianggap mengundurkan diri.</p>'
-        : isCadangan
-        ? '<p>Peserta akan dihubungi kembali apabila terdapat kuota yang tersedia.</p>'
-        : '<p>Kami mengucapkan terima kasih atas partisipasi peserta dalam seleksi ini.</p>';
+      var next = isDiterima ? '<p>' + kalimatDU + '</p>'
+               : isCadangan ? '<p>Peserta akan dihubungi kembali apabila terdapat kuota yang tersedia.</p>'
+               : '<p>Kami mengucapkan terima kasih atas partisipasi peserta dalam seleksi ini.</p>';
 
-      // ====== KOP: gambar utama + fallback teks (inline, tidak pakai window.__) ======
+      // ===== KOP: gambar utama + fallback teks (inline) =====
       var kopFallback =
         '<div style="display:flex;align-items:center;gap:5mm;' +
           'border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
@@ -418,7 +468,6 @@
               ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</p>' +
           '</div></div>';
 
-      // Pakai onerror inline — sembunyikan gambar, tampilkan fallback
       var kop =
         '<img src="kop-spmb.png" class="kop-img" alt="KOP" ' +
           'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
@@ -435,7 +484,7 @@
               '<tr><td style="padding:3px 10px;">Nama</td><td>: <strong>' + Utils.escapeHtml(p.nama_lengkap) + '</strong></td></tr>' +
               '<tr><td style="padding:3px 10px;">NISN</td><td>: ' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
               '<tr><td style="padding:3px 10px;">No. Pendaftaran</td><td>: ' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</td></tr>' +
-              '<tr><td style="padding:3px 10px;">Konsentrasi</td><td>: ' + Utils.escapeHtml(p.konsentrasi_1 || '-') + '</td></tr>' +
+              '<tr><td style="padding:3px 10px;">Konsentrasi</td><td>: ' + Utils.escapeHtml(konsLabel) + '</td></tr>' +
             '</table>' +
             '<p style="margin:14px 0;">dinyatakan: ' + hasilTeks + '</p>' + next +
             '<p style="margin-top:24px;">Demikian surat ini disampaikan untuk dipergunakan sebagaimana mestinya.</p></div>' +
