@@ -450,14 +450,10 @@
       var terbilang = angkaKeHuruf(t.amount) + ' rupiah';
       var konsentrasiTampil = labelKonsentrasi(p.konsentrasi_1);
       var kop =
-        '<div class="kop">' +
-          '<img src="logo.png" alt="Logo" class="kop-logo" onerror="this.style.display=\'none\'">' +
-          '<div class="kop-teks">' +
-            '<h2>' + Utils.escapeHtml(s.nama_sekolah || '') + '</h2>' +
-            '<div class="kop-sub">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</div>' +
-            '<div class="kop-sub">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
-              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</div></div></div>' +
-        '<hr class="kop-line">';
+  '<div class="kop">' +
+    '<img src="Kop-Surat.png" alt="Kop Surat" style="width:100%;height:auto;object-fit:contain;">' +
+  '</div>' +
+  '<hr class="kop-line">';
       document.getElementById('print-area').innerHTML =
         '<div class="kuitansi">' + kop +
           '<div class="kuitansi-title">KUITANSI PEMBAYARAN</div>' +
