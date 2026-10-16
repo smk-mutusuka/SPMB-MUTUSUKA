@@ -160,9 +160,16 @@
     .surat .judul .nomor { font-size: 12pt; margin-top: 2mm; }
     .surat .isi { margin: 5mm 0; text-align: justify; }
     .surat .ttd { margin-top: 10mm; text-align: right; }
-    .surat .ttd .jabatan { margin-bottom: 20mm; }
+    .surat .ttd .jabatan { margin-bottom: 2mm; }
+    .surat .ttd .ttd-img {
+      display: inline-block;
+      width: 4.5cm;
+      max-height: 22mm;
+      object-fit: contain;
+      margin: 1mm 0;
+    }
     .surat .ttd .nama { font-weight: 700; text-decoration: underline; }
-    .surat .ttd .nipm { font-size: 12pt; margin-top: 2mm; }
+    .surat .ttd .nipm { font-size: 10pt; margin-top: 1mm; }
   }
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
@@ -563,6 +570,8 @@
           '<div class="ttd">' +
             'Surakarta, ' + Utils.formatTanggal(h.decision_date) + '<br>' +
             '<div class="jabatan">Kepala Sekolah,</div>' +
+            '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
+              'onerror="this.style.display=\'none\'">' +
             '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div>' +
             '<div class="nipm">NIPM. 512 099 314</div>' +
           '</div></div>';
