@@ -1,0 +1,31 @@
+name: Generate QR Code SPMB
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  generate-qr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Generate QR Code
+        uses: snow-actions/qrcode@v1.0.0
+        with:
+          text: 'https://smk-mutusuka.github.io/SPMB-MUTUSUKA/'
+          output: 'qr-spmb.png'
+          size: 500
+
+      - name: Commit dan Push QR Code
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add qr-spmb.png
+          git commit -m "Update QR Code SPMB otomatis" || exit 0
+          git push
