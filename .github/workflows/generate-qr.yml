@@ -15,12 +15,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Install qrencode
+        run: sudo apt-get update && sudo apt-get install -y qrencode
+
       - name: Generate QR Code
-        uses: snow-actions/qrcode@v1.0.0
-        with:
-          text: 'https://smk-mutusuka.github.io/SPMB-MUTUSUKA/'
-          output: 'qr-spmb.png'
-          size: 500
+        run: qrencode -o qr-spmb.png -s 10 -m 2 "https://smk-mutusuka.github.io/SPMB-MUTUSUKA/"
 
       - name: Commit dan Push QR Code
         run: |
