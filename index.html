@@ -29,9 +29,36 @@
   .btn-primary:hover { background: #143f6e; }
   .btn-status { background: #d1fae5; color: #065f46; }
   .btn-status:hover { background: #a7f3d0; }
-  .btn-secondary { background: #e5e7eb; color: #1f2937; }
-  .btn-secondary:hover { background: #d1d5db; }
-  .footnote { font-size: 0.75rem; color: #6b7280; margin-top: 20px; }
+  .btn-pengumuman { background: #fef3c7; color: #92400e; }
+  .btn-pengumuman:hover { background: #fde68a; }
+
+  /* Box info berkas */
+  .info-box {
+    background: #eff6ff;
+    border-left: 4px solid #1a5490;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    color: #1e40af;
+    line-height: 1.6;
+    text-align: left;
+  }
+  .info-box .info-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .info-box ul {
+    margin: 4px 0 0 18px;
+    padding: 0;
+  }
+  .info-box ul li {
+    margin-bottom: 3px;
+  }
+
+  .footnote { font-size: 0.75rem; color: #6b7280; margin-top: 20px; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -46,7 +73,16 @@
 
   <a href="register.html" class="btn btn-primary">Daftar Sekarang</a>
   <a href="status.html" class="btn btn-status">Cek Status Pendaftaran</a>
-  <a href="login.html" class="btn btn-secondary">Login Petugas</a>
+  <a href="pengumuman.html" class="btn btn-pengumuman">📄 Lihat Pengumuman Hasil Seleksi</a>
+
+  <div class="info-box">
+    <span class="info-title">📋 Siapkan file berikut sebelum mendaftar:</span>
+    <ul>
+      <li>Foto calon murid</li>
+      <li>Akte Kelahiran calon murid</li>
+      <li>Kartu Keluarga (KK)</li>
+    </ul>
+  </div>
 
   <p class="footnote">
     Dengan mendaftar, Anda menyetujui pemrosesan data pribadi untuk keperluan Penerimaan Murid Baru.
