@@ -128,15 +128,39 @@
       border-bottom: 1px solid #000; padding-bottom: 1mm; margin-bottom: 2mm; }
     .doc .info-du ul { margin: 0; padding-left: 5mm; }
     .doc .info-du li { margin-bottom: 1mm; }
-    .doc .ttd { margin-top: 10mm; text-align: right; font-size: 12pt; }
-    .doc .ttd .kota { margin-bottom: 1mm; }
-    .doc .ttd .jabatan { margin-bottom: 2mm; }
-    .doc .ttd .ttd-img {
-      display: inline-block;
-      width: 4.5cm;
+        /* ====== TANDA TANGAN 2 KOLOM ====== */
+    .doc .ttd-2col {
+      margin-top: 12mm;
+      display: flex;
+      justify-content: space-between;
+      gap: 8mm;
+      page-break-inside: avoid;
+    }
+    .doc .ttd-kolom {
+      flex: 1;
+      text-align: center;
+      font-size: 12pt;
+    }
+    .doc .ttd-kolom .jabatan { margin-bottom: 1mm; }
+    .doc .ttd-kolom .ttd-img {
+      display: block;
+      width: 3.5cm;
       max-height: 22mm;
       object-fit: contain;
-      margin: 1mm 0;
+      margin: 0 auto;
+    }
+    .doc .ttd-kolom .ttd-placeholder {
+      height: 22mm;
+      display: block;
+    }
+    .doc .ttd-kolom .nama {
+      font-weight: 700;
+      text-decoration: underline;
+      margin-top: 1mm;
+    }
+    .doc .ttd-kolom .nipm {
+      font-size: 11pt;
+      margin-top: 1mm;
     }
     .doc .ttd .nama { font-weight: 700; text-decoration: underline; display: inline-block; }
     .doc .ttd .nipm { font-size: 10pt; margin-top: 1mm; }
@@ -374,7 +398,7 @@
         '</div></div>';
 
     var kop =
-      '<img src="kop-spmb.png" class="kop-img" alt="KOP" ' +
+      '<img src="kop-surat.png" class="kop-img" alt="KOP" ' +
         'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
       '<div style="display:none;">' + kopFallback + '</div>';
 
@@ -428,13 +452,27 @@
     }
 
     html +=
-       '<div class="ttd">' +
-        'Surakarta, ' + Utils.formatTanggal(tglKeputusan.toISOString()) + '<br>' +
-        '<div class="jabatan">Kepala Sekolah,</div>' +
-        '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
-          'onerror="this.style.display=\'none\'">' +
-        '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div>' +
-        '<div class="nipm">NIPM. 512 099 314</div>' +
+             '<div class="ttd-2col">' +
+        '<div class="ttd-kolom">' +
+          '<div>Mengetahui,</div>' +
+          '<div class="jabatan">Kepala Sekolah,</div>' +
+          '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
+            'onerror="this.style.display=\'none\';' +
+            'this.nextElementSibling.style.display=\'block\';">' +
+          '<span class="ttd-placeholder" style="display:none;"></span>' +
+          '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || 'Joko Harinto, S.Pd, M.Pd.') + '</div>' +
+          '<div class="nipm">NIPM. 512 099 314</div>' +
+        '</div>' +
+        '<div class="ttd-kolom">' +
+          '<div>Surakarta, ' + Utils.formatTanggal(tglKeputusan.toISOString()) + '</div>' +
+          '<div class="jabatan">Ketua Panitia,</div>' +
+          '<img src="ttd-ketua.png" class="ttd-img" alt="TTD" ' +
+            'onerror="this.style.display=\'none\';' +
+            'this.nextElementSibling.style.display=\'block\';">' +
+          '<span class="ttd-placeholder" style="display:none;"></span>' +
+          '<div class="nama">' + Utils.escapeHtml(s.ketua_panitia || 'Lexna Keswanto, S.Pd.') + '</div>' +
+          '<div class="nipm">NBM. 151 1800</div>' +
+        '</div>' +
       '</div>' +
       '<div class="catatan-kaki">' +
         'Dokumen ini dicetak otomatis dari sistem SPMB ' +
