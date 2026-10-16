@@ -144,6 +144,8 @@
     .surat .isi { margin: 5mm 0; text-align: justify; }
     .surat .ttd { margin-top: 10mm; text-align: right; }
     .surat .ttd .jabatan { margin-bottom: 20mm; }
+    .surat .ttd .nama { font-weight: 700; text-decoration: underline; }
+    .surat .ttd .nipm { font-size: 10pt; margin-top: 1mm; }
   }
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
@@ -242,6 +244,7 @@
   function closeModal() { modalBg.classList.remove('show'); document.getElementById('modal').innerHTML = ''; }
   modalBg.addEventListener('click', function (e) { if (e.target === modalBg) closeModal(); });
   var state = { q: '', decision: '' };
+
   function loadSummary() {
     Api.selection.stats().then(function (res) {
       if (!res.success) return;
@@ -268,6 +271,7 @@
                  '✗ NONAKTIF — pendaftar belum bisa melihat hasil') + '</div>';
     });
   }
+
   document.getElementById('btn-publish').addEventListener('click', function () {
     if (!confirm('Ubah status publikasi hasil seleksi?')) return;
     Utils.showLoading('Memproses...');
@@ -280,6 +284,7 @@
       else Utils.toast('Gagal: ' + r.message, 'error');
     }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
   });
+
   function loadList() {
     Utils.showLoading('Memuat kandidat...');
     Api.selection.listCandidates(state).then(function (res) {
@@ -326,11 +331,13 @@
       document.getElementById('tbl').innerHTML = '<div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div>';
     });
   }
+
   document.getElementById('btn-filter').addEventListener('click', function () {
     state.q = document.getElementById('f-q').value.trim();
     state.decision = document.getElementById('f-decision').value;
     loadList();
   });
+
   function showSetForm(it) {
     openModal(
       '<h3>Tetapkan Keputusan</h3>' +
@@ -364,6 +371,10 @@
       }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
   }
+
+  /* ============================================================
+   * CETAK SURAT — A4 PORTRAIT dengan KOP fallback aman
+   * ============================================================ */
   function printSurat(regId) {
     Utils.showLoading('Menyiapkan surat...');
     Api.selection.getResult(regId).then(function (res) {
@@ -374,12 +385,15 @@
       var decision = String(h.decision);
       var isDiterima = decision === 'DITERIMA';
       var isCadangan = decision === 'CADANGAN';
+
       var kalimat = 'Berdasarkan hasil seleksi Penerimaan Murid Baru (SPMB) ' +
         Utils.escapeHtml(s.nama_sekolah || '') + ' Tahun Pelajaran ' +
         Utils.escapeHtml(s.tahun_ajaran || '') + ', dengan ini kami nyatakan bahwa:';
+
       var hasilTeks = isDiterima ? '<strong>DITERIMA</strong>' :
                       isCadangan ? '<strong>CADANGAN</strong>' :
                       '<strong>TIDAK DITERIMA</strong>';
+
       var next = isDiterima
         ? '<p>Peserta diharapkan melakukan daftar ulang paling lambat ' +
           Utils.escapeHtml(s.batas_daftar_ulang || 'yang akan diinformasikan lebih lanjut') +
@@ -387,17 +401,29 @@
         : isCadangan
         ? '<p>Peserta akan dihubungi kembali apabila terdapat kuota yang tersedia.</p>'
         : '<p>Kami mengucapkan terima kasih atas partisipasi peserta dalam seleksi ini.</p>';
+
+      // ====== KOP: gambar utama + fallback teks (inline, tidak pakai window.__) ======
+      var kopFallback =
+        '<div style="display:flex;align-items:center;gap:5mm;' +
+          'border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
+          '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" ' +
+            'onerror="this.style.display=\'none\'">' +
+          '<div style="flex:1;text-align:center;">' +
+            '<h2 style="font-size:14pt;font-weight:700;margin:0;">' +
+              Utils.escapeHtml(s.nama_sekolah || 'SMK MUHAMMADIYAH 1 SURAKARTA') + '</h2>' +
+            '<p style="font-size:9pt;margin:1mm 0 0;">' +
+              Utils.escapeHtml(s.alamat_sekolah || '') + '</p>' +
+            '<p style="font-size:9pt;margin:0;">Telp: ' +
+              Utils.escapeHtml(s.telepon_sekolah || '-') +
+              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</p>' +
+          '</div></div>';
+
+      // Pakai onerror inline — sembunyikan gambar, tampilkan fallback
       var kop =
         '<img src="kop-spmb.png" class="kop-img" alt="KOP" ' +
-        'onerror="this.outerHTML=window.__suratKopFallback__">';
-      window.__suratKopFallback__ =
-        '<div style="display:flex;align-items:center;gap:5mm;border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
-          '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" onerror="this.style.display=\'none\'">' +
-          '<div style="flex:1;text-align:center;">' +
-            '<h2 style="font-size:14pt;font-weight:700;margin:0;">' + Utils.escapeHtml(s.nama_sekolah || 'SMK MUHAMMADIYAH 1 SURAKARTA') + '</h2>' +
-            '<p style="font-size:9pt;margin:1mm 0 0;">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</p>' +
-            '<p style="font-size:9pt;margin:0;">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
-              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</p></div></div>';
+          'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
+        '<div style="display:none;">' + kopFallback + '</div>';
+
       document.getElementById('print-area').innerHTML =
         '<div class="surat">' + kop +
           '<div class="judul">' +
@@ -415,11 +441,14 @@
             '<p style="margin-top:24px;">Demikian surat ini disampaikan untuk dipergunakan sebagaimana mestinya.</p></div>' +
           '<div class="ttd">' +
             'Surakarta, ' + Utils.formatTanggal(h.decision_date) + '<br>' +
-            'Kepala Sekolah,<br><br><br><br>' +
-            '<strong>' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</strong></div></div>';
-      setTimeout(function () { window.print(); }, 200);
+            '<div class="jabatan">Kepala Sekolah,</div>' +
+            '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div>' +
+            '<div class="nipm">NIPM. 512 099 314</div>' +
+          '</div></div>';
+      setTimeout(function () { window.print(); }, 300);
     }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
   }
+
   loadSummary();
   loadList();
 })();
