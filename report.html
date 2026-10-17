@@ -248,12 +248,29 @@
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
+  
   var konsentrasiList = [];
   Api.settings.listKonsentrasi().then(function (res) {
     if (res && res.success && res.data && res.data.konsentrasi) {
       konsentrasiList = res.data.konsentrasi;
     }
   }).catch(function () {});
+  
+  var gelombangList = [];
+  Api.gelombang.list().then(function(res) {
+    if (res.success && res.data.gelombang) {
+      gelombangList = res.data.gelombang;
+    }
+  }).catch(function(){});
+  
+  function opsiGelombang() {
+    var h = '<option value="">Semua Gelombang</option>';
+    gelombangList.forEach(function (g) {
+      h += '<option value="' + Utils.escapeHtml(g.gelombang_id) + '">' +
+        Utils.escapeHtml(g.nama) + '</option>';
+    });
+    return h;
+  }
   
   function opsiKonsentrasi() {
     var h = '<option value="">Semua Konsentrasi</option>';
@@ -355,7 +372,9 @@
     c.innerHTML =
       '<div class="panel">' +
         '<div class="preview-info">📥 Pilih filter, lalu klik <strong>Tampilkan Preview</strong> untuk melihat data dan mengunduh Excel.</div>' +
-        '<div class="filters">' +
+        '<div class="filters" style="grid-template-columns: 1fr 1fr 1fr auto;">' +
+          '<div class="field"><label>Gelombang</label>' +
+            '<select id="ex-gelombang">' + opsiGelombang() + '</select></div>' +
           '<div class="field"><label>Status</label>' +
             '<select id="ex-status"><option value="">Semua Status</option>' +
               '<option value="DRAFT">DRAFT</option>' +
@@ -365,10 +384,10 @@
               '<option value="DIBATALKAN">DIBATALKAN</option></select></div>' +
           '<div class="field"><label>Konsentrasi</label>' +
             '<select id="ex-kons">' + opsiKonsentrasi() + '</select></div>' +
-            '<div style="display:flex; gap:8px; align-items:flex-end;">' +
-              '<button class="btn btn-secondary" id="btn-preview">👁️ Tampilkan Preview</button>' +
-              '<button class="btn btn-primary" id="btn-download" style="display:none;">⬇ Download Excel</button>' +
-            '</div>' +
+          '<div style="display:flex; gap:8px; align-items:flex-end;">' +
+            '<button class="btn btn-secondary" id="btn-preview">👁️ Tampilkan Preview</button>' +
+            '<button class="btn btn-primary" id="btn-download" style="display:none;">⬇ Download Excel</button>' +
+          '</div>' +
         '</div></div>' +
       '<div class="panel"><div class="section-title">Preview Data</div>' +
         '<div id="ex-preview" class="empty">Klik Tampilkan Preview untuk melihat data.</div></div>';
@@ -376,9 +395,10 @@
     document.getElementById('btn-preview').addEventListener('click', function () {
       var status = document.getElementById('ex-status').value;
       var kons = document.getElementById('ex-kons').value;
-      Utils.showLoading('Menyiapkan data...');
+      var gel = document.getElementById('ex-gelombang').value;
       
-      Api.report.exportData({ status: status, konsentrasi: kons }).then(function (res) {
+      Utils.showLoading('Menyiapkan data...');
+      Api.report.exportData({ status: status, konsentrasi: kons, gelombang_id: gel }).then(function (res) {
         Utils.hideLoading();
         if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
         
@@ -494,7 +514,9 @@
     c.innerHTML =
       '<div class="panel">' +
         '<div class="preview-info">🖨️ Cetak daftar hadir peserta wawancara. Hanya menampilkan siswa berstatus <strong>TERVERIFIKASI</strong>.</div>' +
-        '<div class="filters" style="grid-template-columns: 1fr 1fr 1fr auto;">' +
+        '<div class="filters" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">' +
+          '<div class="field"><label>Gelombang</label>' +
+            '<select id="hd-gelombang">' + opsiGelombang() + '</select></div>' +
           '<div class="field"><label>Konsentrasi</label>' +
             '<select id="hd-kons">' + opsiKonsentrasi() + '</select></div>' +
           '<div class="field"><label>Tanggal Wawancara (Opsional)</label>' +
@@ -513,11 +535,13 @@
       var kons = document.getElementById('hd-kons').value;
       var tgl = document.getElementById('hd-tgl').value;
       var status = document.getElementById('hd-status').value;
+      var gel = document.getElementById('hd-gelombang').value;
       
       var payload = { 
         konsentrasi: kons, 
         tanggal: tgl, 
-        hanya_belum: (status === 'belum') 
+        hanya_belum: (status === 'belum'),
+        gelombang_id: gel
       };
       
       Utils.showLoading('Menyiapkan daftar hadir...');
