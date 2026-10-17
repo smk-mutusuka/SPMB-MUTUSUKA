@@ -161,11 +161,17 @@
     
     /* Layout Foto dan Tabel A */
     .form-bio .layout-container { display: flex; gap: 8mm; margin-bottom: 4mm; align-items: flex-start; }
+    
+    /* Lebar foto pas 4cm */
     .form-bio .photo-container { width: 4cm; flex-shrink: 0; text-align: center; }
     
-    /* Nomor Pendaftaran 16pt */
-    .form-bio .photo-no-reg { font-size: 16pt; font-weight: bold; margin-bottom: 2mm; }
+    /* Nomor Pendaftaran 18pt */
+    .form-bio .photo-no-reg { font-size: 18pt; font-weight: bold; margin-bottom: 2mm; }
     
+    /* 
+     * KUNCI KOMPRESI FOTO: 
+     * width 4cm, height 5.5cm, object-fit: cover (memaksa gambar mengisi kotak)
+     */
     .form-bio .photo-box { 
       width: 4cm; height: 5.5cm; border: 1px solid #000; 
       object-fit: cover; display: block; background: #f9fafb; 
@@ -580,7 +586,7 @@
     var fotoUrl = '';
     
     if (fotoDoc && fotoDoc.drive_file_id) {
-        // MENGGUNAKAN LH3 DIRECT LINK YANG LEBIH STABIL UNTUK CROSS-ORIGIN
+        // URL thumbnail Google Drive ukuran lebar 500px
         fotoUrl = 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id + '=s500';
     }
 
@@ -614,14 +620,16 @@
         // BAGIAN ATAS: FOTO (KIRI) & TABEL A (KANAN)
         '<div class="layout-container">' +
           '<div class="photo-container">' +
-            // Nomor Pendaftaran di atas foto
+            // Nomor Pendaftaran 18pt di atas foto
             '<div class="photo-no-reg">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</div>' +
+            
+            // Gambar Foto 4x5.5 (object-fit cover memaksa gambar terkompresi pas di kotak)
             (fotoUrl 
               ? '<img src="' + fotoUrl + '" class="photo-box" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
                 '<div class="photo-box" style="display:none;">FOTO</div>'
               : '<div class="photo-box">FOTO</div>'
             ) +
-            // Label "FOTO 4x5.5" dihilangkan
+            // Tulisan "FOTO 4x5.5" sudah dihilangkan
           '</div>' +
 
           '<div class="form-content-a">' +
