@@ -111,10 +111,6 @@
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
-  
-  /* ============================================================
-   * PRINT — DAFTAR HADIR A4 LANDSCAPE (KOP 20cm + TTD)
-   * ============================================================ */
   #print-area { display: none; }
   @media print {
     @page { size: A4 landscape; margin: 10mm 15mm; }
@@ -140,7 +136,7 @@
     
     .print-tbl { width: 100%; border-collapse: collapse; font-size: 12pt; margin-bottom: 8mm; }
     .print-tbl th, .print-tbl td { border: 1px solid #000; padding: 2mm 3mm; text-align: left; }
-    .print-tbl th { background: #f0f0f0; font-weight: 700; text-align: center; }
+    .print-tbl th { background: #f0f0f0; font-weight: 700; text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 12pt; }
     .print-tbl td.no { text-align: center; width: 12mm; }
     .print-tbl td.jk { text-align: center; width: 15mm; }
     
@@ -443,7 +439,7 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
   
-    function renderHadir() {
+  function renderHadir() {
     var c = document.getElementById('tab-content');
     c.innerHTML =
       '<div class="panel">' +
@@ -541,6 +537,7 @@
             '<th style="width:25mm;">NISN</th>' +
             '<th style="width:12mm;">JK</th>' +
             '<th>Sekolah Asal</th>' +
+            '<th style="width:40mm;">Pelaksanaan Wawancara</th>' +
             '<th style="width:40mm;">Tanda Tangan</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       printHtml += '<tr>' +
@@ -550,6 +547,7 @@
         '<td>' + Utils.escapeHtml(r.nisn) + '</td>' +
         '<td class="jk">' + Utils.escapeHtml(r.jenis_kelamin) + '</td>' +
         '<td>' + Utils.escapeHtml(r.sekolah_asal) + '</td>' +
+        '<td></td>' + 
         '<td></td></tr>';
     });
     printHtml += '</tbody></table>';
