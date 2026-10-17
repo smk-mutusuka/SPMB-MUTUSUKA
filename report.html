@@ -115,6 +115,7 @@
   #print-area { display: none; }
 
   @media print {
+    /* Paksa semua teks jadi hitam pekat & hilangkan background abu-abu */
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     @page { size: A4 landscape; margin: 10mm 15mm; }
     html, body { background: #fff !important; color: #000 !important; }
@@ -129,6 +130,7 @@
     
     .print-doc { padding: 0; font-size: 12pt; color: #000 !important; }
     
+    /* KOP 20cm dilebarkan */
     .print-doc .kop-img { width: 20cm; max-width: none; height: auto; display: block;
       margin: 0 auto 4mm auto; }
     .print-doc .kop-fallback { margin: 0 auto 4mm auto; width: 20cm; display: flex; align-items: center; gap: 5mm;
@@ -138,6 +140,7 @@
       margin: 4mm 0 2mm 0; letter-spacing: 0.5px; color: #000 !important; }
     .print-doc .meta { text-align: center; font-size: 12pt; margin-bottom: 6mm; color: #000 !important; }
     
+    /* Tabel: Garis tipis seragam 1px hitam */
     .print-tbl { width: 100%; border-collapse: collapse; font-size: 12pt; margin-bottom: 8mm; color: #000 !important; }
     .print-tbl th, .print-tbl td { 
       border: 1px solid #000 !important; 
@@ -156,6 +159,7 @@
     .print-tbl td.no { text-align: center; width: 12mm; color: #000 !important; }
     .print-tbl td.jk { text-align: center; width: 15mm; color: #000 !important; }
     
+    /* TTD Sejajar */
     .print-doc .ttd-2col { margin-top: 8mm; display: flex; justify-content: space-between;
       gap: 10mm; page-break-inside: avoid; color: #000 !important; }
       
@@ -215,11 +219,16 @@
   </main>
 </div>
 <div id="print-area"></div>
+
+<!-- Library Pustaka -->
 <script src="config.js"></script>
 <script src="utils.js"></script>
 <script src="api.js"></script>
 <script src="auth.js"></script>
 <script src="nav.js"></script>
+<!-- SheetJS untuk Excel Asli -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+
 <script>
 (function () {
   'use strict';
@@ -363,6 +372,7 @@
         '</div></div>' +
       '<div class="panel"><div class="section-title">Preview Data</div>' +
         '<div id="ex-preview" class="empty">Klik Download Excel untuk melihat preview.</div></div>';
+        
     document.getElementById('btn-download').addEventListener('click', function () {
       var status = document.getElementById('ex-status').value;
       var kons = document.getElementById('ex-kons').value;
@@ -377,7 +387,7 @@
           return;
         }
         renderPreviewEkspor(rows);
-        downloadExcel(rows, 'pendaftar-spmb-' + formatTanggalFile() + '.xls');
+        downloadExcel(rows, 'pendaftar-spmb-' + formatTanggalFile() + '.xlsx');
         Utils.toast(rows.length + ' baris siap diunduh', 'success');
       }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
@@ -414,7 +424,8 @@
     return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '-' +
            String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0');
   }
-  
+
+  // FUNGSI EXCEL ASLI (TANPA PERINGATAN CORRUPTED)
   function downloadExcel(rows, filename) {
     var cols = ['nomor_pendaftaran','nama_lengkap','nisn','nik','jenis_kelamin',
       'tempat_lahir','tanggal_lahir','agama','alamat','rt','rw','desa_kelurahan',
@@ -438,36 +449,23 @@
       status_pendaftaran: 'Status Pendaftaran', tanggal_daftar: 'Tanggal Daftar', submitted_at: 'Waktu Submit'
     };
 
-    var table = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
-    table += '<head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Data SPMB</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
-    table += '<table border="1">';
-    
-    table += '<tr style="background-color: #1a5490; color: #ffffff; font-weight: bold;">';
-    cols.forEach(function (c) {
-      table += '<th>' + (headerLabels[c] || c) + '</th>';
-    });
-    table += '</tr>';
+    var ws_data = [];
+    var headerRow = cols.map(function(c) { return headerLabels[c] || c; });
+    ws_data.push(headerRow);
 
     rows.forEach(function (r) {
-      table += '<tr>';
-      cols.forEach(function (c) {
-        var v = r[c] === null || r[c] === undefined ? '' : String(r[c]);
-        table += '<td>' + v + '</td>';
+      var row = cols.map(function (c) {
+        return r[c] === null || r[c] === undefined ? '' : String(r[c]);
       });
-      table += '</tr>';
+      ws_data.push(row);
     });
 
-    table += '</table></body></html>';
-
-    var blob = new Blob([table], { type: 'application/vnd.ms-excel' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(ws_data);
+    ws['!cols'] = cols.map(function() { return { wch: 20 }; });
+    
+    XLSX.utils.book_append_sheet(wb, ws, "Data SPMB");
+    XLSX.writeFile(wb, filename);
   }
  
   function renderHadir() {
