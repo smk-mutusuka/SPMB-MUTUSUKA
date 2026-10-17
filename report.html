@@ -111,35 +111,49 @@
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
+  
+  /* ============================================================
+   * PRINT — DAFTAR HADIR A4 LANDSCAPE (KOP 20cm + TTD)
+   * ============================================================ */
   #print-area { display: none; }
   @media print {
-    @page { size: A4 landscape; margin: 10mm; }
+    @page { size: A4 landscape; margin: 10mm 15mm; }
     html, body { background: #fff !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
     #print-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%;
       font-family: 'Times New Roman', Times, serif; color: #000; }
     .no-print { display: none !important; }
-    .print-doc .kop { display: flex; align-items: center; gap: 5mm; margin-bottom: 2mm; }
-    .print-doc .kop-logo { width: 20mm; height: 20mm; object-fit: contain; flex-shrink: 0; }
-    .print-doc .kop-teks { flex: 1; text-align: center; }
-    .print-doc .kop-teks h2 { font-size: 14pt; font-weight: 700; margin: 0; line-height: 1.2; }
-    .print-doc .kop-teks .kop-sub { font-size: 9pt; margin-top: 0.5mm; line-height: 1.3; }
-    .print-doc .kop-line { border: none; border-top: 2px solid #000; border-bottom: 1px solid #000;
-      height: 1.5mm; margin: 1mm 0 4mm 0; }
-    .print-doc h3 { text-align: center; font-size: 13pt; text-decoration: underline;
-      margin: 2mm 0 4mm 0; letter-spacing: 0.5px; }
-    .print-doc .meta { text-align: center; font-size: 10pt; margin-bottom: 4mm; }
-    .print-tbl { width: 100%; border-collapse: collapse; font-size: 9pt; }
-    .print-tbl th, .print-tbl td { border: 1px solid #000; padding: 1.5mm 2mm; text-align: left; }
-    .print-tbl th { background: #e5e5e5; font-weight: 700; text-align: center; }
-    .print-tbl td.no { text-align: center; width: 8mm; }
-    .print-tbl td.jk { text-align: center; width: 10mm; }
-    .print-doc .ttd { margin-top: 8mm; font-size: 10pt; display: flex; justify-content: space-between; }
-    .print-doc .ttd .ttd-kolom { text-align: center; }
-    .print-doc .ttd .ttd-jabatan { margin-bottom: 20mm; }
-    .print-doc .ttd .ttd-nama { font-weight: 700; text-decoration: underline; }
-    .print-doc .tanggal-print { text-align: right; font-size: 10pt; margin-bottom: 3mm; }
+    
+    .print-doc { padding: 0; font-size: 12pt; }
+    
+    /* KOP 20cm */
+    .print-doc .kop-img { width: 20cm; max-width: none; height: auto; display: block;
+      margin: 0 auto 4mm auto; }
+    .print-doc .kop-fallback { margin: 0 auto 4mm auto; width: 20cm; display: flex; align-items: center; gap: 5mm;
+      border-bottom: 2px solid #000; padding-bottom: 3mm; }
+    .print-doc .kop-fallback img { width: 22mm; height: 22mm; object-fit: contain; }
+    
+    .print-doc h3 { text-align: center; font-size: 14pt; font-weight: 700; text-decoration: underline;
+      margin: 4mm 0 2mm 0; letter-spacing: 0.5px; }
+    .print-doc .meta { text-align: center; font-size: 12pt; margin-bottom: 6mm; }
+    
+    .print-tbl { width: 100%; border-collapse: collapse; font-size: 12pt; margin-bottom: 8mm; }
+    .print-tbl th, .print-tbl td { border: 1px solid #000; padding: 2mm 3mm; text-align: left; }
+    .print-tbl th { background: #f0f0f0; font-weight: 700; text-align: center; }
+    .print-tbl td.no { text-align: center; width: 12mm; }
+    .print-tbl td.jk { text-align: center; width: 15mm; }
+    
+    /* Tanda Tangan 2 Kolom + Gambar TTD */
+    .print-doc .ttd-2col { margin-top: 8mm; display: flex; justify-content: space-between;
+      gap: 10mm; page-break-inside: avoid; }
+    .print-doc .ttd-kolom { flex: 1; text-align: center; font-size: 12pt; }
+    .print-doc .ttd-kolom .jabatan { margin-bottom: 2mm; }
+    .print-doc .ttd-kolom .ttd-img { display: block; width: 3.5cm; max-height: 22mm;
+      object-fit: contain; margin: 0 auto; }
+    .print-doc .ttd-kolom .ttd-placeholder { height: 22mm; display: block; }
+    .print-doc .ttd-kolom .nama { font-weight: 700; text-decoration: underline; margin-top: 1mm; }
+    .print-doc .ttd-kolom .nipm { font-size: 12pt; margin-top: 1mm; }
   }
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
@@ -222,6 +236,7 @@
       konsentrasiList = res.data.konsentrasi;
     }
   }).catch(function () {});
+  
   function opsiKonsentrasi() {
     var h = '<option value="">Semua Konsentrasi</option>';
     konsentrasiList.forEach(function (k) {
@@ -230,6 +245,19 @@
     });
     return h;
   }
+  function labelKonsentrasi(id) {
+    if (!id) return '-';
+    var key = String(id);
+    var nama = '';
+    for (var i = 0; i < konsentrasiList.length; i++) {
+      if (konsentrasiList[i].konsentrasi_id === key) {
+        nama = konsentrasiList[i].nama_konsentrasi;
+        break;
+      }
+    }
+    return nama ? (key + ' — ' + nama) : key;
+  }
+  
   var currentTab = 'ringkasan';
   document.querySelector('.tabs').addEventListener('click', function (e) {
     var t = e.target.closest('.tab');
@@ -239,6 +267,7 @@
     currentTab = t.getAttribute('data-tab');
     renderTab();
   });
+  
   function renderTab() {
     var c = document.getElementById('tab-content');
     c.innerHTML = '<div class="panel"><div class="empty">Memuat...</div></div>';
@@ -246,6 +275,7 @@
     else if (currentTab === 'ekspor') renderEkspor();
     else if (currentTab === 'hadir') renderHadir();
   }
+  
   function renderRingkasan() {
     Api.report.dashboard().then(function (res) {
       if (!res.success) {
@@ -299,6 +329,7 @@
         '<div class="panel"><div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div></div>';
     });
   }
+  
   function renderEkspor() {
     var c = document.getElementById('tab-content');
     c.innerHTML =
@@ -337,6 +368,7 @@
       }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
   }
+  
   function renderPreviewEkspor(rows) {
     var c = document.getElementById('ex-preview');
     var previewCols = ['nomor_pendaftaran','nama_lengkap','nisn','jenis_kelamin',
@@ -352,17 +384,23 @@
     h += '</tr></thead><tbody>';
     rows.slice(0, 20).forEach(function (r) {
       h += '<tr>';
-      previewCols.forEach(function (col) { h += '<td>' + Utils.escapeHtml(r[col] || '-') + '</td>'; });
+      previewCols.forEach(function (col) {
+        var val = r[col] || '-';
+        if (col === 'konsentrasi_1' && r[col]) val = labelKonsentrasi(r[col]);
+        h += '<td>' + Utils.escapeHtml(val) + '</td>';
+      });
       h += '</tr>';
     });
     h += '</tbody></table></div>';
     c.innerHTML = h;
   }
+  
   function formatTanggalFile() {
     var d = new Date();
     return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '-' +
            String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0');
   }
+  
   function downloadCSV(rows, filename) {
     var cols = ['nomor_pendaftaran','nama_lengkap','nisn','nik','jenis_kelamin',
       'tempat_lahir','tanggal_lahir','agama','alamat','rt','rw','desa_kelurahan',
@@ -404,6 +442,7 @@
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
+  
   function renderHadir() {
     var c = document.getElementById('tab-content');
     c.innerHTML =
@@ -429,6 +468,7 @@
       }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
   }
+  
   function renderPreviewHadir(data) {
     var rows = data.rows;
     var s = data.sekolah;
@@ -456,28 +496,36 @@
     });
     prevHtml += '</tbody></table></div>';
     document.getElementById('hd-preview').innerHTML = prevHtml;
+    
     var today = Utils.formatTanggal(new Date().toISOString());
+    
+    var kopFallback =
+      '<div class="kop-fallback">' +
+        '<img src="logo.png" alt="Logo" onerror="this.style.display=\'none\'">' +
+        '<div style="flex:1;text-align:center;">' +
+          '<h2 style="font-size:14pt;font-weight:700;margin:0;">' + Utils.escapeHtml(s.nama_sekolah || 'SMK MUHAMMADIYAH 1 SURAKARTA') + '</h2>' +
+          '<p style="font-size:9pt;margin:1mm 0 0;">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</p>' +
+          '<p style="font-size:9pt;margin:0;">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
+            ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</p>' +
+        '</div></div>';
+
+    var kop =
+      '<img src="kop-surat.png" class="kop-img" alt="KOP" ' +
+        'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
+      '<div style="display:none;">' + kopFallback + '</div>';
+
     var printHtml =
-      '<div class="print-doc">' +
-        '<div class="kop">' +
-          '<img src="logo.png" alt="Logo" class="kop-logo" onerror="this.style.display=\'none\'">' +
-          '<div class="kop-teks">' +
-            '<h2>' + Utils.escapeHtml(s.nama_sekolah || '') + '</h2>' +
-            '<div class="kop-sub">' + Utils.escapeHtml(s.alamat_sekolah || '') + '</div>' +
-            '<div class="kop-sub">Telp: ' + Utils.escapeHtml(s.telepon_sekolah || '-') +
-              ' | Email: ' + Utils.escapeHtml(s.email_sekolah || '-') + '</div></div></div>' +
-        '<hr class="kop-line">' +
+      '<div class="print-doc">' + kop +
         '<h3>DAFTAR HADIR PESERTA WAWANCARA</h3>' +
         '<div class="meta">Tahun Pelajaran ' + Utils.escapeHtml(s.tahun_ajaran || '') + Utils.escapeHtml(konsLabel) + '</div>' +
-        '<div class="tanggal-print">Surakarta, ' + Utils.escapeHtml(today) + '</div>' +
         '<table class="print-tbl"><thead><tr>' +
-            '<th style="width:8mm;">No</th>' +
-            '<th style="width:28mm;">No. Pendaftaran</th>' +
+            '<th style="width:10mm;">No</th>' +
+            '<th style="width:32mm;">No. Pendaftaran</th>' +
             '<th>Nama Lengkap</th>' +
-            '<th style="width:22mm;">NISN</th>' +
-            '<th style="width:10mm;">JK</th>' +
+            '<th style="width:25mm;">NISN</th>' +
+            '<th style="width:12mm;">JK</th>' +
             '<th>Sekolah Asal</th>' +
-            '<th style="width:32mm;">Tanda Tangan</th></tr></thead><tbody>';
+            '<th style="width:40mm;">Tanda Tangan</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       printHtml += '<tr>' +
         '<td class="no">' + r.no + '</td>' +
@@ -489,16 +537,33 @@
         '<td></td></tr>';
     });
     printHtml += '</tbody></table>';
-    printHtml += '<div class="ttd">' +
-        '<div class="ttd-kolom"><div>Mengetahui,</div>' +
-          '<div class="ttd-jabatan">Kepala Sekolah,</div>' +
-          '<div class="ttd-nama">' + Utils.escapeHtml(s.kepala_sekolah || '_______________') + '</div></div>' +
-        '<div class="ttd-kolom"><div>Panitia SPMB,</div>' +
-          '<div class="ttd-jabatan">Ketua,</div>' +
-          '<div class="ttd-nama">' + Utils.escapeHtml(s.ketua_panitia || '_______________') + '</div></div>' +
+    
+    printHtml += '<div class="ttd-2col">' +
+        '<div class="ttd-kolom">' +
+          '<div>Mengetahui,</div>' +
+          '<div class="jabatan">Kepala Sekolah,</div>' +
+          '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
+            'onerror="this.style.display=\'none\';' +
+            'this.nextElementSibling.style.display=\'block\';">' +
+          '<span class="ttd-placeholder" style="display:none;"></span>' +
+          '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || 'Joko Harinto, S.Pd, M.Pd.') + '</div>' +
+          '<div class="nipm">NIPM. 512 099 314</div>' +
+        '</div>' +
+        '<div class="ttd-kolom">' +
+          '<div>Surakarta, ' + Utils.escapeHtml(today) + '</div>' +
+          '<div class="jabatan">Panitia SPMB,</div>' +
+          '<img src="ttd-ketua.png" class="ttd-img" alt="TTD" ' +
+            'onerror="this.style.display=\'none\';' +
+            'this.nextElementSibling.style.display=\'block\';">' +
+          '<span class="ttd-placeholder" style="display:none;"></span>' +
+          '<div class="nama">' + Utils.escapeHtml(s.ketua_panitia || 'Lexna Keswanto, S.Pd.') + '</div>' +
+          '<div class="nipm">NBM. 151 1800</div>' +
+        '</div>' +
       '</div></div>';
+      
     document.getElementById('print-area').innerHTML = printHtml;
   }
+  
   renderTab();
 })();
 </script>
