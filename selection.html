@@ -541,11 +541,30 @@
         '<div style="display:none;">' + kopFallback + '</div>';
 
       /* ====== RENDER ====== */
+            // 1. Ambil tahun dari tanggal cetak (misal: "2026")
+      var tahunCetak = new Date().getFullYear();
+
+      // 2. Ambil nomor urut 3 digit dari nomor_pendaftaran (misal: PMB-2728-001 -> "001")
+      var seq = "001";
+      if (p.nomor_pendaftaran) {
+        var parts = p.nomor_pendaftaran.split('-');
+        if (parts.length >= 3) {
+          seq = parts[2].padStart(3, '0');
+        }
+      }
+
+      // 3. Gabungkan (jika h.letter_number kosong, pakai format buatan)
+      var nomorSuratTampil = h.letter_number;
+      if (!nomorSuratTampil || nomorSuratTampil.indexOf('001') !== -1) {
+        // Jika backend selalu kirim 001, kita override dengan seq dari pendaftaran
+        nomorSuratTampil = '421/SPMB/' + seq + '/' + tahunCetak;
+      }
+
       document.getElementById('print-area').innerHTML =
         '<div class="surat">' + kop +
           '<div class="judul">' +
             '<h3>SURAT KETERANGAN HASIL SELEKSI</h3>' +
-            '<div class="nomor">Nomor: ' + Utils.escapeHtml(h.letter_number || '-') + '</div></div>' +
+            '<div class="nomor">Nomor: ' + Utils.escapeHtml(nomorSuratTampil) + '</div></div>' +
           '<div class="isi">' +
             '<p>' + kalimat + '</p>' +
             '<table style="margin:16px 0 16px 30px;font-size:12pt;">' +
