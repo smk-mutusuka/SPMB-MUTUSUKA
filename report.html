@@ -443,26 +443,42 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
   
-  function renderHadir() {
+    function renderHadir() {
     var c = document.getElementById('tab-content');
     c.innerHTML =
       '<div class="panel">' +
-        '<div class="preview-info">🖨️ Cetak daftar hadir peserta wawancara (hanya pendaftar berstatus <strong>TERVERIFIKASI</strong>).</div>' +
-        '<div class="filters">' +
+        '<div class="preview-info">🖨️ Cetak daftar hadir peserta wawancara. Hanya menampilkan siswa berstatus <strong>TERVERIFIKASI</strong>.</div>' +
+        '<div class="filters" style="grid-template-columns: 1fr 1fr 1fr auto;">' +
           '<div class="field"><label>Konsentrasi</label>' +
             '<select id="hd-kons">' + opsiKonsentrasi() + '</select></div>' +
-          '<div></div>' +
-          '<div><button class="btn btn-primary" id="btn-print">🖨️ Cetak Daftar Hadir</button></div>' +
+          '<div class="field"><label>Tanggal Wawancara (Opsional)</label>' +
+            '<input type="date" id="hd-tgl"></div>' +
+          '<div class="field"><label>Status Wawancara</label>' +
+            '<select id="hd-status">' +
+              '<option value="belum">Belum Wawancara Saja</option>' +
+              '<option value="semua">Semua Terverifikasi</option>' +
+            '</select></div>' +
+          '<div><button class="btn btn-primary" id="btn-print">🖨️ Cetak</button></div>' +
         '</div></div>' +
       '<div class="panel"><div class="section-title">Preview</div>' +
-        '<div id="hd-preview" class="empty">Pilih konsentrasi lalu klik Cetak untuk melihat preview.</div></div>';
+        '<div id="hd-preview" class="empty">Pilih filter lalu klik Cetak untuk melihat preview.</div></div>';
+        
     document.getElementById('btn-print').addEventListener('click', function () {
       var kons = document.getElementById('hd-kons').value;
+      var tgl = document.getElementById('hd-tgl').value;
+      var status = document.getElementById('hd-status').value;
+      
+      var payload = { 
+        konsentrasi: kons, 
+        tanggal: tgl, 
+        hanya_belum: (status === 'belum') 
+      };
+      
       Utils.showLoading('Menyiapkan daftar hadir...');
-      Api.report.daftarHadir({ konsentrasi: kons }).then(function (res) {
+      Api.report.daftarHadir(payload).then(function (res) {
         Utils.hideLoading();
         if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
-        if (!res.data.rows.length) { Utils.toast('Tidak ada pendaftar terverifikasi untuk filter ini', 'warning'); return; }
+        if (!res.data.rows.length) { Utils.toast('Tidak ada data untuk filter ini', 'warning'); return; }
         renderPreviewHadir(res.data);
         setTimeout(function () { window.print(); }, 300);
       }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
