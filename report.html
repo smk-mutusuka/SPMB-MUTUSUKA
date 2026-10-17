@@ -111,14 +111,15 @@
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
+  
   #print-area { display: none; }
-    @media print {
+
+  @media print {
     @page { size: A4 landscape; margin: 10mm 15mm; }
     html, body { background: #fff !important; color: #000 !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
     
-    /* Paksa semua teks jadi hitam pekat */
     #print-area { 
       display: block !important; position: absolute; left: 0; top: 0; width: 100%;
       font-family: 'Times New Roman', Times, serif; color: #000 !important; 
@@ -127,7 +128,6 @@
     
     .print-doc { padding: 0; font-size: 12pt; color: #000 !important; }
     
-    /* KOP 20cm */
     .print-doc .kop-img { width: 20cm; max-width: none; height: auto; display: block;
       margin: 0 auto 4mm auto; }
     .print-doc .kop-fallback { margin: 0 auto 4mm auto; width: 20cm; display: flex; align-items: center; gap: 5mm;
@@ -137,16 +137,15 @@
       margin: 4mm 0 2mm 0; letter-spacing: 0.5px; color: #000 !important; }
     .print-doc .meta { text-align: center; font-size: 12pt; margin-bottom: 6mm; color: #000 !important; }
     
-    /* TABEL: Garis tipis seragam & teks hitam */
     .print-tbl { width: 100%; border-collapse: collapse; font-size: 12pt; margin-bottom: 8mm; color: #000 !important; }
     .print-tbl th, .print-tbl td { 
-      border: 1px solid #000 !important; /* Garis tipis 1px hitam */
+      border: 1px solid #000 !important; 
       padding: 2mm 3mm; 
       text-align: left; 
       color: #000 !important; 
     }
     .print-tbl th { 
-      background: transparent !important; /* Hilangkan warna abu-abu background */
+      background: transparent !important; 
       font-weight: 700; 
       text-align: center; 
       font-family: 'Times New Roman', Times, serif; 
@@ -156,7 +155,6 @@
     .print-tbl td.no { text-align: center; width: 12mm; color: #000 !important; }
     .print-tbl td.jk { text-align: center; width: 15mm; color: #000 !important; }
     
-    /* Tanda Tangan */
     .print-doc .ttd-2col { margin-top: 8mm; display: flex; justify-content: space-between;
       gap: 10mm; page-break-inside: avoid; color: #000 !important; }
     .print-doc .ttd-kolom { flex: 1; text-align: center; font-size: 12pt; color: #000 !important; }
@@ -167,6 +165,7 @@
     .print-doc .ttd-kolom .nama { font-weight: 700; text-decoration: underline; margin-top: 1mm; color: #000 !important; }
     .print-doc .ttd-kolom .nipm { font-size: 12pt; margin-top: 1mm; color: #000 !important; }
   }
+  
   @media (max-width: 900px) {
     .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
