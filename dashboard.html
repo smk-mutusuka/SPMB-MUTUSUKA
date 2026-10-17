@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — SPMB SMK Muhammadiyah 1 Surakarta</title>
 <link rel="icon" href="logo.png">
-
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -103,19 +102,6 @@
     background: rgba(0,0,0,0.4); z-index: 99; }
   .overlay.show { display: block; }
 
-  @media (max-width: 900px) {
-    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-      transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .btn-menu { display: block; }
-    .user-meta { display: none; }
-  }
-  @media (max-width: 500px) {
-    .content { padding: 16px; }
-    .welcome-card { padding: 18px 20px; }
-    .welcome-card h2 { font-size: 1.1rem; }
-    .stats { grid-template-columns: repeat(2, 1fr); }
-  }
   /* ============================================================
    * PURE CSS CHART (GRAFIK BAWAAN)
    * ============================================================ */
@@ -147,7 +133,7 @@
     min-height: 2px;
   }
   .chart-bar:hover {
-    background-color: #d4a017; /* Warna emas saat di-hover */
+    background-color: #d4a017;
   }
   .chart-label {
     font-size: 0.65rem;
@@ -159,12 +145,24 @@
     position: absolute;
     bottom: -30px;
   }
-  /* Container khusus label agar tidak menabrak border */
   .chart-label-container {
     height: 40px; 
     position: relative; 
     width: 100%; 
     margin-top: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .btn-menu { display: block; }
+    .user-meta { display: none; }
+  }
+  @media (max-width: 500px) {
+    .content { padding: 16px; }
+    .welcome-card { padding: 18px 20px; }
+    .welcome-card h2 { font-size: 1.1rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -200,6 +198,7 @@
         <h2 id="welcome-title">Selamat datang</h2>
         <p id="welcome-sub">Anda login sebagai petugas SPMB.</p>
       </div>
+      
       <h3 class="section-title">Ringkasan Pendaftaran</h3>
       <div class="stats">
         <div class="stat-card" id="card-total">
@@ -227,11 +226,14 @@
           <div class="stat-value" id="stat-dibatalkan">—</div>
         </div>
       </div>
+
+      <!-- BLOK GRAFIK -->
       <h3 class="section-title">Grafik Pendaftar (14 Hari Terakhir)</h3>
       <div class="panel" style="padding:20px 20px 40px 20px; margin-bottom:24px;">
-      <div class="custom-chart-container" id="custom-chart-bars"></div>
-      <div class="chart-label-container" id="custom-chart-labels"></div>
+        <div class="custom-chart-container" id="custom-chart-bars"></div>
+        <div class="chart-label-container" id="custom-chart-labels"></div>
       </div>
+
       <h3 class="section-title">Aksi Cepat</h3>
       <div class="panel"><div class="quick-actions" id="quick-actions"></div></div>
       <h3 class="section-title">Informasi</h3>
@@ -269,7 +271,7 @@
       'BENDAHARA': 'Bendahara', 'SELEKSI': 'Panitia Seleksi' }[r] || r;
   }
 
-  // Sidebar — pakai Nav (sumber tunggal)
+  // Sidebar
   Nav.render('dashboard');
 
   // Aksi cepat per role
@@ -319,6 +321,7 @@
     if (card) card.classList.remove('loading');
   }
 
+  // Ambil Data Statistik
   Api.registration.stats().then(function (res) {
     if (!res || !res.success) {
       setStat('stat-total', 'card-total', 0);
@@ -339,49 +342,51 @@
   }).catch(function (err) {
     console.warn('[SPMB] gagal memuat statistik:', err.message);
   });
-  // === RENDER GRAFIK DASHBOARD ===
-  Api.report.chartData().then(function(res) {
-    if (!res.success) return;
-    var ctx = document.getElementById('chart-pendaftar');
-    if (!ctx) return;
-    
-    // Format label tanggal jadi lebih cantik (misal: 17 Okt)
-    var rawLabels = res.data.labels;
-    var labels = rawLabels.map(function(iso) {
-      var d = new Date(iso);
-      var bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-      return d.getDate() + ' ' + bulan[d.getMonth()];
-    });
 
-    new Chart(ctx, {
-      type: 'bar', // Menggunakan Bar Chart agar lebih jelas
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Jumlah Pendaftar',
-          data: res.data.data,
-          backgroundColor: 'rgba(26, 84, 144, 0.7)',
-          borderColor: '#1a5490',
-          borderWidth: 1,
-          borderRadius: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { stepSize: 1 }
-          }
-        }
-      }
+  // === RENDER GRAFIK (PURE CSS) ===
+  if (Api.report && typeof Api.report.chartData === 'function') {
+    Api.report.chartData().then(function(res) {
+      if (!res || !res.success) return;
+      
+      var barsContainer = document.getElementById('custom-chart-bars');
+      var labelsContainer = document.getElementById('custom-chart-labels');
+      if (!barsContainer || !labelsContainer) return;
+
+      var data = res.data.data;
+      var labels = res.data.labels;
+      
+      var maxVal = Math.max.apply(null, data);
+      if (maxVal === 0) maxVal = 1;
+
+      var barsHtml = '';
+      var labelsHtml = '';
+
+      data.forEach(function(val, i) {
+        var heightPercent = (val / maxVal) * 100;
+        
+        var d = new Date(labels[i]);
+        var bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+        var labelTeks = d.getDate() + ' ' + bulan[d.getMonth()];
+
+        barsHtml += '<div class="chart-bar-wrapper" title="' + labelTeks + ': ' + val + ' pendaftar">' +
+                      '<div class="chart-bar" style="height: ' + heightPercent + '%;"></div>' +
+                    '</div>';
+                    
+        labelsHtml += '<div style="flex:1; text-align:center; position:relative;">' +
+                        '<div class="chart-label">' + labelTeks + '</div>' +
+                      '</div>';
+      });
+
+      barsContainer.innerHTML = barsHtml;
+      labelsContainer.innerHTML = labelsHtml;
+      
+    }).catch(function(err) {
+      console.warn('[SPMB] Gagal memuat grafik:', err.message);
     });
-  }).catch(function(err) {
-    console.warn('[SPMB] Gagal memuat grafik:', err.message);
-  });
+  } else {
+    console.error('[SPMB] Fungsi Api.report.chartData tidak ditemukan. Pastikan api.js sudah diupdate dan browser sudah di-refresh.');
+  }
+
 })();
 </script>
 </body>
