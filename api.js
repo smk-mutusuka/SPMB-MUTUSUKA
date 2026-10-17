@@ -175,6 +175,7 @@ const Api = {
     dashboard: function () { return Api.call('report.dashboard', {}); },
     exportData: function (params) { return Api.call('report.exportData', params || {}); },
     daftarHadir: function (params) { return Api.call('report.daftarHadir', params || {}); }
+    chartData: function () { return Api.call('report.chartData', {}); }
   },
 
   notif: {
