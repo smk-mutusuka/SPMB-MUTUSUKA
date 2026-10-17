@@ -115,6 +115,7 @@
   #print-area { display: none; }
 
   @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     @page { size: A4 landscape; margin: 10mm 15mm; }
     html, body { background: #fff !important; color: #000 !important; }
     body * { visibility: hidden; }
@@ -157,11 +158,13 @@
     
     .print-doc .ttd-2col { margin-top: 8mm; display: flex; justify-content: space-between;
       gap: 10mm; page-break-inside: avoid; color: #000 !important; }
-    .print-doc .ttd-kolom { flex: 1; text-align: center; font-size: 12pt; color: #000 !important; }
+      
+    /* KUNCI: min-height 35mm agar nama sejajar walau gambar hilang */
+    .print-doc .ttd-kolom { flex: 1; text-align: center; font-size: 12pt; color: #000 !important; min-height: 35mm; }
+    
     .print-doc .ttd-kolom .jabatan { margin-bottom: 2mm; color: #000 !important; }
     .print-doc .ttd-kolom .ttd-img { display: block; width: 3.5cm; max-height: 22mm;
       object-fit: contain; margin: 0 auto; }
-    .print-doc .ttd-kolom .ttd-placeholder { height: 22mm; display: block; }
     .print-doc .ttd-kolom .nama { font-weight: 700; text-decoration: underline; margin-top: 1mm; color: #000 !important; }
     .print-doc .ttd-kolom .nipm { font-size: 12pt; margin-top: 1mm; color: #000 !important; }
   }
@@ -571,20 +574,14 @@
         '<div class="ttd-kolom">' +
           '<div>Mengetahui,</div>' +
           '<div class="jabatan">Kepala Sekolah,</div>' +
-          '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" ' +
-            'onerror="this.style.display=\'none\';' +
-            'this.nextElementSibling.style.display=\'block\';">' +
-          '<span class="ttd-placeholder" style="display:none;"></span>' +
+          '<img src="ttd-spmb.png" class="ttd-img" alt="TTD" onerror="this.style.display=\'none\'">' +
           '<div class="nama">' + Utils.escapeHtml(s.kepala_sekolah || 'Joko Harinto, S.Pd, M.Pd.') + '</div>' +
           '<div class="nipm">NIPM. 512 099 314</div>' +
         '</div>' +
         '<div class="ttd-kolom">' +
           '<div>Surakarta, ' + Utils.escapeHtml(today) + '</div>' +
           '<div class="jabatan">Panitia SPMB,</div>' +
-          '<img src="ttd-ketua.png" class="ttd-img" alt="TTD" ' +
-            'onerror="this.style.display=\'none\';' +
-            'this.nextElementSibling.style.display=\'block\';">' +
-          '<span class="ttd-placeholder" style="display:none;"></span>' +
+          '<img src="ttd-ketua.png" class="ttd-img" alt="TTD" onerror="this.style.display=\'none\'">' +
           '<div class="nama">' + Utils.escapeHtml(s.ketua_panitia || 'Lexna Keswanto, S.Pd.') + '</div>' +
           '<div class="nipm">NBM. 151 1800</div>' +
         '</div>' +
