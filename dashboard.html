@@ -381,10 +381,8 @@
         barsHtml += '<div class="chart-bar-wrapper" title="' + labelTeks + ': ' + val + ' pendaftar">' +
                       '<div class="chart-bar" style="height: ' + heightPercent + '%;"></div>' +
                     '</div>';
-                    
-        labelsHtml += '<div style="flex:1; text-align:center; position:relative;">' +
-                        '<div class="chart-label">' + labelTeks + '</div>' +
-                      '</div>';
+     
+      labelsHtml += '<div class="chart-label-item">' + labelTeks + '</div>';
       });
 
       barsContainer.innerHTML = barsHtml;
