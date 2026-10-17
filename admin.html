@@ -795,11 +795,10 @@
   // ============================================================
   // FUNGSI CETAK KARTU BUKTI PENDAFTARAN (A5 LANDSCAPE)
   // ============================================================
-  function printKartuBukti(d) {
+    function printKartuBukti(d) {
     var p = d.pendaftaran;
     var kons1 = namaKonsentrasi(p.konsentrasi_1);
     
-    // Cari file foto
     var fotoDoc = (d.dokumen || []).find(function(doc) { return doc.jenis_dokumen === 'FOTO'; });
     var fotoUrl = fotoDoc && fotoDoc.drive_file_id ? 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id + '=s500' : '';
 
@@ -808,7 +807,6 @@
       alamat_sekolah: 'Jl. Kahayan 1 Joyotakan Kecamatan Serengan Surakarta 57157'
     };
 
-    // === KOP SURAT ===
     var kopFallback =
       '<div style="display:flex;align-items:center;gap:5mm;border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
         '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" onerror="this.style.display=\'none\'">' +
@@ -817,58 +815,68 @@
           '<p style="font-size:9pt;margin:1mm 0 0;">' + s.alamat_sekolah + '</p>' +
         '</div></div>';
 
-    var kop = '<img src="kop-surat.png" style="width: 100%; max-height: 35mm; object-fit: contain; display: block; margin-bottom: 3mm;" alt="KOP" ' +
+    var kop = '<img src="kop-surat.png" style="width: 100%; height: auto; display: block; margin: 0;" alt="KOP" ' +
               'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
               '<div style="display:none;">' + kopFallback + '</div>';
 
     var html =
       '<div class="kartu-container">' +
-        // --- KOP SURAT DITARUH DI SINI ---
         kop +
-        
-        // --- JUDUL KARTU ---
-        '<div style="text-align: center; margin-bottom: 0mm;">' +
-          '<h2 style="font-size: 14pt; font-weight: 800; color: #1a5490; margin: 0; letter-spacing: 1px;">KARTU BUKTI PENDAFTARAN</h2>' +
-        '</div>' +
-        
-        '<div class="kartu-body">' +
-          // Foto 3 x 4.13 cm
-          (fotoUrl 
-            ? '<img src="' + fotoUrl + '" class="kartu-foto" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
-              '<div class="kartu-foto" style="display:none; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
-            : '<div class="kartu-foto" style="display:flex; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
-          ) +
-          
-          '<div class="kartu-data">' +
-            '<table>' +
-              '<tr><td class="lbl">Nomor Pendaftaran</td><td class="colon">:</td><td class="val" style="font-size:14pt; color:#d93025;">' + Utils.escapeHtml(p.nomor_pendaftaran) + '</td></tr>' +
-              '<tr><td class="lbl">Nama Lengkap</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
-              '<tr><td class="lbl">NISN</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
-              '<tr><td class="lbl">Sekolah Asal</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td></tr>' +
-              '<tr><td class="lbl">Konsentrasi 1</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(kons1) + '</td></tr>' +
-              '<tr><td class="lbl">Tanggal Daftar</td><td class="colon">:</td><td class="val">' + (p.tanggal_daftar ? Utils.formatTanggal(p.tanggal_daftar) : '-') + '</td></tr>' +
-            '</table>' +
+        '<div style="padding: 5mm 8mm 8mm 8mm;">' +
+          '<div style="text-align: center; margin-bottom: 4mm;">' +
+            '<h2 style="font-size: 14pt; font-weight: 800; color: #1a5490; margin: 0; letter-spacing: 1px;">KARTU BUKTI PENDAFTARAN</h2>' +
           '</div>' +
-        '</div>' +
-        
-        '<div class="kartu-footer">' +
-          'Kartu ini adalah bukti sah pendaftaran. Harap simpan dan tunjukkan kartu ini saat verifikasi berkas di sekolah.' +
+          
+          '<div class="kartu-body">' +
+            (fotoUrl 
+              ? '<img src="' + fotoUrl + '" class="kartu-foto" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
+                '<div class="kartu-foto" style="display:none; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
+              : '<div class="kartu-foto" style="display:flex; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
+            ) +
+            
+            '<div class="kartu-data">' +
+              '<table>' +
+                '<tr><td class="lbl">Nomor Pendaftaran</td><td class="colon">:</td><td class="val" style="font-size:14pt; color:#d93025;">' + Utils.escapeHtml(p.nomor_pendaftaran) + '</td></tr>' +
+                '<tr><td class="lbl">Nama Lengkap</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
+                '<tr><td class="lbl">NISN</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
+                '<tr><td class="lbl">Sekolah Asal</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td></tr>' +
+                '<tr><td class="lbl">Konsentrasi 1</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(kons1) + '</td></tr>' +
+                '<tr><td class="lbl">Tanggal Daftar</td><td class="colon">:</td><td class="val">' + (p.tanggal_daftar ? Utils.formatTanggal(p.tanggal_daftar) : '-') + '</td></tr>' +
+              '</table>' +
+            '</div>' +
+          '</div>' +
+          
+          '<div class="kartu-footer">' +
+            'Kartu ini adalah bukti sah pendaftaran. Harap simpan dan tunjukkan kartu ini saat verifikasi berkas di sekolah.' +
+          '</div>' +
         '</div>' +
       '</div>';
 
     document.getElementById('print-area').innerHTML = html;
 
-    // TRIK: Ubah ukuran kertas jadi A5 Landscape secara dinamis saat tombol ditekan
+    // --- TRIK AGAR TIDAK ADA HALAMAN KOSONG ---
+    // Hapus style lama jika ada (mencegah penumpukan)
+    var oldStyle = document.getElementById('dynamic-page-style');
+    if (oldStyle) oldStyle.remove();
+
     var style = document.createElement('style');
-    style.id = 'dynamic-page-a5';
-    style.innerHTML = '@media print { @page { size: A5 landscape; margin: 10mm; } }';
+    style.id = 'dynamic-page-style';
+    style.innerHTML = `
+      @media print { 
+        @page { size: A5 landscape; margin: 0; } 
+        /* Sembunyikan halaman aplikasi secara total agar tidak memakan tempat */
+        .app { display: none !important; } 
+        body, html { height: auto !important; overflow: hidden !important; } 
+        /* Pastikan print-area berada di posisi normal, bukan absolute */
+        #print-area { position: static !important; display: block !important; width: 100%; } 
+      }
+    `;
     document.head.appendChild(style);
 
     setTimeout(function () { 
       window.print(); 
-      // Hapus trik setelah selesai print agar tidak merusak cetak Formulir A4
       setTimeout(function() {
-        var el = document.getElementById('dynamic-page-a5');
+        var el = document.getElementById('dynamic-page-style');
         if (el) el.remove();
       }, 1000);
     }, 300);
