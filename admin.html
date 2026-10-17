@@ -162,12 +162,16 @@
     /* Layout Foto dan Tabel A */
     .form-bio .layout-container { display: flex; gap: 8mm; margin-bottom: 4mm; align-items: flex-start; }
     .form-bio .photo-container { width: 4cm; flex-shrink: 0; text-align: center; }
+    
+    /* Nomor Pendaftaran 18pt */
+    .form-bio .photo-no-reg { font-size: 18pt; font-weight: bold; margin-bottom: 2mm; }
+    
     .form-bio .photo-box { 
       width: 4cm; height: 5.5cm; border: 1px solid #000; 
       object-fit: cover; display: block; background: #f9fafb; 
       line-height: 5.5cm; color: #999; font-size: 10pt;
     }
-    .form-bio .photo-label { font-size: 10pt; margin-top: 1.5mm; font-weight: bold; }
+    
     .form-bio .form-content-a { flex: 1; }
 
     /* Sisa tabel B, C, D, E full width */
@@ -576,8 +580,8 @@
     var fotoUrl = '';
     
     if (fotoDoc && fotoDoc.drive_file_id) {
-        // Format URL Google Drive paling stabil
-        fotoUrl = 'https://drive.google.com/thumbnail?id=' + fotoDoc.drive_file_id + '&sz=w500';
+        // MENGGUNAKAN LH3 DIRECT LINK YANG LEBIH STABIL UNTUK CROSS-ORIGIN
+        fotoUrl = 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id + '=s500';
     }
 
     var s = { // Fallback data sekolah
@@ -610,12 +614,14 @@
         // BAGIAN ATAS: FOTO (KIRI) & TABEL A (KANAN)
         '<div class="layout-container">' +
           '<div class="photo-container">' +
+            // Nomor Pendaftaran di atas foto
+            '<div class="photo-no-reg">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</div>' +
             (fotoUrl 
               ? '<img src="' + fotoUrl + '" class="photo-box" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
                 '<div class="photo-box" style="display:none;">FOTO</div>'
               : '<div class="photo-box">FOTO</div>'
             ) +
-            '<div class="photo-label">FOTO 4x5.5</div>' +
+            // Label "FOTO 4x5.5" dihilangkan
           '</div>' +
 
           '<div class="form-content-a">' +
