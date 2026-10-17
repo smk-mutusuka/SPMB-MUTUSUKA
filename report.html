@@ -359,10 +359,10 @@
               '<option value="DIBATALKAN">DIBATALKAN</option></select></div>' +
           '<div class="field"><label>Konsentrasi</label>' +
             '<select id="ex-kons">' + opsiKonsentrasi() + '</select></div>' +
-          '<div><button class="btn btn-primary" id="btn-download">⬇ Download CSV</button></div>' +
+            '<div><button class="btn btn-primary" id="btn-download">⬇ Download Excel</button></div>' +
         '</div></div>' +
       '<div class="panel"><div class="section-title">Preview Data</div>' +
-        '<div id="ex-preview" class="empty">Klik Download CSV untuk melihat preview.</div></div>';
+        '<div id="ex-preview" class="empty">Klik Download Excel untuk melihat preview.</div></div>';
     document.getElementById('btn-download').addEventListener('click', function () {
       var status = document.getElementById('ex-status').value;
       var kons = document.getElementById('ex-kons').value;
@@ -377,7 +377,7 @@
           return;
         }
         renderPreviewEkspor(rows);
-        downloadCSV(rows, 'pendaftar-spmb-' + formatTanggalFile() + '.csv');
+        downloadXLS(rows, 'pendaftar-spmb-' + formatTanggalFile() + '..xls');
         Utils.toast(rows.length + ' baris siap diunduh', 'success');
       }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
