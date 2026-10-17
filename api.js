@@ -102,7 +102,9 @@ const Api = {
     deletePertanyaan: function (id) { return Api.call('admin.deletePertanyaan', { question_id: id }); },
     listTemplate: function () { return Api.call('admin.listTemplate', {}); },
     saveTemplate: function (d) { return Api.call('admin.saveTemplate', d); },
-    getFullSettings: function () { return Api.call('admin.getFullSettings', {}); }
+    getFullSettings: function () { return Api.call('admin.getFullSettings', {}); },
+    createBackup: function () { return Api.call('admin.createBackup', {}); },
+    listBackups: function () { return Api.call('admin.listBackups', {}); }
   },
 
   registration: {
