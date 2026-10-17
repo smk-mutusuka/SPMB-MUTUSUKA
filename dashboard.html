@@ -176,6 +176,10 @@
           <div class="stat-value" id="stat-dibatalkan">—</div>
         </div>
       </div>
+      <h3 class="section-title">Grafik Pendaftar (14 Hari Terakhir)</h3>
+      <div class="panel" style="padding:20px; margin-bottom:24px;">
+      <canvas id="chart-pendaftar" height="80"></canvas>
+      </div>
       <h3 class="section-title">Aksi Cepat</h3>
       <div class="panel"><div class="quick-actions" id="quick-actions"></div></div>
       <h3 class="section-title">Informasi</h3>
@@ -191,6 +195,7 @@
 <script src="api.js"></script>
 <script src="auth.js"></script>
 <script src="nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 (function () {
   'use strict';
@@ -283,7 +288,49 @@
   }).catch(function (err) {
     console.warn('[SPMB] gagal memuat statistik:', err.message);
   });
+  // === RENDER GRAFIK DASHBOARD ===
+  Api.report.chartData().then(function(res) {
+    if (!res.success) return;
+    var ctx = document.getElementById('chart-pendaftar');
+    if (!ctx) return;
+    
+    // Format label tanggal jadi lebih cantik (misal: 17 Okt)
+    var rawLabels = res.data.labels;
+    var labels = rawLabels.map(function(iso) {
+      var d = new Date(iso);
+      var bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+      return d.getDate() + ' ' + bulan[d.getMonth()];
+    });
 
+    new Chart(ctx, {
+      type: 'bar', // Menggunakan Bar Chart agar lebih jelas
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Jumlah Pendaftar',
+          data: res.data.data,
+          backgroundColor: 'rgba(26, 84, 144, 0.7)',
+          borderColor: '#1a5490',
+          borderWidth: 1,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        }
+      }
+    });
+  }).catch(function(err) {
+    console.warn('[SPMB] Gagal memuat grafik:', err.message);
+  });
 })();
 </script>
 </body>
