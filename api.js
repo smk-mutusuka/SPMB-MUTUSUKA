@@ -174,7 +174,7 @@ const Api = {
   report: {
     dashboard: function () { return Api.call('report.dashboard', {}); },
     exportData: function (params) { return Api.call('report.exportData', params || {}); },
-    daftarHadir: function (params) { return Api.call('report.daftarHadir', params || {}); }
+    daftarHadir: function (params) { return Api.call('report.daftarHadir', params || {}); },
     chartData: function () { return Api.call('report.chartData', {}); }
   },
 
@@ -187,14 +187,6 @@ const Api = {
     log: function (d) { return Api.call('notif.log', d); },
     listLog: function (params) { return Api.call('notif.listLog', params || {}); }
   },
-  public: {
-    checkStatus: function (nomor) {
-      return Api.call('public.checkStatus', { nomor_pendaftaran: nomor }, { useToken: false });
-    },
-    getPengumuman: function (nomor) {
-      return Api.call('public.getPengumuman', { nomor_pendaftaran: nomor }, { useToken: false });
-    }
-  },
-  
+
   ping: function () { return Api.call('ping', {}, { useToken: false }); }
 };
