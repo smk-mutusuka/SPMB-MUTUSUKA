@@ -696,16 +696,16 @@
           '</table>' +
         '</div>' +
 
-        // TANDA TANGAN
-        '<div class="ttd-box">' +
+                // TANDA TANGAN
+        '<div style="text-align: right; margin-bottom: 5mm; margin-right: 5mm;">Surakarta, ' + Utils.formatTanggal(p.tanggal_daftar || new Date().toISOString()) + '</div>' +
+        '<div class="ttd-box" style="margin-top: 0;">' +
           '<div class="kolom">' +
-            '<div>Calon Peserta Didik,</div>' +
+            '<div>Calon Murid,</div>' +
             '<div class="spasi"></div>' +
             '<div style="font-weight:700;text-decoration:underline;">' + Utils.escapeHtml(p.nama_lengkap) + '</div>' +
             '<div>NISN: ' + Utils.escapeHtml(p.nisn || '-') + '</div>' +
           '</div>' +
           '<div class="kolom">' +
-            '<div>Surakarta, ' + Utils.formatTanggal(p.tanggal_daftar || new Date().toISOString()) + '</div>' +
             '<div>Orang Tua / Wali,</div>' +
             '<div class="spasi"></div>' +
             '<div style="font-weight:700;text-decoration:underline;">' + Utils.escapeHtml(k.nama_ayah || k.nama_ibu || '_________________') + '</div>' +
