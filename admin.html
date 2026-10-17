@@ -816,14 +816,30 @@
 
     var s = {
       nama_sekolah: 'SMK MUHAMMADIYAH 1 SURAKARTA',
-      alamat_sekolah: 'Jl. Kahayan 1 Joyotakan Kecamatan Serengan Surakarta'
+      alamat_sekolah: 'Jl. Kahayan 1 Joyotakan Kecamatan Serengan Surakarta 57157'
     };
+
+    // === KOP SURAT ===
+    var kopFallback =
+      '<div style="display:flex;align-items:center;gap:5mm;border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
+        '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" onerror="this.style.display=\'none\'">' +
+        '<div style="flex:1;text-align:center;">' +
+          '<h2 style="font-size:14pt;font-weight:700;margin:0;">' + s.nama_sekolah + '</h2>' +
+          '<p style="font-size:9pt;margin:1mm 0 0;">' + s.alamat_sekolah + '</p>' +
+        '</div></div>';
+
+    var kop = '<img src="kop-surat.png" style="width: 100%; max-height: 35mm; object-fit: contain; display: block; margin-bottom: 3mm;" alt="KOP" ' +
+              'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
+              '<div style="display:none;">' + kopFallback + '</div>';
 
     var html =
       '<div class="kartu-container">' +
-        '<div class="kartu-header">' +
-          '<h2>KARTU BUKTI PENDAFTARAN</h2>' +
-          '<p>' + s.nama_sekolah + '</p>' +
+        // --- KOP SURAT DITARUH DI SINI ---
+        kop +
+        
+        // --- JUDUL KARTU ---
+        '<div style="text-align: center; margin-bottom: 6mm;">' +
+          '<h2 style="font-size: 14pt; font-weight: 800; color: #1a5490; margin: 0; letter-spacing: 1px;">KARTU BUKTI PENDAFTARAN</h2>' +
         '</div>' +
         
         '<div class="kartu-body">' +
