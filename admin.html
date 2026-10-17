@@ -228,6 +228,72 @@
     .content { padding: 16px; }
     .filters { grid-template-columns: 1fr; }
   }
+   /* ============================================================
+   * KARTU BUKTI PENDAFTARAN (A5 LANDSCAPE)
+   * ============================================================ */
+  .kartu-container {
+    border: 2px dashed #1a5490;
+    padding: 8mm;
+    border-radius: 4mm;
+    background: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #1f2937;
+    box-sizing: border-box;
+  }
+  .kartu-header {
+    text-align: center;
+    border-bottom: 2px solid #1a5490;
+    padding-bottom: 3mm;
+    margin-bottom: 5mm;
+  }
+  .kartu-header h2 {
+    font-size: 16pt;
+    font-weight: 800;
+    margin: 0;
+    color: #1a5490;
+    letter-spacing: 1px;
+  }
+  .kartu-header p {
+    font-size: 10pt;
+    margin: 1mm 0 0 0;
+    color: #6b7280;
+  }
+  .kartu-body {
+    display: flex;
+    gap: 8mm;
+  }
+  .kartu-foto {
+    width: 3cm;
+    height: 4.13cm; /* Ukuran sesuai permintaan */
+    object-fit: cover;
+    border: 1px solid #d1d5db;
+    border-radius: 2mm;
+    background: #f3f4f6;
+  }
+  .kartu-data {
+    flex: 1;
+  }
+  .kartu-data table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11pt;
+  }
+  .kartu-data td {
+    padding: 1.5mm 0;
+    vertical-align: top;
+  }
+  .kartu-data td.lbl { width: 35mm; color: #6b7280; }
+  .kartu-data td.colon { width: 3mm; }
+  .kartu-data td.val { font-weight: 700; color: #1f2937; }
+  
+  .kartu-footer {
+    margin-top: 6mm;
+    text-align: center;
+    font-size: 9pt;
+    color: #6b7280;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 3mm;
+  }
 </style>
 </head>
 <body>
@@ -500,6 +566,7 @@
         '</div><div style="display:flex;gap:8px;align-items:center;">' +
           '<span class="badge st-' + st + '">' + st.replace('_',' ') + '</span>' +
           '<button class="btn btn-primary btn-sm" id="btn-print-bio">🖨️ Cetak Formulir</button>' +
+          '<button class="btn btn-success btn-sm" id="btn-print-kartu">🎫 Cetak Kartu</button>' +
           '<a href="admin.html" class="btn btn-secondary btn-sm">← Kembali</a>' +
         '</div></div>';
     html += '<div class="section-sub">Data Siswa</div><div class="detail-grid">' +
@@ -567,10 +634,19 @@
     }
     document.getElementById('detail-panel').innerHTML = html;
     
+        // ============================================================
+    // EVENT LISTENER TOMBOL CETAK
+    // ============================================================
     var btnPrint = document.getElementById('btn-print-bio');
     if (btnPrint) {
         btnPrint.addEventListener('click', function() { printFormulirBiodata(d); });
     }
+
+    var btnPrintKartu = document.getElementById('btn-print-kartu');
+    if (btnPrintKartu) {
+        btnPrintKartu.addEventListener('click', function() { printKartuBukti(d); });
+    }
+    // ============================================================
 
     if (role === 'ADMIN') {
       bindVerif('TERVERIFIKASI', 'btn-verif-valid', 'Status diubah menjadi TERVERIFIKASI');
@@ -727,7 +803,71 @@
         document.getElementById('print-area').innerHTML = html;
     setTimeout(function () { window.print(); }, 300);
   }
+  // ============================================================
+  // FUNGSI CETAK KARTU BUKTI PENDAFTARAN (A5 LANDSCAPE)
+  // ============================================================
+  function printKartuBukti(d) {
+    var p = d.pendaftaran;
+    var kons1 = namaKonsentrasi(p.konsentrasi_1);
+    
+    // Cari file foto
+    var fotoDoc = (d.dokumen || []).find(function(doc) { return doc.jenis_dokumen === 'FOTO'; });
+    var fotoUrl = fotoDoc && fotoDoc.drive_file_id ? 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id + '=s500' : '';
 
+    var s = {
+      nama_sekolah: 'SMK MUHAMMADIYAH 1 SURAKARTA',
+      alamat_sekolah: 'Jl. Kahayan 1 Joyotakan Kecamatan Serengan Surakarta'
+    };
+
+    var html =
+      '<div class="kartu-container">' +
+        '<div class="kartu-header">' +
+          '<h2>KARTU BUKTI PENDAFTARAN</h2>' +
+          '<p>' + s.nama_sekolah + '</p>' +
+        '</div>' +
+        
+        '<div class="kartu-body">' +
+          // Foto 3 x 4.13 cm
+          (fotoUrl 
+            ? '<img src="' + fotoUrl + '" class="kartu-foto" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
+              '<div class="kartu-foto" style="display:none; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
+            : '<div class="kartu-foto" style="display:flex; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
+          ) +
+          
+          '<div class="kartu-data">' +
+            '<table>' +
+              '<tr><td class="lbl">Nomor Pendaftaran</td><td class="colon">:</td><td class="val" style="font-size:14pt; color:#d93025;">' + Utils.escapeHtml(p.nomor_pendaftaran) + '</td></tr>' +
+              '<tr><td class="lbl">Nama Lengkap</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
+              '<tr><td class="lbl">NISN</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
+              '<tr><td class="lbl">Sekolah Asal</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td></tr>' +
+              '<tr><td class="lbl">Konsentrasi 1</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(kons1) + '</td></tr>' +
+              '<tr><td class="lbl">Tanggal Daftar</td><td class="colon">:</td><td class="val">' + (p.tanggal_daftar ? Utils.formatTanggal(p.tanggal_daftar) : '-') + '</td></tr>' +
+            '</table>' +
+          '</div>' +
+        '</div>' +
+        
+        '<div class="kartu-footer">' +
+          'Kartu ini adalah bukti sah pendaftaran. Harap simpan dan tunjukkan kartu ini saat verifikasi berkas di sekolah.' +
+        '</div>' +
+      '</div>';
+
+    document.getElementById('print-area').innerHTML = html;
+
+    // TRIK: Ubah ukuran kertas jadi A5 Landscape secara dinamis saat tombol ditekan
+    var style = document.createElement('style');
+    style.id = 'dynamic-page-a5';
+    style.innerHTML = '@media print { @page { size: A5 landscape; margin: 10mm; } }';
+    document.head.appendChild(style);
+
+    setTimeout(function () { 
+      window.print(); 
+      // Hapus trik setelah selesai print agar tidak merusak cetak Formulir A4
+      setTimeout(function() {
+        var el = document.getElementById('dynamic-page-a5');
+        if (el) el.remove();
+      }, 1000);
+    }, 300);
+  }
   if (mode === 'detail') renderDetail();
   else renderList();
 })();
