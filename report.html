@@ -115,7 +115,6 @@
   #print-area { display: none; }
 
   @media print {
-    /* Paksa semua teks jadi hitam pekat & hilangkan background abu-abu */
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     @page { size: A4 landscape; margin: 10mm 15mm; }
     html, body { background: #fff !important; color: #000 !important; }
@@ -130,7 +129,6 @@
     
     .print-doc { padding: 0; font-size: 12pt; color: #000 !important; }
     
-    /* KOP 20cm dilebarkan */
     .print-doc .kop-img { width: 20cm; max-width: none; height: auto; display: block;
       margin: 0 auto 4mm auto; }
     .print-doc .kop-fallback { margin: 0 auto 4mm auto; width: 20cm; display: flex; align-items: center; gap: 5mm;
@@ -140,7 +138,6 @@
       margin: 4mm 0 2mm 0; letter-spacing: 0.5px; color: #000 !important; }
     .print-doc .meta { text-align: center; font-size: 12pt; margin-bottom: 6mm; color: #000 !important; }
     
-    /* Tabel: Garis tipis seragam 1px hitam */
     .print-tbl { width: 100%; border-collapse: collapse; font-size: 12pt; margin-bottom: 8mm; color: #000 !important; }
     .print-tbl th, .print-tbl td { 
       border: 1px solid #000 !important; 
@@ -159,11 +156,9 @@
     .print-tbl td.no { text-align: center; width: 12mm; color: #000 !important; }
     .print-tbl td.jk { text-align: center; width: 15mm; color: #000 !important; }
     
-    /* TTD Sejajar */
     .print-doc .ttd-2col { margin-top: 8mm; display: flex; justify-content: space-between;
       gap: 10mm; page-break-inside: avoid; color: #000 !important; }
       
-    /* KUNCI: min-height 35mm agar nama sejajar walau gambar hilang */
     .print-doc .ttd-kolom { flex: 1; text-align: center; font-size: 12pt; color: #000 !important; min-height: 35mm; }
     
     .print-doc .ttd-kolom .jabatan { margin-bottom: 2mm; color: #000 !important; }
@@ -282,6 +277,8 @@
   }
   
   var currentTab = 'ringkasan';
+  var cachedExportRows = []; // Menyimpan data hasil preview
+  
   document.querySelector('.tabs').addEventListener('click', function (e) {
     var t = e.target.closest('.tab');
     if (!t) return;
@@ -357,7 +354,7 @@
     var c = document.getElementById('tab-content');
     c.innerHTML =
       '<div class="panel">' +
-        '<div class="preview-info">📥 Pilih filter, lalu klik <strong>Download Excel</strong>. File bisa langsung dibuka di Microsoft Excel / Google Sheets.</div>' +
+        '<div class="preview-info">📥 Pilih filter, lalu klik <strong>Tampilkan Preview</strong> untuk melihat data dan mengunduh Excel.</div>' +
         '<div class="filters">' +
           '<div class="field"><label>Status</label>' +
             '<select id="ex-status"><option value="">Semua Status</option>' +
@@ -368,28 +365,52 @@
               '<option value="DIBATALKAN">DIBATALKAN</option></select></div>' +
           '<div class="field"><label>Konsentrasi</label>' +
             '<select id="ex-kons">' + opsiKonsentrasi() + '</select></div>' +
-            '<div><button class="btn btn-primary" id="btn-download">⬇ Download Excel</button></div>' +
+            '<div style="display:flex; gap:8px; align-items:flex-end;">' +
+              '<button class="btn btn-secondary" id="btn-preview">👁️ Tampilkan Preview</button>' +
+              '<button class="btn btn-primary" id="btn-download" style="display:none;">⬇ Download Excel</button>' +
+            '</div>' +
         '</div></div>' +
       '<div class="panel"><div class="section-title">Preview Data</div>' +
-        '<div id="ex-preview" class="empty">Klik Download Excel untuk melihat preview.</div></div>';
+        '<div id="ex-preview" class="empty">Klik Tampilkan Preview untuk melihat data.</div></div>';
         
-    document.getElementById('btn-download').addEventListener('click', function () {
+    document.getElementById('btn-preview').addEventListener('click', function () {
       var status = document.getElementById('ex-status').value;
       var kons = document.getElementById('ex-kons').value;
       Utils.showLoading('Menyiapkan data...');
+      
       Api.report.exportData({ status: status, konsentrasi: kons }).then(function (res) {
         Utils.hideLoading();
         if (!res.success) { Utils.toast('Gagal: ' + res.message, 'error'); return; }
-        var rows = res.data.rows || [];
-        if (!rows.length) {
+        
+        cachedExportRows = res.data.rows || [];
+        
+        if (!cachedExportRows.length) {
           Utils.toast('Tidak ada data untuk filter ini', 'warning');
           document.getElementById('ex-preview').innerHTML = '<div class="empty">Tidak ada data.</div>';
+          document.getElementById('btn-download').style.display = 'none';
           return;
         }
-        renderPreviewEkspor(rows);
-        downloadExcel(rows, 'pendaftar-spmb-' + formatTanggalFile() + '.xlsx');
-        Utils.toast(rows.length + ' baris siap diunduh', 'success');
-      }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
+        
+        renderPreviewEkspor(cachedExportRows);
+        
+        // Munculkan tombol download setelah preview berhasil
+        var btnDownload = document.getElementById('btn-download');
+        btnDownload.style.display = 'inline-block';
+        Utils.toast(cachedExportRows.length + ' baris data siap diunduh', 'success');
+        
+      }).catch(function (err) { 
+        Utils.hideLoading(); 
+        Utils.toast('Error: ' + err.message, 'error'); 
+      });
+    });
+
+    document.getElementById('btn-download').addEventListener('click', function () {
+      if (cachedExportRows.length === 0) {
+        Utils.toast('Silakan Tampilkan Preview terlebih dahulu', 'warning');
+        return;
+      }
+      downloadExcel(cachedExportRows, 'pendaftar-spmb-' + formatTanggalFile() + '.xlsx');
+      Utils.toast('File Excel berhasil diunduh', 'success');
     });
   }
   
