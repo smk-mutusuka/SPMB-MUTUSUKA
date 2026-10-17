@@ -569,7 +569,13 @@
     
     // Cari file foto
     var fotoDoc = (d.dokumen || []).find(function(doc) { return doc.jenis_dokumen === 'FOTO'; });
-    var fotoUrl = fotoDoc ? 'https://drive.google.com/thumbnail?id=' + fotoDoc.drive_file_id + '&sz=w500' : '';
+    var fotoUrl = '';
+    
+    if (fotoDoc && fotoDoc.drive_file_id) {
+        // Format URL Google Drive yang paling stabil untuk <img> tag
+        // (lh3.googleusercontent.com)
+        fotoUrl = 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id;
+    }
 
     var s = { // Fallback data sekolah
       nama_sekolah: 'SMK MUHAMMADIYAH 1 SURAKARTA',
