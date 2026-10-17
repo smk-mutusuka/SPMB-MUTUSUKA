@@ -478,9 +478,13 @@
     return { 'FOTO':'📷 Foto Siswa','KK':'👨‍👩‍👧 Kartu Keluarga',
       'AKTA':'📜 Akta Kelahiran','IJAZAH':'🎓 Ijazah' }[j] || j || '-';
   }
-  function renderDetailContent(d) {
+    function renderDetailContent(d) {
     if (!d || !d.pendaftaran) throw new Error('Struktur data tidak lengkap');
     var p = d.pendaftaran;
+    
+    // TAMBAHKAN BARIS INI UNTUK MENGUBAH JUDUL TAB BROWSER
+    document.title = (p.nomor_pendaftaran || 'SPMB') + ' - ' + (p.nama_lengkap || 'Detail');
+    
     var st = String(p.status_pendaftaran || 'DRAFT').toUpperCase();
     var html =
       '<div class="detail-head"><div>' +
@@ -714,18 +718,7 @@
       '</div>';
 
         document.getElementById('print-area').innerHTML = html;
-    
-    // --- TRIK UBAH NAMA FILE PDF ---
-    var judulAsli = document.title; // Simpan judul asli web
-    var namaFile = (p.nomor_pendaftaran || 'Formulir_Pendaftaran') + ' - ' + (p.nama_lengkap || '');
-    document.title = namaFile; // Ubah judul jadi nomor pendaftaran & nama
-
-    setTimeout(function () { 
-      window.print(); 
-      // Kembalikan judul asli setelah dialog print ditutup
-      setTimeout(function() { document.title = judulAsli; }, 2000); 
-    }, 300);
-    // -------------------------------
+    setTimeout(function () { window.print(); }, 300);
   }
 
   if (mode === 'detail') renderDetail();
