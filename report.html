@@ -377,7 +377,7 @@
           return;
         }
         renderPreviewEkspor(rows);
-        downloadXLS(rows, 'pendaftar-spmb-' + formatTanggalFile() + '.xls');
+        downloadExcel(rows, 'pendaftar-spmb-' + formatTanggalFile() + '.xls');
         Utils.toast(rows.length + ' baris siap diunduh', 'success');
       }).catch(function (err) { Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error'); });
     });
