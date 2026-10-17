@@ -795,7 +795,7 @@
   // ============================================================
   // FUNGSI CETAK KARTU BUKTI PENDAFTARAN (A5 LANDSCAPE)
   // ============================================================
-    function printKartuBukti(d) {
+      function printKartuBukti(d) {
     var p = d.pendaftaran;
     var kons1 = namaKonsentrasi(p.konsentrasi_1);
     
@@ -815,47 +815,79 @@
           '<p style="font-size:9pt;margin:1mm 0 0;">' + s.alamat_sekolah + '</p>' +
         '</div></div>';
 
-    var kop = '<img src="kop-surat.png" style="width: 100%; height: auto; display: block; margin: 0;" alt="KOP" ' +
+    // KOP ditampilkan dengan margin standar (karena gambar kop-surat sudah punya margin internal)
+    var kop = '<img src="kop-surat.png" style="width: 100%; height: auto; display: block; margin-bottom: 2mm;" alt="KOP" ' +
               'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
               '<div style="display:none;">' + kopFallback + '</div>';
 
     var html =
-      '<div class="kartu-container">' +
+      '<div style="background: #fff; font-family: \'Segoe UI\', Arial, sans-serif; color: #1f2937; padding: 0 5mm;">' +
+        
+        // KOP
         kop +
-        '<div style="padding: 5mm 8mm 8mm 8mm;">' +
-          '<div style="text-align: center; margin-bottom: 4mm;">' +
-            '<h2 style="font-size: 14pt; font-weight: 800; color: #1a5490; margin: 0; letter-spacing: 1px;">KARTU BUKTI PENDAFTARAN</h2>' +
-          '</div>' +
+        
+        // JUDUL
+        '<div style="text-align: center; margin: 4mm 0 5mm 0;">' +
+          '<h2 style="font-size: 14pt; font-weight: 800; color: #1a5490; margin: 0; letter-spacing: 0.5px; text-transform: uppercase;">Kartu Bukti Pendaftaran</h2>' +
+        '</div>' +
+        
+        // BODY (FOTO KIRI, TABEL KANAN)
+        '<div style="display: flex; gap: 6mm;">' +
           
-          '<div class="kartu-body">' +
+          // FOTO (3 x 4.13 cm)
+          '<div style="flex-shrink: 0;">' +
             (fotoUrl 
-              ? '<img src="' + fotoUrl + '" class="kartu-foto" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
-                '<div class="kartu-foto" style="display:none; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
-              : '<div class="kartu-foto" style="display:flex; align-items:center; justify-content:center; font-size:8pt; text-align:center; color:#9ca3af;">FOTO<br>3x4</div>'
+              ? '<img src="' + fotoUrl + '" style="width: 3cm; height: 4.13cm; object-fit: cover; border: 1px solid #d1d5db; border-radius: 3px; display: block;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
+                '<div style="width: 3cm; height: 4.13cm; display: none; align-items: center; justify-content: center; background: #f3f4f6; border: 1px solid #d1d5db; font-size: 8pt; color: #9ca3af; text-align: center;">FOTO<br>3x4</div>'
+              : '<div style="width: 3cm; height: 4.13cm; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border: 1px solid #d1d5db; font-size: 8pt; color: #9ca3af; text-align: center;">FOTO<br>3x4</div>'
             ) +
-            
-            '<div class="kartu-data">' +
-              '<table>' +
-                '<tr><td class="lbl">Nomor Pendaftaran</td><td class="colon">:</td><td class="val" style="font-size:14pt; color:#d93025;">' + Utils.escapeHtml(p.nomor_pendaftaran) + '</td></tr>' +
-                '<tr><td class="lbl">Nama Lengkap</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
-                '<tr><td class="lbl">NISN</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
-                '<tr><td class="lbl">Sekolah Asal</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td></tr>' +
-                '<tr><td class="lbl">Konsentrasi 1</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(kons1) + '</td></tr>' +
-                '<tr><td class="lbl">Tanggal Daftar</td><td class="colon">:</td><td class="val">' + (p.tanggal_daftar ? Utils.formatTanggal(p.tanggal_daftar) : '-') + '</td></tr>' +
-              '</table>' +
-            '</div>' +
           '</div>' +
           
-          '<div class="kartu-footer">' +
-            'Kartu ini adalah bukti sah pendaftaran. Harap simpan dan tunjukkan kartu ini saat verifikasi berkas di sekolah.' +
+          // TABEL DATA
+          '<div style="flex: 1;">' +
+            '<table style="width: 100%; border-collapse: collapse; font-size: 11pt;">' +
+              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
+                '<td style="padding: 2.5mm 0; width: 38mm; color: #6b7280; font-size: 10pt;">Nomor Pendaftaran</td>' +
+                '<td style="padding: 2.5mm 2mm; width: 3mm; color: #6b7280;">:</td>' +
+                '<td style="padding: 2.5mm 0; font-weight: 800; color: #d93025; font-size: 13pt;">' + Utils.escapeHtml(p.nomor_pendaftaran) + '</td>' +
+              '</tr>' +
+              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
+                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Nama Lengkap</td>' +
+                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
+                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(p.nama_lengkap) + '</td>' +
+              '</tr>' +
+              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
+                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">NISN</td>' +
+                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
+                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(p.nisn || '-') + '</td>' +
+              '</tr>' +
+              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
+                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Sekolah Asal</td>' +
+                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
+                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td>' +
+              '</tr>' +
+              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
+                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Konsentrasi 1</td>' +
+                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
+                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(kons1) + '</td>' +
+              '</tr>' +
+              '<tr>' +
+                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Tanggal Daftar</td>' +
+                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
+                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + (p.tanggal_daftar ? Utils.formatTanggal(p.tanggal_daftar) : '-') + '</td>' +
+              '</tr>' +
+            '</table>' +
           '</div>' +
+        '</div>' +
+        
+        // FOOTER
+        '<div style="margin-top: 6mm; padding-top: 3mm; border-top: 1px solid #d1d5db; text-align: center; font-size: 8.5pt; color: #6b7280;">' +
+          'Kartu ini adalah bukti sah pendaftaran. Harap simpan dan tunjukkan kartu ini saat verifikasi berkas di sekolah.' +
         '</div>' +
       '</div>';
 
     document.getElementById('print-area').innerHTML = html;
 
-    // --- TRIK AGAR TIDAK ADA HALAMAN KOSONG ---
-    // Hapus style lama jika ada (mencegah penumpukan)
     var oldStyle = document.getElementById('dynamic-page-style');
     if (oldStyle) oldStyle.remove();
 
@@ -863,11 +895,9 @@
     style.id = 'dynamic-page-style';
     style.innerHTML = `
       @media print { 
-        @page { size: A5 landscape; margin: 0; } 
-        /* Sembunyikan halaman aplikasi secara total agar tidak memakan tempat */
+        @page { size: A5 landscape; margin: 10mm; } /* Margin 10mm agar KOP tidak terpotong */
         .app { display: none !important; } 
         body, html { height: auto !important; overflow: hidden !important; } 
-        /* Pastikan print-area berada di posisi normal, bukan absolute */
         #print-area { position: static !important; display: block !important; width: 100%; } 
       }
     `;
