@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — SPMB SMK Muhammadiyah 1 Surakarta</title>
 <link rel="icon" href="logo.png">
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -115,6 +116,56 @@
     .welcome-card h2 { font-size: 1.1rem; }
     .stats { grid-template-columns: repeat(2, 1fr); }
   }
+  /* ============================================================
+   * PURE CSS CHART (GRAFIK BAWAAN)
+   * ============================================================ */
+  .custom-chart-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 200px;
+    padding-top: 20px;
+    border-bottom: 2px solid #e5e7eb;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .chart-bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: relative;
+  }
+  .chart-bar {
+    width: 100%;
+    max-width: 30px;
+    background-color: #1a5490;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.5s ease, background-color 0.2s;
+    min-height: 2px;
+  }
+  .chart-bar:hover {
+    background-color: #d4a017; /* Warna emas saat di-hover */
+  }
+  .chart-label {
+    font-size: 0.65rem;
+    color: #6b7280;
+    margin-top: 8px;
+    white-space: nowrap;
+    transform: rotate(-45deg);
+    transform-origin: top left;
+    position: absolute;
+    bottom: -30px;
+  }
+  /* Container khusus label agar tidak menabrak border */
+  .chart-label-container {
+    height: 40px; 
+    position: relative; 
+    width: 100%; 
+    margin-top: 5px;
+  }
 </style>
 </head>
 <body>
@@ -177,8 +228,9 @@
         </div>
       </div>
       <h3 class="section-title">Grafik Pendaftar (14 Hari Terakhir)</h3>
-      <div class="panel" style="padding:20px; margin-bottom:24px;">
-      <canvas id="chart-pendaftar" height="80"></canvas>
+      <div class="panel" style="padding:20px 20px 40px 20px; margin-bottom:24px;">
+      <div class="custom-chart-container" id="custom-chart-bars"></div>
+      <div class="chart-label-container" id="custom-chart-labels"></div>
       </div>
       <h3 class="section-title">Aksi Cepat</h3>
       <div class="panel"><div class="quick-actions" id="quick-actions"></div></div>
@@ -195,7 +247,6 @@
 <script src="api.js"></script>
 <script src="auth.js"></script>
 <script src="nav.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 (function () {
   'use strict';
