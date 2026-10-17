@@ -180,6 +180,7 @@
         <button class="tab" data-tab="konsentrasi">Konsentrasi</button>
         <button class="tab" data-tab="pertanyaan">Pertanyaan Wawancara</button>
         <button class="tab" data-tab="template">Template WA</button>
+        <button class="tab" data-tab="backup">Backup Data</button>
       </div>
       <div id="tab-content"></div>
     </div>
@@ -249,6 +250,7 @@
     else if (currentTab === 'konsentrasi') renderKonsentrasi();
     else if (currentTab === 'pertanyaan') renderPertanyaan();
     else if (currentTab === 'template') renderTemplate();
+    else if (currentTab === 'backup') renderBackup();
   }
 
   /* ============ MODAL ============ */
@@ -886,7 +888,72 @@
       });
     });
   }
-
+  /* ============ BACKUP DATA ============ */
+  function renderBackup() {
+    var c = document.getElementById('tab-content');
+    c.innerHTML = '<div class="panel"><div class="empty">Memuat data backup...</div></div>';
+    
+    Api.admin.listBackups().then(function(res) {
+      if (!res.success) {
+        c.innerHTML = '<div class="panel"><div class="empty">Gagal: ' + Utils.escapeHtml(res.message) + '</div></div>';
+        return;
+      }
+      
+      var files = res.data.files || [];
+      var html = '<div class="panel">' +
+        '<div class="panel-head">' +
+          '<h3>Backup Database</h3>' +
+          '<button class="btn btn-primary btn-sm" id="btn-create-backup">📦 Buat Backup Sekarang</button>' +
+        '</div>' +
+        '<div style="background:#eff6ff;border-left:4px solid #1a5490;padding:12px 16px;border-radius:6px;margin-bottom:14px;font-size:0.85rem;color:#1e40af;">' +
+          '💡 <strong>Info:</strong> Backup akan menyimpan seluruh data (Pendaftar, Pembayaran, dll) dalam bentuk file Spreadsheet baru yang aman di Google Drive.' +
+        '</div>' +
+        '<div class="table-wrap"><table><thead><tr>' +
+          '<th>Nama File</th><th>Tanggal Dibuat</th><th>Ukuran</th><th>Aksi</th>' +
+        '</tr></thead><tbody>';
+        
+      if (!files.length) {
+        html += '<tr><td colspan="4"><div class="empty">Belum ada file backup.</div></td></tr>';
+      }
+      
+      files.forEach(function(f) {
+        var d = new Date(f.date);
+        var tgl = Utils.formatTanggal(f.date) + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+        var size = (f.size / 1024 / 1024).toFixed(2) + ' MB';
+        
+        html += '<tr>' +
+          '<td><strong>' + Utils.escapeHtml(f.name) + '</strong></td>' +
+          '<td>' + tgl + '</td>' +
+          '<td>' + size + '</td>' +
+          '<td class="actions">' +
+            '<a href="' + f.url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ Buka / Download</a>' +
+          '</td>' +
+        '</tr>';
+      });
+      
+      html += '</tbody></table></div></div>';
+      c.innerHTML = html;
+      
+      document.getElementById('btn-create-backup').addEventListener('click', function() {
+        if (!confirm('Buat file backup sekarang? Proses ini memakan waktu beberapa detik.')) return;
+        Utils.showLoading('Membuat backup database...');
+        Api.admin.createBackup().then(function(r) {
+          Utils.hideLoading();
+          if (r.success) {
+            Utils.toast('Backup berhasil dibuat', 'success');
+            renderBackup(); // Refresh tabel
+          } else {
+            Utils.toast('Gagal: ' + r.message, 'error');
+          }
+        }).catch(function(err) {
+          Utils.hideLoading(); Utils.toast('Error: ' + err.message, 'error');
+        });
+      });
+      
+    }).catch(function(err) {
+      c.innerHTML = '<div class="panel"><div class="empty">Error: ' + Utils.escapeHtml(err.message) + '</div></div>';
+    });
+  }
   renderTab();
 
 })();
