@@ -141,6 +141,7 @@ const Api = {
     cancel: function (id, alasan) {
       return Api.call('payment.cancel', { transaction_id: id, alasan: alasan || '' });
     },
+    getRekap: function (params) { return Api.call('payment.getRekap', params || {}); },
     getForPrint: function (id) { return Api.call('payment.getForPrint', { transaction_id: id }); }
   },
 
