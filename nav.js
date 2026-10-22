@@ -60,7 +60,6 @@ const Nav = {
     var user = Auth.getUser();
     var role = user && user.role ? user.role : 'ADMIN';
     
-    // Dukungan role PENDAFTAR / PENDAFTARAN
     var menuKey = (role === 'PENDAFTAR') ? 'PENDAFTARAN' : role;
     var menu = Nav.MENUS[menuKey] || Nav.MENUS.ADMIN;
 
