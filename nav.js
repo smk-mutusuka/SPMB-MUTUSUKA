@@ -19,7 +19,6 @@ const Nav = {
         { icon: '⚙️', label: 'Pengaturan', href: 'settings.html', key: 'settings' }
       ]}
     ],
-
     PENDAFTARAN: [
       { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', key: 'dashboard' }]},
       { group: 'Pendaftaran', items: [
@@ -30,7 +29,6 @@ const Nav = {
         { icon: '📲', label: 'Notifikasi WA', href: 'notif.html', key: 'notif' }
       ]}
     ],
-
     WAWANCARA: [
       { group: 'Utama', items: [{ icon: '🏠', label: 'Dashboard', href: 'dashboard.html', key: 'dashboard' }]},
       { group: 'Pendaftaran', items: [
@@ -43,7 +41,6 @@ const Nav = {
         { icon: '📲', label: 'Notifikasi WA', href: 'notif.html', key: 'notif' }
       ]}
     ],
-
     BENDAHARA: [
       { group: 'Proses', items: [
         { icon: '💰', label: 'Pembayaran', href: 'payment.html', key: 'payment' },
@@ -63,7 +60,7 @@ const Nav = {
     var user = Auth.getUser();
     var role = user && user.role ? user.role : 'ADMIN';
     
-    // Fallback jika role di database tertulis 'PENDAFTAR'
+    // Dukungan role PENDAFTAR / PENDAFTARAN
     var menuKey = (role === 'PENDAFTAR') ? 'PENDAFTARAN' : role;
     var menu = Nav.MENUS[menuKey] || Nav.MENUS.ADMIN;
 
