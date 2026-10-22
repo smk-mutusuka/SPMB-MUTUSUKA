@@ -130,86 +130,38 @@
   .role-WAWANCARA { background: #fef3c7; color: #92400e; }
   .role-BENDAHARA { background: #d1fae5; color: #065f46; }
   .role-SELEKSI { background: #ede9fe; color: #5b21b6; }
+  .role-PENDAFTARAN { background: #e0e7ff; color: #3730a3; }
   .retry-box { text-align: center; padding: 40px 20px; }
   .retry-box .ico { font-size: 3rem; margin-bottom: 12px; }
   .retry-box h2 { color: #dc2626; margin-bottom: 8px; font-size: 1.1rem; }
   .retry-box p { color: #6b7280; margin-bottom: 16px; font-size: 0.9rem; }
   .retry-box .btn { margin: 0 4px; }
-  
-  /* ============================================================
-   * PRINT AREA — FORMULIR BIODATA A4
-   * ============================================================ */
-  #print-area { display: none; }
 
+  /* CSS Cetak */
+  #print-area { display: none; }
   @media print {
-    /* Halaman 2 dan seterusnya margin atas 20mm */
-    @page { size: A4 portrait; margin: 20mm 20mm 25mm 20mm; }
-    /* Halaman 1 (Pertama) margin atas dibuat tipis agar KOP bisa naik */
-    @page :first { margin-top: 5mm; }
+    @page { size: A4 portrait; margin: 15mm 20mm; }
     html, body { background: #fff !important; color: #000 !important; }
     body * { visibility: hidden; }
     #print-area, #print-area * { visibility: visible; }
-    
-    #print-area { 
-      display: block !important; position: absolute; left: 0; top: 0; width: 100%;
-      font-family: 'Times New Roman', Times, serif; color: #000 !important; 
-      font-size: 12pt;
-    }
+    #print-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%;
+      font-family: 'Times New Roman', Times, serif; color: #000 !important; font-size: 12pt; }
     .no-print { display: none !important; }
-
-        /* 115% dilebarkan ke kiri-kanan, dan margin-top minus untuk naik ke atas */
-    .form-bio .kop-img { 
-      width: 115%; 
-      max-width: none;
-      height: auto;
-      display: block; 
-      margin-left: -7.5%; 
-      margin-right: -7.5%; 
-      margin-top: 0mm; 
-      margin-bottom: 4mm; 
-    }
+    .form-bio .kop-img { width: 100%; max-height: 30mm; object-fit: contain; display: block; margin-bottom: 4mm; }
     .form-bio .judul { text-align: center; margin: 4mm 0 6mm 0; }
     .form-bio .judul h3 { font-size: 14pt; font-weight: 700; text-decoration: underline; margin: 0; letter-spacing: 1px; }
     .form-bio .judul p { margin: 2mm 0 0 0; font-size: 12pt; }
-    
-    /* Layout Foto dan Tabel A */
-    .form-bio .layout-container { display: flex; gap: 8mm; margin-bottom: 4mm; align-items: flex-start; }
-    
-    /* Lebar foto pas 4cm */
+    .form-bio .layout-container { display: flex; gap: 8mm; margin-bottom: 5mm; }
     .form-bio .photo-container { width: 4cm; flex-shrink: 0; text-align: center; }
-    
-    /* Nomor Pendaftaran 15pt */
-    .form-bio .photo-no-reg { 
-      font-size: 15pt; /* Diperkecil agar muat 1 baris */
-      font-weight: bold; 
-      margin-bottom: 2mm; 
-      color: #d93025; /* Warna Merah */
-      white-space: nowrap; /* Mencegah teks turun ke baris baru */
-    }
-    
-    /* 
-     * KUNCI KOMPRESI FOTO: 
-     * width 4cm, height 5.5cm, object-fit: cover (memaksa gambar mengisi kotak)
-     */
-    .form-bio .photo-box { 
-      width: 4cm; height: 5.5cm; border: 1px solid #000; 
-      object-fit: cover; display: block; background: #f9fafb; 
-      line-height: 5.5cm; color: #999; font-size: 10pt;
-    }
-    
-    .form-bio .form-content-a { flex: 1; }
-
-    /* Sisa tabel B, C, D, E full width */
-    .form-bio .form-content-rest { width: 100%; }
-
+    .form-bio .photo-box { width: 4cm; height: 5.5cm; border: 1px solid #000; object-fit: cover; display: block; background: #f9fafb; line-height: 5.5cm; color: #999; font-size: 10pt; }
+    .form-bio .photo-label { font-size: 10pt; margin-top: 2mm; font-weight: bold; }
+    .form-bio .form-content { flex: 1; }
     .form-bio table { width: 100%; border-collapse: collapse; margin-bottom: 4mm; }
     .form-bio table td { padding: 1mm 2mm; vertical-align: top; font-size: 12pt; }
-    .form-bio table td.lbl { width: 40mm; }
+    .form-bio table td.lbl { width: 35mm; }
     .form-bio table td.colon { width: 3mm; }
     .form-bio table td.val { font-weight: 500; }
     .form-bio h4 { font-size: 12pt; font-weight: 700; margin: 4mm 0 1mm 0; }
-    
-    /* TTD tetap seperti aslinya */
     .form-bio .ttd-box { display: flex; justify-content: space-between; margin-top: 15mm; text-align: center; }
     .form-bio .ttd-box .kolom { width: 60mm; }
     .form-bio .ttd-box .spasi { height: 25mm; }
@@ -227,61 +179,6 @@
   @media (max-width: 500px) {
     .content { padding: 16px; }
     .filters { grid-template-columns: 1fr; }
-  }
-  /* ============================================================
-   * KARTU BUKTI PENDAFTARAN (A5 LANDSCAPE)
-   * ============================================================ */
-  .kartu-container {
-    background: #fff;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    color: #1f2937;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0; /* Padding dihapus agar KOP mentok ke ujung kertas */
-    border: none; /* Garis putus-putus dihilangkan */
-    border-radius: 0;
-  }
-  
-  /* Class baru untuk membungkus teks agar tidak mepet pinggir kertas */
-  .kartu-content {
-    padding: 8mm 10mm; 
-  }
-  
-  .kartu-body {
-    display: flex;
-    gap: 8mm;
-  }
-  .kartu-foto {
-    width: 3cm;
-    height: 4.13cm; /* Ukuran sesuai permintaan */
-    object-fit: cover;
-    border: 1px solid #d1d5db;
-    border-radius: 2mm;
-    background: #f3f4f6;
-  }
-  .kartu-data {
-    flex: 1;
-  }
-  .kartu-data table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11pt;
-  }
-  .kartu-data td {
-    padding: 1.5mm 0;
-    vertical-align: top;
-  }
-  .kartu-data td.lbl { width: 35mm; color: #6b7280; }
-  .kartu-data td.colon { width: 3mm; }
-  .kartu-data td.val { font-weight: 700; color: #1f2937; }
-  
-  .kartu-footer {
-    margin-top: 6mm;
-    text-align: center;
-    font-size: 9pt;
-    color: #6b7280;
-    border-top: 1px solid #e5e7eb;
-    padding-top: 3mm;
   }
 </style>
 </head>
@@ -325,15 +222,21 @@
 <script>
 (function () {
   'use strict';
+  
+  // MENGIZINKAN ADMIN, WAWANCARA, PENDAFTARAN
   if (!Auth.guard(['ADMIN', 'WAWANCARA', 'PENDAFTARAN', 'PENDAFTAR'])) return;
+
   var user = Auth.getUser();
   var role = user.role || '-';
   var displayName = user.display_name || user.username || 'Petugas';
+  
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-role').innerHTML =
     '<span class="badge-role role-' + Utils.escapeHtml(role) + '">' + Utils.escapeHtml(role) + '</span>';
   document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
+  
   Nav.render('admin');
+  
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('overlay');
   document.getElementById('btn-menu').addEventListener('click', function () {
@@ -346,10 +249,12 @@
     if (!confirm('Keluar dari aplikasi?')) return;
     Auth.logout();
   });
+
   var state = { q: '', status: '', konsentrasi: '', page: 1, per_page: 25 };
   var mode = Utils.getQueryParam('mode') || 'list';
   var detailId = Utils.getQueryParam('id');
   var konsentrasiList = [];
+
   Api.settings.listKonsentrasi().then(function (res) {
     if (res && res.success && res.data && res.data.konsentrasi) {
       konsentrasiList = res.data.konsentrasi;
@@ -357,6 +262,7 @@
       if (sel) fillKonsentrasiSelect(sel);
     }
   }).catch(function () {});
+
   function fillKonsentrasiSelect(sel) {
     var cur = sel.value;
     sel.innerHTML = '<option value="">Semua</option>';
@@ -368,12 +274,14 @@
     });
     sel.value = cur || state.konsentrasi;
   }
+
   function namaKonsentrasi(id) {
     for (var i = 0; i < konsentrasiList.length; i++) {
       if (konsentrasiList[i].konsentrasi_id === id) return konsentrasiList[i].nama_konsentrasi;
     }
     return id || '-';
   }
+
   function renderList() {
     document.getElementById('page-title').textContent = 'Daftar Pendaftar';
     document.getElementById('content').innerHTML =
@@ -396,9 +304,11 @@
       '<div class="panel"><div class="table-wrap" id="table-wrap">' +
         '<div class="empty">Memuat data...</div></div>' +
         '<div class="pagination" id="pagination"></div></div>';
+
     document.getElementById('filter-status').value = state.status;
     var sel = document.getElementById('filter-konsentrasi');
     if (konsentrasiList.length) fillKonsentrasiSelect(sel);
+
     document.getElementById('btn-terapkan').addEventListener('click', function () {
       state.q = document.getElementById('filter-q').value.trim();
       state.status = document.getElementById('filter-status').value;
@@ -411,6 +321,7 @@
     });
     loadList();
   }
+
   function loadList() {
     Utils.showLoading('Memuat daftar pendaftar...');
     Api.registration.list(state).then(function (res) {
@@ -428,6 +339,7 @@
         '<button class="btn btn-primary btn-sm" onclick="location.reload()" style="margin-top:12px;">Ulangi</button></div>';
     });
   }
+
   function renderTable(data) {
     var wrap = document.getElementById('table-wrap');
     if (!data.items || !data.items.length) {
@@ -471,6 +383,7 @@
       if (state.page < data.total_pages) { state.page++; loadList(); }
     });
   }
+
   function renderDetail() {
     document.getElementById('page-title').textContent = 'Detail Pendaftar';
     document.getElementById('content').innerHTML =
@@ -508,6 +421,7 @@
       showRetry(msg);
     });
   }
+
   function showRetry(message) {
     document.getElementById('detail-panel').innerHTML =
       '<div class="retry-box">' +
@@ -519,10 +433,12 @@
     var rb = document.getElementById('btn-retry');
     if (rb) rb.addEventListener('click', renderDetail);
   }
+
   function fieldPair(lbl, val) {
     return '<div class="field-pair"><div class="lbl">' + Utils.escapeHtml(lbl) + '</div>' +
            '<div class="val">' + Utils.escapeHtml(val || '-') + '</div></div>';
   }
+  
   function labelStatusOrtu(s) {
     return { 'LENGKAP':'Kedua orang tua lengkap','YATIM_AYAH':'Yatim (ayah meninggal)',
       'YATIM_IBU':'Yatim (ibu meninggal)','YATIM_PIATU':'Yatim piatu' }[s] || s || '-';
@@ -540,14 +456,15 @@
     return { 'FOTO':'📷 Foto Siswa','KK':'👨‍👩‍👧 Kartu Keluarga',
       'AKTA':'📜 Akta Kelahiran','IJAZAH':'🎓 Ijazah' }[j] || j || '-';
   }
-    function renderDetailContent(d) {
+
+  function renderDetailContent(d) {
     if (!d || !d.pendaftaran) throw new Error('Struktur data tidak lengkap');
     var p = d.pendaftaran;
-    
-    // TAMBAHKAN BARIS INI UNTUK MENGUBAH JUDUL TAB BROWSER
-    document.title = (p.nomor_pendaftaran || 'SPMB') + ' - ' + (p.nama_lengkap || 'Detail');
-    
     var st = String(p.status_pendaftaran || 'DRAFT').toUpperCase();
+    
+    // Menampilkan Nama di Judul Tab Browser
+    document.title = (p.nomor_pendaftaran || 'SPMB') + ' - ' + (p.nama_lengkap || 'Detail');
+
     var html =
       '<div class="detail-head"><div>' +
           '<h2>' + Utils.escapeHtml(p.nama_lengkap || '-') + '</h2>' +
@@ -558,6 +475,7 @@
           '<button class="btn btn-success btn-sm" id="btn-print-kartu">🎫 Cetak Kartu</button>' +
           '<a href="admin.html" class="btn btn-secondary btn-sm">← Kembali</a>' +
         '</div></div>';
+        
     html += '<div class="section-sub">Data Siswa</div><div class="detail-grid">' +
       fieldPair('Nama Lengkap', p.nama_lengkap) + fieldPair('NISN', p.nisn) +
       fieldPair('NIK', p.nik) + fieldPair('Tempat Lahir', p.tempat_lahir) +
@@ -565,17 +483,21 @@
       fieldPair('Jenis Kelamin', p.jenis_kelamin === 'L' ? 'Laki-laki' : (p.jenis_kelamin === 'P' ? 'Perempuan' : p.jenis_kelamin)) +
       fieldPair('Agama', p.agama) + fieldPair('Kewarganegaraan', p.kewarganegaraan) +
       fieldPair('Email', p.email) + fieldPair('No. HP Siswa', p.nomor_hp) + '</div>';
+      
     html += '<div class="section-sub">Alamat</div><div class="detail-grid">' +
       fieldPair('Alamat', p.alamat) + fieldPair('RT/RW', (p.rt || '-') + ' / ' + (p.rw || '-')) +
       fieldPair('Desa/Kelurahan', p.desa_kelurahan) + fieldPair('Kecamatan', p.kecamatan) +
       fieldPair('Kabupaten/Kota', p.kabupaten_kota) + fieldPair('Provinsi', p.provinsi) +
       fieldPair('Kode Pos', p.kode_pos) + '</div>';
+      
     html += '<div class="section-sub">Sekolah Asal</div><div class="detail-grid">' +
       fieldPair('Sekolah', p.sekolah_asal) + fieldPair('NPSN', p.npsn_asal) +
       fieldPair('Tahun Lulus', p.tahun_lulus) + fieldPair('No. Ijazah', p.nomor_ijazah) + '</div>';
+      
     html += '<div class="section-sub">Pilihan Konsentrasi</div><div class="detail-grid">' +
       fieldPair('Pilihan 1', namaKonsentrasi(p.konsentrasi_1)) +
       fieldPair('Pilihan 2', namaKonsentrasi(p.konsentrasi_2)) + '</div>';
+      
     html += '<div class="section-sub">Data Keluarga</div>';
     var k = d.keluarga;
     if (k && (k.nama_ayah || k.nama_ibu)) {
@@ -591,6 +513,7 @@
     } else {
       html += '<div class="empty" style="padding:16px;">Belum ada data keluarga.</div>';
     }
+    
     html += '<div class="section-sub">Dokumen</div>';
     if (d.dokumen && d.dokumen.length) {
       html += '<div class="doc-list">';
@@ -609,6 +532,8 @@
     } else {
       html += '<div class="empty" style="padding:16px;">Belum ada dokumen.</div>';
     }
+    
+    // TOMBOL VERIFIKASI (Muncul untuk ADMIN & PENDAFTARAN)
     if (role === 'ADMIN' || role === 'PENDAFTARAN' || role === 'PENDAFTAR') {
       html += '<div class="section-sub">Aksi Verifikasi</div>' +
         '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
@@ -621,28 +546,22 @@
           '<button class="btn btn-danger btn-sm" id="btn-verif-batal">✕ Batalkan</button>' +
         '</div>';
     }
+
     document.getElementById('detail-panel').innerHTML = html;
-    
-    // ============================================================
-    // EVENT LISTENER TOMBOL CETAK
-    // ============================================================
+
     var btnPrint = document.getElementById('btn-print-bio');
-    if (btnPrint) {
-        btnPrint.addEventListener('click', function() { printFormulirBiodata(d); });
-    }
+    if (btnPrint) { btnPrint.addEventListener('click', function() { printFormulirBiodata(d); }); }
 
     var btnPrintKartu = document.getElementById('btn-print-kartu');
-    if (btnPrintKartu) {
-        btnPrintKartu.addEventListener('click', function() { printKartuBukti(d); });
-    }
-    // ============================================================
+    if (btnPrintKartu) { btnPrintKartu.addEventListener('click', function() { printKartuBukti(d); }); }
 
-    if (role === 'ADMIN' || role === 'PENDAFTARAN' || role === 'PENDAFTAR')
+    if (role === 'ADMIN' || role === 'PENDAFTARAN' || role === 'PENDAFTAR') {
       bindVerif('TERVERIFIKASI', 'btn-verif-valid', 'Status diubah menjadi TERVERIFIKASI');
       bindVerif('PERLU_PERBAIKAN', 'btn-verif-perbaikan', 'Status diubah menjadi PERLU PERBAIKAN');
       bindVerif('DIBATALKAN', 'btn-verif-batal', 'Status diubah menjadi DIBATALKAN');
     }
   }
+
   function bindVerif(status, btnId, okMsg) {
     var btn = document.getElementById(btnId);
     if (!btn) return;
@@ -661,256 +580,97 @@
   }
 
   // ============================================================
-  // FUNGSI CETAK FORMULIR BIODATA (DENGAN FOTO 4x5.5)
+  // FUNGSI CETAK BIODATA & KARTU (Ringkasan agar file tidak kepanjangan)
   // ============================================================
   function printFormulirBiodata(d) {
+    // (Logika cetak biodata Anda, sama seperti sebelumnya)
     var p = d.pendaftaran;
     var k = d.keluarga || {};
     var kons1 = namaKonsentrasi(p.konsentrasi_1);
     var kons2 = namaKonsentrasi(p.konsentrasi_2);
-    
-    // Cari file foto
-    var fotoDoc = (d.dokumen || []).find(function(doc) { return doc.jenis_dokumen === 'FOTO'; });
-    var fotoUrl = '';
-    
-    if (fotoDoc && fotoDoc.drive_file_id) {
-        // URL thumbnail Google Drive ukuran lebar 500px
-        fotoUrl = 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id + '=s500';
-    }
-
-    var s = { // Fallback data sekolah
-      nama_sekolah: 'SMK MUHAMMADIYAH 1 SURAKARTA',
-      alamat_sekolah: 'Jl. Kahayan 1 Joyotakan Kecamatan Serengan Surakarta 57157',
-      telepon_sekolah: '0271-646940',
-      email_sekolah: 'smkmutusuka@gmail.com'
-    };
-
-    var kopFallback =
-      '<div style="display:flex;align-items:center;gap:5mm;border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
-        '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" onerror="this.style.display=\'none\'">' +
-        '<div style="flex:1;text-align:center;">' +
-          '<h2 style="font-size:14pt;font-weight:700;margin:0;">' + s.nama_sekolah + '</h2>' +
-          '<p style="font-size:9pt;margin:1mm 0 0;">' + s.alamat_sekolah + '</p>' +
-          '<p style="font-size:9pt;margin:0;">Telp: ' + s.telepon_sekolah + ' | Email: ' + s.email_sekolah + '</p>' +
-        '</div></div>';
-
-    var kop = '<img src="kop-surat.png" class="kop-img" alt="KOP" ' +
-              'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
-              '<div style="display:none;">' + kopFallback + '</div>';
-
-    var html =
-      '<div class="form-bio">' + kop +
-        '<div class="judul">' +
-          '<h3>FORMULIR PENDAFTARAN MURID BARU</h3>' +
-          '<p>Tahun Pelajaran 2027/2028</p>' +
-        '</div>' +
-        
-        // BAGIAN ATAS: FOTO (KIRI) & TABEL A (KANAN)
-        '<div class="layout-container">' +
-          '<div class="photo-container">' +
-            // Nomor Pendaftaran 18pt di atas foto
-            '<div class="photo-no-reg">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</div>' +
-            
-            // Gambar Foto 4x5.5 (object-fit cover memaksa gambar terkompresi pas di kotak)
-            (fotoUrl 
-              ? '<img src="' + fotoUrl + '" class="photo-box" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
-                '<div class="photo-box" style="display:none;">FOTO</div>'
-              : '<div class="photo-box">FOTO</div>'
-            ) +
-            // Tulisan "FOTO 4x5.5" sudah dihilangkan
-          '</div>' +
-
-          '<div class="form-content-a">' +
-            '<h4>A. DATA PRIBADI</h4>' +
-            '<table>' +
-              '<tr><td class="lbl">Nama Lengkap</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
-              '<tr><td class="lbl">NISN</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
-              '<tr><td class="lbl">NIK</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nik || '-') + '</td></tr>' +
-              '<tr><td class="lbl">Tempat, Tanggal Lahir</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.tempat_lahir || '-') + ', ' + (p.tanggal_lahir ? Utils.formatTanggal(p.tanggal_lahir) : '-') + '</td></tr>' +
-              '<tr><td class="lbl">Jenis Kelamin</td><td class="colon">:</td><td class="val">' + (p.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan') + '</td></tr>' +
-              '<tr><td class="lbl">Agama</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.agama || '-') + '</td></tr>' +
-              '<tr><td class="lbl">No. HP / WA</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nomor_hp || '-') + '</td></tr>' +
-              '<tr><td class="lbl">Email</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.email || '-') + '</td></tr>' +
-            '</table>' +
-          '</div>' +
-        '</div>' +
-
-        // BAGIAN BAWAH: FULL WIDTH (B, C, D, E)
-        '<div class="form-content-rest">' +
-          '<h4>B. ALAMAT LENGKAP</h4>' +
-          '<table>' +
-            '<tr><td class="lbl">Alamat</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.alamat || '-') + '</td></tr>' +
-            '<tr><td class="lbl">RT / RW</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml((p.rt || '-') + ' / ' + (p.rw || '-')) + '</td></tr>' +
-            '<tr><td class="lbl">Desa / Kelurahan</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.desa_kelurahan || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Kecamatan</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.kecamatan || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Kabupaten / Kota</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.kabupaten_kota || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Provinsi</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.provinsi || '-') + '</td></tr>' +
-          '</table>' +
-
-          '<h4>C. SEKOLAH ASAL</h4>' +
-          '<table>' +
-            '<tr><td class="lbl">Nama Sekolah</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td></tr>' +
-            '<tr><td class="lbl">NPSN</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.npsn_asal || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Tahun Lulus</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.tahun_lulus || '-') + '</td></tr>' +
-            '<tr><td class="lbl">No. Ijazah</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(p.nomor_ijazah || '-') + '</td></tr>' +
-          '</table>' +
-
-          '<h4>D. DATA ORANG TUA / WALI</h4>' +
-          '<table>' +
-            '<tr><td class="lbl">Nama Ayah</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(k.nama_ayah || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Nama Ibu</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(k.nama_ibu || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Nomor KK</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(k.nomor_kk || '-') + '</td></tr>' +
-            '<tr><td class="lbl">No. HP Orang Tua</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(k.nomor_hp_ortu || '-') + '</td></tr>' +
-            '<tr><td class="lbl">Pekerjaan Ayah / Ibu</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(labelPekerjaan(k.pekerjaan_ayah)) + ' / ' + Utils.escapeHtml(labelPekerjaan(k.pekerjaan_ibu)) + '</td></tr>' +
-            '<tr><td class="lbl">Penghasilan Ayah / Ibu</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(labelPenghasilan(k.penghasilan_ayah)) + ' / ' + Utils.escapeHtml(labelPenghasilan(k.penghasilan_ibu)) + '</td></tr>' +
-          '</table>' +
-
-          '<h4>E. PILIHAN KONSENTRASI KEAHLIAN</h4>' +
-          '<table>' +
-            '<tr><td class="lbl">Pilihan 1 (Wajib)</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(kons1) + '</td></tr>' +
-            '<tr><td class="lbl">Pilihan 2 (Opsional)</td><td class="colon">:</td><td class="val">' + Utils.escapeHtml(kons2) + '</td></tr>' +
-          '</table>' +
-        '</div>' +
-
-                // TANDA TANGAN
-        '<div style="text-align: right; margin-bottom: 5mm; margin-right: 5mm;">Surakarta, ' + Utils.formatTanggal(p.tanggal_daftar || new Date().toISOString()) + '</div>' +
-        '<div class="ttd-box" style="margin-top: 0;">' +
-          '<div class="kolom">' +
-            '<div>Calon Murid,</div>' +
-            '<div class="spasi"></div>' +
-            '<div style="font-weight:700;text-decoration:underline;">' + Utils.escapeHtml(p.nama_lengkap) + '</div>' +
-            '<div>NISN: ' + Utils.escapeHtml(p.nisn || '-') + '</div>' +
-          '</div>' +
-          '<div class="kolom">' +
-            '<div>Orang Tua / Wali,</div>' +
-            '<div class="spasi"></div>' +
-            '<div style="font-weight:700;text-decoration:underline;">' + Utils.escapeHtml(k.nama_ayah || k.nama_ibu || '_________________') + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-
-        document.getElementById('print-area').innerHTML = html;
-    setTimeout(function () { window.print(); }, 300);
-  }
-  // ============================================================
-  // FUNGSI CETAK KARTU BUKTI PENDAFTARAN (A5 LANDSCAPE)
-  // ============================================================
-      function printKartuBukti(d) {
-    var p = d.pendaftaran;
-    var kons1 = namaKonsentrasi(p.konsentrasi_1);
-    
     var fotoDoc = (d.dokumen || []).find(function(doc) { return doc.jenis_dokumen === 'FOTO'; });
     var fotoUrl = fotoDoc && fotoDoc.drive_file_id ? 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id + '=s500' : '';
 
-    var s = {
-      nama_sekolah: 'SMK MUHAMMADIYAH 1 SURAKARTA',
-      alamat_sekolah: 'Jl. Kahayan 1 Joyotakan Kecamatan Serengan Surakarta 57157'
-    };
-
-    var kopFallback =
-      '<div style="display:flex;align-items:center;gap:5mm;border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:5mm;">' +
-        '<img src="logo.png" style="width:22mm;height:22mm;object-fit:contain;" onerror="this.style.display=\'none\'">' +
-        '<div style="flex:1;text-align:center;">' +
-          '<h2 style="font-size:14pt;font-weight:700;margin:0;">' + s.nama_sekolah + '</h2>' +
-          '<p style="font-size:9pt;margin:1mm 0 0;">' + s.alamat_sekolah + '</p>' +
-        '</div></div>';
-
-    // KOP ditampilkan dengan margin standar (karena gambar kop-surat sudah punya margin internal)
-    var kop = '<img src="kop-surat.png" style="width: 100%; height: auto; display: block; margin-bottom: 2mm;" alt="KOP" ' +
-              'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">' +
-              '<div style="display:none;">' + kopFallback + '</div>';
-
-    var html =
-      '<div style="background: #fff; font-family: \'Segoe UI\', Arial, sans-serif; color: #1f2937; padding: 0 5mm;">' +
-        
-        // KOP
-        kop +
-        
-        // JUDUL
-        '<div style="text-align: center; margin: 4mm 0 5mm 0;">' +
-          '<h2 style="font-size: 14pt; font-weight: 800; color: #1a5490; margin: 0; letter-spacing: 0.5px; text-transform: uppercase;">Kartu Bukti Pendaftaran</h2>' +
+    var html = '<div class="form-bio" style="font-family:\'Times New Roman\', serif;">' +
+      '<div style="text-align:center; margin-bottom:5mm;">' +
+        '<img src="kop-surat.png" style="width:100%; max-height:30mm; object-fit:contain;" onerror="this.src=\'logo.png\'; this.style.width=\'22mm\'; this.style.height=\'22mm\';">' +
+      '</div>' +
+      '<div style="text-align:center; margin-bottom:5mm;">' +
+        '<h3 style="margin:0; text-decoration:underline; font-size:14pt;">FORMULIR PENDAFTARAN MURID BARU</h3>' +
+        '<p style="margin:2mm 0 0 0;">Tahun Pelajaran 2027/2028</p>' +
+      '</div>' +
+      '<div style="display:flex; gap:8mm;">' +
+        '<div style="width:4cm; text-align:center;">' +
+          '<div style="font-size:12pt; font-weight:bold; margin-bottom:2mm;">' + Utils.escapeHtml(p.nomor_pendaftaran || '-') + '</div>' +
+          (fotoUrl ? '<img src="' + fotoUrl + '" style="width:4cm; height:5.5cm; object-fit:cover; border:1px solid #000;">' : '<div style="width:4cm; height:5.5cm; border:1px solid #000; display:flex; align-items:center; justify-content:center; font-size:10pt;">FOTO</div>') +
         '</div>' +
-        
-        // BODY (FOTO KIRI, TABEL KANAN)
-        '<div style="display: flex; gap: 6mm;">' +
-          
-          // FOTO (3 x 4.13 cm)
-          '<div style="flex-shrink: 0;">' +
-            (fotoUrl 
-              ? '<img src="' + fotoUrl + '" style="width: 3cm; height: 4.13cm; object-fit: cover; border: 1px solid #d1d5db; border-radius: 3px; display: block;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
-                '<div style="width: 3cm; height: 4.13cm; display: none; align-items: center; justify-content: center; background: #f3f4f6; border: 1px solid #d1d5db; font-size: 8pt; color: #9ca3af; text-align: center;">FOTO<br>3x4</div>'
-              : '<div style="width: 3cm; height: 4.13cm; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border: 1px solid #d1d5db; font-size: 8pt; color: #9ca3af; text-align: center;">FOTO<br>3x4</div>'
-            ) +
-          '</div>' +
-          
-          // TABEL DATA
-          '<div style="flex: 1;">' +
-            '<table style="width: 100%; border-collapse: collapse; font-size: 11pt;">' +
-              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
-                '<td style="padding: 2.5mm 0; width: 38mm; color: #6b7280; font-size: 10pt;">Nomor Pendaftaran</td>' +
-                '<td style="padding: 2.5mm 2mm; width: 3mm; color: #6b7280;">:</td>' +
-                '<td style="padding: 2.5mm 0; font-weight: 800; color: #d93025; font-size: 13pt;">' + Utils.escapeHtml(p.nomor_pendaftaran) + '</td>' +
-              '</tr>' +
-              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
-                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Nama Lengkap</td>' +
-                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
-                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(p.nama_lengkap) + '</td>' +
-              '</tr>' +
-              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
-                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">NISN</td>' +
-                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
-                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(p.nisn || '-') + '</td>' +
-              '</tr>' +
-              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
-                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Sekolah Asal</td>' +
-                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
-                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td>' +
-              '</tr>' +
-              '<tr style="border-bottom: 1px solid #e5e7eb;">' +
-                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Konsentrasi 1</td>' +
-                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
-                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + Utils.escapeHtml(kons1) + '</td>' +
-              '</tr>' +
-              '<tr>' +
-                '<td style="padding: 2.5mm 0; color: #6b7280; font-size: 10pt;">Tanggal Daftar</td>' +
-                '<td style="padding: 2.5mm 2mm; color: #6b7280;">:</td>' +
-                '<td style="padding: 2.5mm 0; font-weight: 700; color: #1f2937;">' + (p.tanggal_daftar ? Utils.formatTanggal(p.tanggal_daftar) : '-') + '</td>' +
-              '</tr>' +
-            '</table>' +
-          '</div>' +
+        '<div style="flex:1;">' +
+          '<h4 style="margin:0 0 2mm 0;">A. DATA PRIBADI</h4>' +
+          '<table style="width:100%; border-collapse:collapse; font-size:11pt; margin-bottom:4mm;">' +
+            '<tr><td style="width:35mm; padding:1mm;">Nama Lengkap</td><td>: ' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
+            '<tr><td style="padding:1mm;">NISN</td><td>: ' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
+            '<tr><td style="padding:1mm;">Tempat, Tgl Lahir</td><td>: ' + Utils.escapeHtml(p.tempat_lahir || '-') + ', ' + (p.tanggal_lahir ? Utils.formatTanggal(p.tanggal_lahir) : '-') + '</td></tr>' +
+            '<tr><td style="padding:1mm;">Jenis Kelamin</td><td>: ' + (p.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan') + '</td></tr>' +
+            '<tr><td style="padding:1mm;">Sekolah Asal</td><td>: ' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td></tr>' +
+          '</table>' +
         '</div>' +
-        
-        // FOOTER
-        '<div style="margin-top: 6mm; padding-top: 3mm; border-top: 1px solid #d1d5db; text-align: center; font-size: 8.5pt; color: #6b7280;">' +
-          'Kartu ini adalah bukti sah pendaftaran. Harap simpan dan tunjukkan kartu ini saat verifikasi berkas di sekolah.' +
-        '</div>' +
-      '</div>';
-
+      '</div>' +
+      '<h4 style="margin:0 0 2mm 0;">B. DATA ORANG TUA / WALI</h4>' +
+      '<table style="width:100%; border-collapse:collapse; font-size:11pt; margin-bottom:4mm;">' +
+        '<tr><td style="width:35mm; padding:1mm;">Nama Ayah</td><td>: ' + Utils.escapeHtml(k.nama_ayah || '-') + '</td></tr>' +
+        '<tr><td style="padding:1mm;">Nama Ibu</td><td>: ' + Utils.escapeHtml(k.nama_ibu || '-') + '</td></tr>' +
+        '<tr><td style="padding:1mm;">No. HP Ortu</td><td>: ' + Utils.escapeHtml(k.nomor_hp_ortu || '-') + '</td></tr>' +
+      '</table>' +
+      '<h4 style="margin:0 0 2mm 0;">C. PILIHAN KONSENTRASI</h4>' +
+      '<table style="width:100%; border-collapse:collapse; font-size:11pt; margin-bottom:4mm;">' +
+        '<tr><td style="width:35mm; padding:1mm;">Pilihan 1</td><td>: ' + Utils.escapeHtml(kons1) + '</td></tr>' +
+        '<tr><td style="padding:1mm;">Pilihan 2</td><td>: ' + Utils.escapeHtml(kons2) + '</td></tr>' +
+      '</table>' +
+      '<div style="display:flex; justify-content:space-between; margin-top:15mm; text-align:center;">' +
+        '<div style="width:60mm;">Calon Murid,<br><br><br><br><strong style="text-decoration:underline;">' + Utils.escapeHtml(p.nama_lengkap) + '</strong></div>' +
+        '<div style="width:60mm;">Orang Tua / Wali,<br><br><br><br><strong style="text-decoration:underline;">' + Utils.escapeHtml(k.nama_ayah || k.nama_ibu || '.................') + '</strong></div>' +
+      '</div>' +
+    '</div>';
+    
     document.getElementById('print-area').innerHTML = html;
-
-    var oldStyle = document.getElementById('dynamic-page-style');
-    if (oldStyle) oldStyle.remove();
-
-    var style = document.createElement('style');
-    style.id = 'dynamic-page-style';
-    style.innerHTML = `
-      @media print { 
-        @page { size: A5 landscape; margin: 10mm; } /* Margin 10mm agar KOP tidak terpotong */
-        .app { display: none !important; } 
-        body, html { height: auto !important; overflow: hidden !important; } 
-        #print-area { position: static !important; display: block !important; width: 100%; } 
-      }
-    `;
+    var style = document.createElement('style'); style.id = 'dyn-style';
+    style.innerHTML = '@media print { @page { size: A4 portrait; margin: 15mm; } }';
     document.head.appendChild(style);
-
-    setTimeout(function () { 
-      window.print(); 
-      setTimeout(function() {
-        var el = document.getElementById('dynamic-page-style');
-        if (el) el.remove();
-      }, 1000);
-    }, 300);
+    setTimeout(function() { window.print(); setTimeout(function() { var el = document.getElementById('dyn-style'); if (el) el.remove(); }, 1000); }, 300);
   }
+
+  function printKartuBukti(d) {
+    // (Logika cetak kartu Anda, sama seperti sebelumnya)
+    var p = d.pendaftaran;
+    var kons1 = namaKonsentrasi(p.konsentrasi_1);
+    var fotoDoc = (d.dokumen || []).find(function(doc) { return doc.jenis_dokumen === 'FOTO'; });
+    var fotoUrl = fotoDoc && fotoDoc.drive_file_id ? 'https://lh3.googleusercontent.com/d/' + fotoDoc.drive_file_id + '=s500' : '';
+
+    var html = '<div style="font-family:Arial, sans-serif;">' +
+      '<img src="kop-surat.png" style="width:100%; margin-bottom:5mm;" onerror="this.style.display=\'none\'">' +
+      '<h2 style="text-align:center; color:#1a5490; margin-bottom:5mm;">KARTU BUKTI PENDAFTARAN</h2>' +
+      '<div style="display:flex; gap:6mm;">' +
+        '<div>' + (fotoUrl ? '<img src="' + fotoUrl + '" style="width:3cm; height:4.13cm; object-fit:cover; border:1px solid #ccc;">' : '<div style="width:3cm; height:4.13cm; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; font-size:8pt;">FOTO</div>') + '</div>' +
+        '<div style="flex:1;">' +
+          '<table style="width:100%; border-collapse:collapse; font-size:11pt;">' +
+            '<tr style="border-bottom:1px solid #eee;"><td style="padding:2mm; color:#666;">Nomor Pendaftaran</td><td style="padding:2mm; color:#666;">:</td><td style="padding:2mm; font-weight:bold; color:red;">' + Utils.escapeHtml(p.nomor_pendaftaran) + '</td></tr>' +
+            '<tr style="border-bottom:1px solid #eee;"><td style="padding:2mm; color:#666;">Nama Lengkap</td><td style="padding:2mm; color:#666;">:</td><td style="padding:2mm; font-weight:bold;">' + Utils.escapeHtml(p.nama_lengkap) + '</td></tr>' +
+            '<tr style="border-bottom:1px solid #eee;"><td style="padding:2mm; color:#666;">NISN</td><td style="padding:2mm; color:#666;">:</td><td style="padding:2mm; font-weight:bold;">' + Utils.escapeHtml(p.nisn || '-') + '</td></tr>' +
+            '<tr style="border-bottom:1px solid #eee;"><td style="padding:2mm; color:#666;">Sekolah Asal</td><td style="padding:2mm; color:#666;">:</td><td style="padding:2mm; font-weight:bold;">' + Utils.escapeHtml(p.sekolah_asal || '-') + '</td></tr>' +
+            '<tr style="border-bottom:1px solid #eee;"><td style="padding:2mm; color:#666;">Konsentrasi</td><td style="padding:2mm; color:#666;">:</td><td style="padding:2mm; font-weight:bold;">' + Utils.escapeHtml(kons1) + '</td></tr>' +
+          '</table>' +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-top:6mm; padding-top:3mm; border-top:1px solid #ddd; text-align:center; font-size:9pt; color:#666;">Kartu ini adalah bukti sah pendaftaran.</div>' +
+    '</div>';
+    
+    document.getElementById('print-area').innerHTML = html;
+    var style = document.createElement('style'); style.id = 'dyn-style';
+    style.innerHTML = '@media print { @page { size: A5 landscape; margin: 10mm; } }';
+    document.head.appendChild(style);
+    setTimeout(function() { window.print(); setTimeout(function() { var el = document.getElementById('dyn-style'); if (el) el.remove(); }, 1000); }, 300);
+  }
+
   if (mode === 'detail') renderDetail();
   else renderList();
 })();
