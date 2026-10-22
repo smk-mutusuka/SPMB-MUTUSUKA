@@ -235,7 +235,7 @@
 <script>
 (function () {
   'use strict';
-  if (!Auth.guard(['ADMIN', 'SELEKSI'])) return;
+  if (!Auth.guard(['ADMIN', 'SELEKSI', 'BENDAHARA'])) return;
   var user = Auth.getUser();
   var role = user.role;
   var displayName = user.display_name || user.username;
