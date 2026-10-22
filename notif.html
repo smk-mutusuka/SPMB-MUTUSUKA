@@ -199,7 +199,7 @@
 <script>
 (function () {
   'use strict';
-  if (!Auth.guard(['ADMIN', 'SELEKSI', 'WAWANCARA', 'BENDAHARA'])) return;
+  if (!Auth.guard(['ADMIN', 'SELEKSI', 'WAWANCARA', 'BENDAHARA', 'PENDAFTARAN', 'PENDAFTAR'])) return;
   var user = Auth.getUser();
   var role = user.role || '-';
   var displayName = user.display_name || user.username || 'Petugas';
