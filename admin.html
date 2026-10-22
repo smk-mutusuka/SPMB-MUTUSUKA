@@ -325,7 +325,7 @@
 <script>
 (function () {
   'use strict';
-  if (!Auth.guard([])) return;
+  if (!Auth.guard(['ADMIN', 'WAWANCARA', 'PENDAFTARAN', 'PENDAFTAR'])) return;
   var user = Auth.getUser();
   var role = user.role || '-';
   var displayName = user.display_name || user.username || 'Petugas';
@@ -609,7 +609,7 @@
     } else {
       html += '<div class="empty" style="padding:16px;">Belum ada dokumen.</div>';
     }
-    if (role === 'ADMIN') {
+    if (role === 'ADMIN' || role === 'PENDAFTARAN' || role === 'PENDAFTAR') {
       html += '<div class="section-sub">Aksi Verifikasi</div>' +
         '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
           '<label style="font-size:0.85rem;color:#6b7280;">Catatan (opsional):</label>' +
@@ -637,7 +637,7 @@
     }
     // ============================================================
 
-    if (role === 'ADMIN') {
+    if (role === 'ADMIN' || role === 'PENDAFTARAN' || role === 'PENDAFTAR')
       bindVerif('TERVERIFIKASI', 'btn-verif-valid', 'Status diubah menjadi TERVERIFIKASI');
       bindVerif('PERLU_PERBAIKAN', 'btn-verif-perbaikan', 'Status diubah menjadi PERLU PERBAIKAN');
       bindVerif('DIBATALKAN', 'btn-verif-batal', 'Status diubah menjadi DIBATALKAN');
